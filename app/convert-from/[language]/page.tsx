@@ -6,6 +6,7 @@ import { LANGUAGES, getLangDisplayName, getFromPageTitle, getFromPageDescription
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { StickyLanguageHeader } from '@/components/converter/StickyLanguageHeader'
+import { LanguageIcon } from '@/components/converter/LanguageIcon'
 
 interface PageProps {
   params: Promise<{ language: string }>
@@ -132,28 +133,29 @@ export default async function ConvertFromPage({ params }: PageProps) {
           <Sparkles className="h-5 w-5 text-primary" />
           <h2 className="text-xl font-bold tracking-tight">Popular conversions from {fromDisplay}</h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-2">
           {popularTargets.map((target, index) => {
             const targetDisplay = getLangDisplayName(target)
             return (
-              <div key={target} className="relative group">
-                {/* Popular badges on top 3 */}
+              <Link key={target} href={`/convert-${from}-to-${target}`} className="group relative">
                 {index < 3 && (
-                  <span className="absolute -top-2.5 left-6 z-10 bg-primary text-[9px] text-primary-foreground font-bold px-2 py-0.5 rounded-full shadow-xs">
+                  <span className="absolute -top-2 left-4 z-10 bg-primary text-[9px] text-primary-foreground font-bold px-2 py-0.5 rounded-full shadow-sm">
                     Popular
                   </span>
                 )}
-                <Button
-                  variant="outline"
-                  asChild
-                  className="w-full h-12 rounded-full justify-between font-semibold border-border bg-card hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground dark:hover:text-primary-foreground hover:border-transparent dark:hover:border-transparent hover:shadow-md cursor-pointer px-6 text-sm transition-all duration-150 relative"
-                >
-                  <Link href={`/convert-${from}-to-${target}`}>
-                    <span>{fromDisplay} &rarr; {targetDisplay}</span>
-                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-0.5 transition-transform duration-150" />
-                  </Link>
-                </Button>
-              </div>
+                <Card className="relative overflow-hidden border-border bg-card group-hover:border-primary/50 group-hover:shadow-md group-hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
+                  <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                  <CardContent className="p-3.5 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <LanguageIcon lang={target} size={22} useBrandColor />
+                      <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                        {targetDisplay}
+                      </span>
+                    </div>
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200 shrink-0" />
+                  </CardContent>
+                </Card>
+              </Link>
             )
           })}
         </div>
@@ -168,7 +170,6 @@ export default async function ConvertFromPage({ params }: PageProps) {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {remainingTargets.map((target, index) => {
             const targetDisplay = getLangDisplayName(target)
-            const initials = targetDisplay.substring(0, 2)
             return (
               <Link
                 key={target}
@@ -182,9 +183,7 @@ export default async function ConvertFromPage({ params }: PageProps) {
                   
                   <CardContent className="p-3.5 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[10px] uppercase shrink-0">
-                        {initials}
-                      </div>
+                      <LanguageIcon lang={target} size={22} useBrandColor />
                       <span className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors">
                         {targetDisplay}
                       </span>

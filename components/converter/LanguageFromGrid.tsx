@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { ArrowRight, Code2 } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { LANGUAGES, getLangDisplayName } from '@/lib/languages'
+import { LanguageIcon } from '@/components/converter/LanguageIcon'
 
 const TAGLINES: Record<string, string> = {
   python: 'Simple, readable, widely used',
@@ -42,8 +43,6 @@ export function LanguageFromGrid() {
         {LANGUAGES.map((lang) => {
           const displayName = getLangDisplayName(lang)
           const tagline = TAGLINES[lang] || 'AI code conversion'
-          // Two-letter initials helper
-          const initials = displayName.substring(0, 2)
 
           return (
             <Link key={lang} href={`/convert-from-${lang}`} className="group">
@@ -53,10 +52,7 @@ export function LanguageFromGrid() {
                 
                 <CardContent className="p-4 flex items-center justify-between gap-3 h-full">
                   <div className="flex items-center gap-3">
-                    {/* Circle badge */}
-                    <div className="h-9 w-9 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs uppercase shrink-0">
-                      {initials}
-                    </div>
+                    <LanguageIcon lang={lang} size={28} useBrandColor />
                     <div className="space-y-0.5">
                       <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors block">
                         {displayName}
@@ -76,3 +72,4 @@ export function LanguageFromGrid() {
     </div>
   )
 }
+

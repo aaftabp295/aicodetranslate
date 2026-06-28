@@ -2,9 +2,10 @@
 
 import * as React from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, HelpCircle } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { LANGUAGES, getLangDisplayName, Language } from '@/lib/languages'
+import { LanguageIcon } from '@/components/converter/LanguageIcon'
 
 interface StickyHeaderProps {
   from: Language
@@ -61,7 +62,10 @@ export function StickyLanguageHeader({ from }: StickyHeaderProps) {
             <SelectContent position="popper" className="bg-popover border-border">
               {targetOptions.map((lang) => (
                 <SelectItem key={lang} value={lang} className="text-xs cursor-pointer">
-                  {getLangDisplayName(lang)}
+                  <div className="flex items-center gap-2">
+                    <LanguageIcon lang={lang} size={12} useBrandColor />
+                    <span>{getLangDisplayName(lang)}</span>
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>

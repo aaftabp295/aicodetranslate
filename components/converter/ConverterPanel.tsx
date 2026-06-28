@@ -25,9 +25,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
-import { LANGUAGES, LANGUAGE_DISPLAY } from '@/lib/languages'
+import { LANGUAGES, LANGUAGE_DISPLAY, Language } from '@/lib/languages'
 import { cn } from '@/lib/utils'
 import { CodeEditor } from '@/components/converter/CodeEditor'
+import { LanguageIcon } from '@/components/converter/LanguageIcon'
 
 interface ConverterPanelProps {
   defaultFrom?: string
@@ -227,7 +228,10 @@ export function ConverterPanel({
                 <SelectContent className="bg-popover border-border">
                   {LANGUAGES.map((lang) => (
                     <SelectItem key={lang} value={lang} className="focus:bg-accent focus:text-accent-foreground cursor-pointer">
-                      {LANGUAGE_DISPLAY[lang]}
+                      <div className="flex items-center gap-2">
+                        <LanguageIcon lang={lang} size={14} useBrandColor />
+                        <span>{LANGUAGE_DISPLAY[lang]}</span>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -283,7 +287,10 @@ export function ConverterPanel({
                 <SelectContent className="bg-popover border-border">
                   {LANGUAGES.map((lang) => (
                     <SelectItem key={lang} value={lang} className="focus:bg-accent focus:text-accent-foreground cursor-pointer">
-                      {LANGUAGE_DISPLAY[lang]}
+                      <div className="flex items-center gap-2">
+                        <LanguageIcon lang={lang} size={14} useBrandColor />
+                        <span>{LANGUAGE_DISPLAY[lang]}</span>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
