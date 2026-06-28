@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Sparkles, ArrowRight, Zap, Code2, Shield } from 'lucide-react'
 import { ConverterPanel } from '@/components/converter/ConverterPanel'
 import { LanguageFromGrid } from '@/components/converter/LanguageFromGrid'
@@ -26,10 +27,10 @@ export default function Home() {
           </p>
           <div className="pt-4 flex justify-center">
             <Button size="lg" asChild className="cursor-pointer font-bold gap-2 text-primary-foreground bg-primary hover:bg-primary/95 shadow-lg">
-              <a href="#converter-section">
+              <Link href="/free-code-converter">
                 <span>Start Converting</span>
                 <ArrowRight className="h-4 w-4" />
-              </a>
+              </Link>
             </Button>
           </div>
         </div>
