@@ -47,7 +47,10 @@ export function LanguageFromGrid() {
 
           return (
             <Link key={lang} href={`/convert-from-${lang}`} className="group">
-              <Card className="h-full border-border bg-card hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+              <Card className="relative overflow-hidden h-full border-border bg-card hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ease-in-out cursor-pointer">
+                {/* Subtle coral left-border accent */}
+                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                
                 <CardContent className="p-4 flex items-center justify-between gap-3 h-full">
                   <div className="flex items-center gap-3">
                     {/* Circle badge */}
@@ -63,7 +66,7 @@ export function LanguageFromGrid() {
                       </p>
                     </div>
                   </div>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
+                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:text-primary translate-x-0 group-hover:translate-x-1 transition-transform duration-200 shrink-0" />
                 </CardContent>
               </Card>
             </Link>

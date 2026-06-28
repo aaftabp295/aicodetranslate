@@ -253,3 +253,11 @@
 .dark .token.regex,
 .dark .token.important,
 .dark .token.variable            { color: #ffab70; }
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

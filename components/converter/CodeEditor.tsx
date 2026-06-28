@@ -274,7 +274,7 @@ export function CodeEditor({
   }
 
   return (
-    <div className="relative flex-1 min-h-[400px] font-mono text-sm leading-relaxed">
+    <div className="relative flex-1 w-full h-full min-h-[400px] font-mono text-sm leading-relaxed">
       {/* ── Highlight layer ── */}
       <div
         ref={highlightRef}
@@ -291,7 +291,8 @@ export function CodeEditor({
             fontSize: 'inherit',
             lineHeight: 'inherit',
             fontFamily: 'inherit',
-            minHeight: '100%',
+            height: '100%',
+            width: '100%',
             overflow: 'hidden',
             borderRadius: 0,
             whiteSpace: 'pre-wrap',
@@ -322,7 +323,7 @@ export function CodeEditor({
         placeholder={placeholder}
         // Force caret color to stand out depending on light/dark mode
         style={{ caretColor: resolvedTheme === 'dark' ? '#ffffff' : '#000000' }}
-        className="absolute inset-0 w-full h-full p-6 font-mono text-sm leading-relaxed bg-transparent resize-none border-0 outline-none focus:outline-none focus:ring-0 text-transparent whitespace-pre-wrap break-all"
+        className="absolute inset-0 w-full h-full p-6 font-mono text-sm leading-relaxed bg-transparent resize-none border-0 outline-none focus:outline-none focus:ring-0 text-transparent whitespace-pre-wrap break-all overflow-y-auto no-scrollbar"
         spellCheck={false}
         autoCorrect="off"
         autoCapitalize="off"

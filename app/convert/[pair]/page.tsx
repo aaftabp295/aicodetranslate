@@ -1,8 +1,11 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getPairFromSlug, getPageTitle, getPageDescription, getLangDisplayName, PAIRS } from '@/lib/languages'
+import Link from 'next/link'
+import { Home, ChevronRight } from 'lucide-react'
+import { getPairFromSlug, getPageTitle, getPageDescription, getLangDisplayName, getPopularTargetsFor, PAIRS } from '@/lib/languages'
 import { ConverterPanel } from '@/components/converter/ConverterPanel'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { Button } from '@/components/ui/button'
 
 interface PageProps {
   params: Promise<{ pair: string }>
@@ -58,6 +61,7 @@ export default async function ConvertPage({ params }: PageProps) {
   const { from, to } = decoded
   const fromDisplay = getLangDisplayName(from)
   const toDisplay = getLangDisplayName(to)
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'
 
   const seoTitle = `Convert ${fromDisplay} to ${toDisplay} Online`
   const metaDescription = getPageDescription(from, to)
@@ -75,13 +79,63 @@ export default async function ConvertPage({ params }: PageProps) {
     'description': metaDescription,
   }
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': appUrl,
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': `Convert from ${fromDisplay}`,
+        'item': `${appUrl}/convert-from-${from}`,
+      },
+      {
+        '@type': 'ListItem',
+        'position': 3,
+        'name': `${fromDisplay} to ${toDisplay}`,
+        'item': `${appUrl}/convert-${pair}`,
+      },
+    ],
+  }
+
+  // Get other popular target conversions from same source
+  const otherPopularTargets = getPopularTargetsFor(from).filter((t) => t !== to)
+
   return (
     <div className="py-10 space-y-12">
-      {/* JSON-LD Structured Data */}
+      {/* JSON-LD SoftwareApplication Schema */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      {/* JSON-LD BreadcrumbList Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
+      {/* Breadcrumb Navigation */}
+      <div className="max-w-4xl mx-auto px-4">
+        <nav aria-label="Breadcrumb" className="flex items-center space-x-1.5 text-xs text-muted-foreground">
+          <Link href="/" className="hover:text-primary flex items-center gap-1">
+            <Home className="h-3 w-3" />
+            <span>Home</span>
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5 shrink-0" />
+          <Link href={`/convert-from-${from}`} className="hover:text-primary">
+            Convert from {fromDisplay}
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5 shrink-0" />
+          <span className="font-semibold text-foreground">{fromDisplay} to {toDisplay}</span>
+        </nav>
+      </div>
 
       {/* Header Segment */}
       <div className="max-w-4xl mx-auto px-4 text-center space-y-4">
@@ -130,6 +184,31 @@ export default async function ConvertPage({ params }: PageProps) {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+      </div>
+
+      {/* Alternative Conversions Section */}
+      <div className="max-w-3xl mx-auto px-4 py-8 border-t border-border/40 space-y-4 text-center">
+        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          Convert {fromDisplay} to a different language
+        </span>
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+          {otherPopularTargets.map((target) => {
+            const targetDisplay = getLangDisplayName(target)
+            return (
+              <Button
+                key={target}
+                variant="outline"
+                size="sm"
+                asChild
+                className="rounded-full border-border bg-card hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground dark:hover:text-primary-foreground hover:border-transparent dark:hover:border-transparent cursor-pointer text-xs transition-all font-semibold"
+              >
+                <Link href={`/convert-${from}-to-${target}`}>
+                  {fromDisplay} &rarr; {targetDisplay}
+                </Link>
+              </Button>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

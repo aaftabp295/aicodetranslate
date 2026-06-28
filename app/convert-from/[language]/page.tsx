@@ -5,6 +5,7 @@ import { ArrowRight, ChevronRight, Home, Sparkles, HelpCircle } from 'lucide-rea
 import { LANGUAGES, getLangDisplayName, getFromPageTitle, getFromPageDescription, getPopularTargetsFor, Language } from '@/lib/languages'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { StickyLanguageHeader } from '@/components/converter/StickyLanguageHeader'
 
 interface PageProps {
   params: Promise<{ language: string }>
@@ -96,6 +97,9 @@ export default async function ConvertFromPage({ params }: PageProps) {
 
   return (
     <div className="py-10 space-y-12 max-w-6xl mx-auto px-4 animate-in fade-in duration-300">
+      {/* Sticky Language Selector Bar */}
+      <StickyLanguageHeader from={from} />
+
       {/* JSON-LD ItemList Schema */}
       <script
         type="application/ld+json"
@@ -128,21 +132,28 @@ export default async function ConvertFromPage({ params }: PageProps) {
           <Sparkles className="h-5 w-5 text-primary" />
           <h2 className="text-xl font-bold tracking-tight">Popular conversions from {fromDisplay}</h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {popularTargets.map((target) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-4">
+          {popularTargets.map((target, index) => {
             const targetDisplay = getLangDisplayName(target)
             return (
-              <Button
-                key={target}
-                variant="outline"
-                asChild
-                className="h-14 justify-between font-semibold border-border bg-card hover:border-primary/50 hover:bg-muted cursor-pointer px-4 text-sm"
-              >
-                <Link href={`/convert-${from}-to-${target}`}>
-                  <span>{fromDisplay} &rarr; {targetDisplay}</span>
-                  <ArrowRight className="h-4 w-4 text-primary ml-2" />
-                </Link>
-              </Button>
+              <div key={target} className="relative group">
+                {/* Popular badges on top 3 */}
+                {index < 3 && (
+                  <span className="absolute -top-2.5 left-6 z-10 bg-primary text-[9px] text-primary-foreground font-bold px-2 py-0.5 rounded-full shadow-xs">
+                    Popular
+                  </span>
+                )}
+                <Button
+                  variant="outline"
+                  asChild
+                  className="w-full h-12 rounded-full justify-between font-semibold border-border bg-card hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground dark:hover:text-primary-foreground hover:border-transparent dark:hover:border-transparent hover:shadow-md cursor-pointer px-6 text-sm transition-all duration-150 relative"
+                >
+                  <Link href={`/convert-${from}-to-${target}`}>
+                    <span>{fromDisplay} &rarr; {targetDisplay}</span>
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-0.5 transition-transform duration-150" />
+                  </Link>
+                </Button>
+              </div>
             )
           })}
         </div>
@@ -155,12 +166,20 @@ export default async function ConvertFromPage({ params }: PageProps) {
           <p className="text-xs text-muted-foreground mt-0.5">{remainingTargets.length} more languages available</p>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {remainingTargets.map((target) => {
+          {remainingTargets.map((target, index) => {
             const targetDisplay = getLangDisplayName(target)
             const initials = targetDisplay.substring(0, 2)
             return (
-              <Link key={target} href={`/convert-${from}-to-${target}`} className="group">
-                <Card className="border-border bg-card group-hover:border-primary/50 group-hover:shadow-md transition-all duration-300 cursor-pointer">
+              <Link
+                key={target}
+                href={`/convert-${from}-to-${target}`}
+                className="group animate-in fade-in-0 slide-in-from-bottom-1 duration-300 fill-mode-both"
+                style={{ animationDelay: `${index * 40}ms` }}
+              >
+                <Card className="relative overflow-hidden border-border bg-card group-hover:border-primary/50 group-hover:shadow-md group-hover:-translate-y-0.5 transition-all duration-200 ease-in-out cursor-pointer">
+                  {/* Subtle coral left accent */}
+                  <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                  
                   <CardContent className="p-3.5 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5">
                       <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[10px] uppercase shrink-0">
@@ -170,7 +189,7 @@ export default async function ConvertFromPage({ params }: PageProps) {
                         {targetDisplay}
                       </span>
                     </div>
-                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200" />
                   </CardContent>
                 </Card>
               </Link>

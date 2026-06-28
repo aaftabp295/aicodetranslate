@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { toast } from 'sonner'
-import { Loader2, Copy, Check, ArrowLeftRight, Sparkles, BookOpen, AlertTriangle } from 'lucide-react'
+import { Loader2, Copy, Check, ArrowLeftRight, Sparkles, BookOpen, AlertTriangle, Maximize2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -49,8 +49,9 @@ export function ConverterPanel({
   const [isExplaining, setIsExplaining] = React.useState(false)
   const [showExplain, setShowExplain] = React.useState(false)
   const [explanation, setExplanation] = React.useState('')
-  const [copied, setCopied] = React.useState(false)
+   const [copied, setCopied] = React.useState(false)
   const [highlightedHtml, setHighlightedHtml] = React.useState('')
+  const [activeMaximize, setActiveMaximize] = React.useState<'input' | 'output' | null>(null)
 
   // Rate Limiting & Subs State
   const [remaining, setRemaining] = React.useState<number | null>(null)
@@ -215,7 +216,7 @@ export function ConverterPanel({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
         
         {/* Left Panel: Input */}
-        <Card className="flex flex-col border-border bg-card shadow-sm">
+        <Card className="flex flex-col h-[540px] border-border bg-card shadow-sm">
           <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center space-x-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Source Language</span>
@@ -233,7 +234,7 @@ export function ConverterPanel({
               </Select>
             </div>
             
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <Button
                 variant="ghost"
                 size="icon"
@@ -243,17 +244,26 @@ export function ConverterPanel({
               >
                 <ArrowLeftRight className="h-4 w-4" />
               </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setActiveMaximize('input')}
+                title="Maximize Editor"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer"
+              >
+                <Maximize2 className="h-4 w-4" />
+              </Button>
             </div>
           </CardHeader>
           
-          <CardContent className="p-0 flex-1 flex flex-col min-h-[400px]">
+          <CardContent className="p-0 flex-1 flex flex-col overflow-hidden">
             <CodeEditor
               value={code}
               onChange={setCode}
               language={fromLang}
               placeholder={`Paste your ${LANGUAGE_DISPLAY[fromLang as typeof LANGUAGES[number]] || fromLang} code here...`}
             />
-            <div className="px-6 py-3 border-t border-border flex justify-end text-xs">
+            <div className="px-6 py-3 border-t border-border flex justify-end text-xs shrink-0 bg-muted/10">
               <span className={code.length > 8000 ? 'text-destructive font-semibold' : 'text-muted-foreground'}>
                 {code.length.toLocaleString()}/10,000
               </span>
@@ -262,7 +272,7 @@ export function ConverterPanel({
         </Card>
 
         {/* Right Panel: Output */}
-        <Card className="flex flex-col border-border bg-card shadow-sm relative">
+        <Card className="flex flex-col h-[540px] border-border bg-card shadow-sm relative">
           <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center space-x-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Target Language</span>
@@ -280,25 +290,36 @@ export function ConverterPanel({
               </Select>
             </div>
             
-            {convertedCode && (
+            <div className="flex items-center space-x-1">
+              {convertedCode && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCopy}
+                  className="h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer flex items-center space-x-1"
+                >
+                  {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                  <span>{copied ? 'Copied' : 'Copy'}</span>
+                </Button>
+              )}
               <Button
                 variant="ghost"
-                size="sm"
-                onClick={handleCopy}
-                className="h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer flex items-center space-x-1"
+                size="icon"
+                onClick={() => setActiveMaximize('output')}
+                title="Maximize Editor"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer"
               >
-                {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                <span>{copied ? 'Copied' : 'Copy'}</span>
+                <Maximize2 className="h-4 w-4" />
               </Button>
-            )}
+            </div>
           </CardHeader>
           
           <CardContent className={cn(
-            "p-6 flex-1 flex flex-col overflow-auto bg-muted/20 dark:bg-muted/5 min-h-[400px]",
+            "p-0 flex-1 flex flex-col overflow-hidden bg-muted/20 dark:bg-muted/5",
             highlightedHtml || isLoading ? "justify-start" : "justify-center"
           )}>
             {isLoading ? (
-              <div className="space-y-4 w-full h-full flex flex-col justify-start">
+              <div className="space-y-4 w-full h-full flex flex-col justify-start p-6">
                 <Skeleton className="h-6 w-[200px] bg-muted" />
                 <Skeleton className="h-4 w-full bg-muted" />
                 <Skeleton className="h-4 w-full bg-muted" />
@@ -308,11 +329,11 @@ export function ConverterPanel({
               </div>
             ) : highlightedHtml ? (
               <div 
-                className="output-highlight w-full flex-1 font-mono text-sm overflow-auto text-left"
+                className="output-highlight w-full flex-1 font-mono text-sm overflow-auto text-left min-h-0 p-6 no-scrollbar"
                 dangerouslySetInnerHTML={{ __html: highlightedHtml }}
               />
             ) : (
-              <div className="text-center space-y-2 py-12">
+              <div className="text-center space-y-2 py-12 p-6 w-full">
                 <p className="text-sm text-muted-foreground">Converted code will appear here</p>
               </div>
             )}
@@ -325,14 +346,14 @@ export function ConverterPanel({
         {/* Usage Progress and Quota */}
         <div className="w-full sm:w-auto flex-1 max-w-md space-y-2">
           <div className="flex justify-between items-center text-xs">
-            <span className="font-medium text-muted-foreground">Daily free usage</span>
-            <Badge variant="secondary" className="font-semibold text-primary">
+            <span className="font-semibold text-muted-foreground">Daily free usage</span>
+            <span className="font-semibold text-[11px] text-primary bg-primary/10 dark:bg-primary/20 border border-primary/15 dark:border-primary/25 px-2.5 py-0.5 rounded-full shadow-xs">
               {remaining !== null ? `${remaining} conversions left today` : 'Checking quota...'}
-            </Badge>
+            </span>
           </div>
           <Progress 
             value={remaining !== null ? ((limit - remaining) / limit) * 100 : 0} 
-            className="h-2 bg-muted" 
+            className="h-1.5 bg-primary/10 dark:bg-primary/20" 
           />
           {remaining === 0 && (
             <p className="text-xs text-amber-600 dark:text-amber-500 font-semibold flex items-center gap-1.5">
@@ -437,6 +458,75 @@ export function ConverterPanel({
             >
               Upgrade to Pro — $7/mo
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Maximize Editor Dialog */}
+      <Dialog 
+        open={activeMaximize !== null} 
+        onOpenChange={(open) => {
+          if (!open) setActiveMaximize(null)
+        }}
+      >
+        <DialogContent className="max-w-[95vw] w-[95vw] md:max-w-[90vw] md:w-[90vw] h-[90vh] max-h-[90vh] flex flex-col bg-card border border-border p-6 gap-4">
+          <DialogHeader className="flex flex-row items-center justify-between space-y-0 border-b border-border pb-3 shrink-0">
+            <div>
+              <DialogTitle className="text-lg font-bold">
+                {activeMaximize === 'input' 
+                  ? `Source Code (${LANGUAGE_DISPLAY[fromLang as typeof LANGUAGES[number]] || fromLang})` 
+                  : `Converted Code (${LANGUAGE_DISPLAY[toLang as typeof LANGUAGES[number]] || toLang})`}
+              </DialogTitle>
+              <DialogDescription className="text-xs text-muted-foreground">
+                {activeMaximize === 'input' 
+                  ? 'Edit or view your source code in full screen mode.' 
+                  : 'View your converted code in full screen mode.'}
+              </DialogDescription>
+            </div>
+            
+            {activeMaximize === 'output' && convertedCode && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCopy}
+                className="h-8 px-3 text-xs mr-6 cursor-pointer flex items-center space-x-1.5 rounded-full border-border bg-background hover:bg-muted"
+              >
+                {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                <span>{copied ? 'Copied' : 'Copy Code'}</span>
+              </Button>
+            )}
+          </DialogHeader>
+
+          <div className="flex-1 min-h-0 w-full relative border border-border rounded-lg overflow-hidden bg-background">
+            {activeMaximize === 'input' ? (
+              <CodeEditor
+                value={code}
+                onChange={setCode}
+                language={fromLang}
+                placeholder={`Paste your ${LANGUAGE_DISPLAY[fromLang as typeof LANGUAGES[number]] || fromLang} code here...`}
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col overflow-hidden bg-muted/20 dark:bg-muted/5">
+                {isLoading ? (
+                  <div className="space-y-4 w-full h-full flex flex-col justify-start p-6">
+                    <Skeleton className="h-6 w-[200px] bg-muted" />
+                    <Skeleton className="h-4 w-full bg-muted" />
+                    <Skeleton className="h-4 w-full bg-muted" />
+                    <Skeleton className="h-4 w-3/4 bg-muted" />
+                    <Skeleton className="h-4 w-full bg-muted" />
+                  </div>
+                ) : highlightedHtml ? (
+                  <div 
+                    className="output-highlight w-full flex-1 font-mono text-sm overflow-auto text-left p-6 min-h-0 no-scrollbar"
+                    dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+                  />
+                ) : (
+                  <div className="text-center space-y-2 py-24 p-6 w-full my-auto">
+                    <p className="text-sm text-muted-foreground">Converted code will appear here</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
