@@ -93,3 +93,42 @@ export function getPageDescription(from: string, to: string): string {
   const toDisplay = getLangDisplayName(to)
   return `Convert ${fromDisplay} code to ${toDisplay} instantly using AI. Free online tool with idiomatic output. No signup required.`
 }
+
+/**
+ * Returns the SEO title for the convert-from-X code page.
+ */
+export function getFromPageTitle(from: string): string {
+  const fromDisplay = getLangDisplayName(from)
+  return `Convert ${fromDisplay} Code Online — Choose Target Language`
+}
+
+/**
+ * Returns the SEO description for the convert-from-X code page.
+ */
+export function getFromPageDescription(from: string): string {
+  const fromDisplay = getLangDisplayName(from)
+  return `Convert ${fromDisplay} code to JavaScript, TypeScript, Python, Java and 14 more languages instantly using AI. Free online tool. No signup required.`
+}
+
+/**
+ * Returns the 6 most popular target languages for a given source language.
+ */
+export function getPopularTargetsFor(from: string): Language[] {
+  const popular: Record<string, Language[]> = {
+    python: ['javascript', 'typescript', 'java', 'go', 'rust', 'cpp'],
+    javascript: ['typescript', 'python', 'java', 'go', 'rust', 'csharp'],
+    typescript: ['javascript', 'python', 'java', 'go', 'rust', 'csharp'],
+    java: ['python', 'javascript', 'typescript', 'kotlin', 'go', 'csharp'],
+    cpp: ['python', 'javascript', 'java', 'go', 'rust', 'csharp'],
+    csharp: ['python', 'javascript', 'java', 'typescript', 'go', 'cpp'],
+    go: ['python', 'javascript', 'typescript', 'java', 'rust', 'cpp'],
+    rust: ['python', 'javascript', 'typescript', 'go', 'java', 'cpp'],
+  }
+
+  if (from in popular) {
+    return popular[from]
+  }
+
+  // Fallback: first 6 from LANGUAGES excluding itself
+  return LANGUAGES.filter((lang) => lang !== from).slice(0, 6) as Language[]
+}

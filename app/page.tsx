@@ -1,9 +1,7 @@
-import Link from 'next/link'
-import { Sparkles, ArrowRight, Zap, Code2, Shield, Heart } from 'lucide-react'
+import { Sparkles, ArrowRight, Zap, Code2, Shield } from 'lucide-react'
 import { ConverterPanel } from '@/components/converter/ConverterPanel'
+import { LanguageFromGrid } from '@/components/converter/LanguageFromGrid'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { getLangDisplayName } from '@/lib/languages'
 
 export const metadata = {
   title: 'AI Code Converter – Translate Programming Languages Online',
@@ -11,33 +9,6 @@ export const metadata = {
 }
 
 export default function Home() {
-  const popularPairs = [
-    { from: 'python', to: 'javascript' },
-    { from: 'javascript', to: 'python' },
-    { from: 'python', to: 'typescript' },
-    { from: 'typescript', to: 'python' },
-    { from: 'javascript', to: 'typescript' },
-    { from: 'typescript', to: 'javascript' },
-    { from: 'java', to: 'python' },
-    { from: 'python', to: 'java' },
-    { from: 'python', to: 'go' },
-    { from: 'go', to: 'python' },
-    { from: 'python', to: 'rust' },
-    { from: 'rust', to: 'python' },
-    { from: 'java', to: 'javascript' },
-    { from: 'javascript', to: 'java' },
-    { from: 'c', to: 'cpp' },
-    { from: 'cpp', to: 'c' },
-    { from: 'csharp', to: 'java' },
-    { from: 'java', to: 'csharp' },
-    { from: 'python', to: 'csharp' },
-    { from: 'csharp', to: 'python' },
-    { from: 'sql', to: 'python' },
-    { from: 'bash', to: 'python' },
-    { from: 'kotlin', to: 'java' },
-    { from: 'swift', to: 'kotlin' },
-  ]
-
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -105,39 +76,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Popular Pairs Combinations */}
-      <section className="py-20 px-4 bg-background">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <div className="text-center space-y-3">
-            <h2 className="text-3xl font-bold tracking-tight">306 Language Combinations Supported</h2>
-            <p className="text-muted-foreground text-sm max-w-xl mx-auto leading-relaxed">
-              Explore dedicated conversion landing pages for the most popular language pairs.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {popularPairs.map((pair) => {
-              const fromDisplay = getLangDisplayName(pair.from)
-              const toDisplay = getLangDisplayName(pair.to)
-              const slug = `${pair.from}-to-${pair.to}`
-              return (
-                <Link key={slug} href={`/convert/${slug}`} className="group">
-                  <Card className="border-border bg-card group-hover:border-primary/50 group-hover:shadow-md transition-all duration-300 cursor-pointer">
-                    <CardContent className="p-4 flex items-center justify-between">
-                      <div className="space-y-1">
-                        <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
-                          {fromDisplay} to {toDisplay}
-                        </span>
-                        <p className="text-xs text-muted-foreground">AI code conversion</p>
-                      </div>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                    </CardContent>
-                  </Card>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
+      {/* Choose a language to convert from grid */}
+      <section className="py-20 bg-background border-b border-border/40">
+        <LanguageFromGrid />
       </section>
     </div>
   )

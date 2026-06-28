@@ -13,6 +13,8 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import {
@@ -76,6 +78,15 @@ export function Navbar() {
     { href: '/pricing', label: 'Pricing' },
   ]
 
+  const popularSources = [
+    { lang: 'python', label: 'Python', desc: 'Simple, readable, widely used' },
+    { lang: 'javascript', label: 'JavaScript', desc: 'The language of the web' },
+    { lang: 'typescript', label: 'TypeScript', desc: 'JavaScript with types' },
+    { lang: 'java', label: 'Java', desc: 'Enterprise-grade, cross-platform' },
+    { lang: 'go', label: 'Go', desc: 'Fast, simple, concurrent' },
+    { lang: 'rust', label: 'Rust', desc: 'Memory-safe systems language' },
+  ]
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
@@ -93,21 +104,75 @@ export function Navbar() {
         <div className="hidden md:flex">
           <NavigationMenu>
             <NavigationMenuList className="gap-1">
-              {navLinks.map((link) => (
-                <NavigationMenuItem key={link.href}>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href={link.href}
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        "bg-transparent cursor-pointer font-medium hover:bg-muted focus:bg-muted"
-                      )}
-                    >
-                      {link.label}
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
+              {/* Home Link */}
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link
+                    href="/"
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      "bg-transparent cursor-pointer font-medium hover:bg-muted focus:bg-muted"
+                    )}
+                  >
+                    Home
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              {/* Converters Dropdown */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent cursor-pointer font-medium hover:bg-muted focus:bg-muted">
+                  Converters
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
+                    <div className="col-span-2 px-2 pb-1 border-b border-border">
+                      <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Convert from...
+                      </span>
+                    </div>
+                    {popularSources.map((src) => (
+                      <Link
+                        key={src.lang}
+                        href={`/convert-from-${src.lang}`}
+                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-accent-foreground focus:bg-muted focus:text-accent-foreground"
+                      >
+                        <div className="text-sm font-semibold text-foreground group-hover:text-primary">
+                          {src.label}
+                        </div>
+                        <p className="line-clamp-1 text-xs leading-normal text-muted-foreground">
+                          {src.desc}
+                        </p>
+                      </Link>
+                    ))}
+                    <div className="col-span-2 mt-2 pt-2 border-t border-border flex justify-end">
+                      <NavigationMenuLink asChild>
+                        <Link
+                          href="/converters"
+                          className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline cursor-pointer"
+                        >
+                          See all 18 languages &rarr;
+                        </Link>
+                      </NavigationMenuLink>
+                    </div>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              {/* Pricing Link */}
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link
+                    href="/pricing"
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      "bg-transparent cursor-pointer font-medium hover:bg-muted focus:bg-muted"
+                    )}
+                  >
+                    Pricing
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>

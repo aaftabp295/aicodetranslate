@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { from, to } = decoded
   const title = getPageTitle(from, to)
   const description = getPageDescription(from, to)
-  const canonical = `${process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'}/convert/${pair}`
+  const canonical = `${process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'}/convert-${pair}`
 
   return {
     title,

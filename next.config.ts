@@ -1,7 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async rewrites() {
+    return [
+      {
+        source: '/convert-from-:language',
+        destination: '/convert-from/:language',
+      },
+      {
+        source: '/convert-:pair',
+        destination: '/convert/:pair',
+      },
+    ]
+  },
 };
 
 export default nextConfig;

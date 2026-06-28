@@ -3,14 +3,14 @@ import { Code2 } from 'lucide-react'
 
 export function Footer() {
   const popularConversions = [
-    { label: 'Python to JavaScript', href: '/convert/python-to-javascript' },
-    { label: 'JavaScript to TypeScript', href: '/convert/javascript-to-typescript' },
-    { label: 'Java to Python', href: '/convert/java-to-python' },
-    { label: 'Python to Go', href: '/convert/python-to-go' },
-    { label: 'JavaScript to Python', href: '/convert/javascript-to-python' },
-    { label: 'TypeScript to JavaScript', href: '/convert/typescript-to-javascript' },
-    { label: 'Python to Rust', href: '/convert/python-to-rust' },
-    { label: 'Java to JavaScript', href: '/convert/java-to-javascript' },
+    { label: 'Python to JavaScript', href: '/convert-python-to-javascript' },
+    { label: 'JavaScript to TypeScript', href: '/convert-javascript-to-typescript' },
+    { label: 'Java to Python', href: '/convert-java-to-python' },
+    { label: 'Python to Go', href: '/convert-python-to-go' },
+    { label: 'JavaScript to Python', href: '/convert-javascript-to-python' },
+    { label: 'TypeScript to JavaScript', href: '/convert-typescript-to-javascript' },
+    { label: 'Python to Rust', href: '/convert-python-to-rust' },
+    { label: 'Java to JavaScript', href: '/convert-java-to-javascript' },
   ]
 
   const productLinks = [
