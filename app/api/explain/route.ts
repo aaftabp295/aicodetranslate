@@ -67,7 +67,9 @@ export async function POST(request: NextRequest) {
 
     // 4. Determine plan
     let plan: 'guest' | 'free' | 'pro' = 'guest'
-    if (user) {
+    if (process.env.DISABLE_RATE_LIMIT === 'true') {
+      plan = 'pro'
+    } else if (user) {
       const { data: subscription } = await supabase
         .from('subscriptions')
         .select('plan, expires_at')
