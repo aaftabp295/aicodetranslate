@@ -201,8 +201,12 @@ create policy "users_own_subscription" on subscriptions
 
 ## Routing Structure
 
-/                              Homepage
-/convert/[pair]                e.g. /convert/python-to-javascript
+/                              Homepage — hero + ConverterPanel + LanguageFromGrid
+/converters                    All 18 source languages index page
+/convert-from-[language]       e.g. /convert-from-python (18 pages)
+Shows popular targets + all 17 target options
+/convert/[pair]                e.g. /convert/python-to-javascript (306 pages)
+Actual converter page with ConverterPanel
 /pricing                       Pricing page
 /dashboard                     User history (protected)
 /login                         Auth page
@@ -212,6 +216,18 @@ create policy "users_own_subscription" on subscriptions
 /api/webhooks/dodo             Dodo Payments webhook (edge)
 /api/usage                     Current user daily usage (edge)
 /api/og                        Dynamic OG image generation (edge)
+
+
+## User Navigation Flow
+
+Homepage (/)
+→ Click "Python" card
+→ /convert-from-python
+→ Click "JavaScript" target button
+→ /convert/python-to-javascript
+→ Converter is pre-loaded and ready
+
+Total indexed pages: 1 + 1 + 18 + 306 = 326 pages
 
 
 ---
