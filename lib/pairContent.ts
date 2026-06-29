@@ -27,6 +27,7 @@ export interface MigrationTip {
 }
 
 export interface PairContent {
+  intro: string
   diffs: DiffRow[]
   examples: CodeExample[]
   tips: MigrationTip[]
@@ -40,6 +41,7 @@ const DATA: Record<string, PairContent> = {
 
   // ── python → javascript ──────────────────────────────────────────────────
   'python-javascript': {
+    intro: "Python's indentation-based syntax and duck-typed runtime are a world apart from JavaScript's event-loop model and prototype chain. When porting Python scripts to JavaScript you'll need to map list comprehensions to Array methods like `.map()` and `.filter()`, replace generators with async iterators, and substitute standard-library modules such as `os` and `json` with Node.js equivalents or browser APIs.",
     diffs: [
       { category: 'Block syntax',    from: 'Indentation + colon define blocks. No braces required.',           to: 'Curly braces delimit blocks. Indentation is stylistic only.' },
       { category: 'Type system',     from: 'Dynamic; PEP 484 type hints are optional and ignored at runtime.', to: 'Dynamic; TypeScript superset adds compile-time enforcement.' },
@@ -109,6 +111,7 @@ console.log(result);  // [4, 16, 36, 64]`,
 
   // ── javascript → python ───────────────────────────────────────────────────
   'javascript-python': {
+    intro: "JavaScript's asynchronous callback and Promise model contrasts sharply with Python's synchronous-first style and `asyncio` library. Converting JavaScript to Python means replacing arrow functions with `def` or `lambda`, translating `Promise.all` to `asyncio.gather`, and swapping prototype-based class patterns for Python's class inheritance. Python's strict indentation replaces JavaScript's curly-brace blocks.",
     diffs: [
       { category: 'Async paradigm',  from: 'Promises + async/await over a non-blocking event loop.',              to: 'asyncio with async/await; use threading or multiprocessing for CPU work.' },
       { category: 'Module system',   from: 'ES Modules (import/export) or CommonJS (require). Config in package.json.', to: 'Unified import system. Third-party packages managed via pip + pyproject.toml.' },
@@ -184,6 +187,7 @@ print(names)  # ['Alice', 'Carol']`,
 
   // ── python → typescript ───────────────────────────────────────────────────
   'python-typescript': {
+    intro: "Python and TypeScript share a commitment to developer productivity, but their type systems differ fundamentally — Python's type hints are optional and runtime-ignored, while TypeScript enforces structural typing at compile time. When converting, Python's `dict`, `list`, and `Optional` type hints map to TypeScript interfaces, generics, and union types. Python dataclasses translate naturally to TypeScript interfaces or classes with typed properties.",
     diffs: [
       { category: 'Type enforcement', from: 'Type hints (PEP 484) are optional and ignored at runtime.',              to: 'Types are enforced at compile time by tsc. Violations are build errors.' },
       { category: 'Interface model',  from: 'Protocols define structural interfaces (PEP 544). Abstract base classes too.', to: 'interface and type alias define structural contracts enforced by the compiler.' },
@@ -263,6 +267,7 @@ class ProductModel implements Product {
 
   // ── java → python ─────────────────────────────────────────────────────────
   'java-python': {
+    intro: "Java's verbose, statically typed class hierarchy stands in sharp contrast to Python's dynamic duck-typing and concise syntax. Porting Java to Python means collapsing boilerplate: Java's getters/setters become plain properties, checked exceptions become try/except blocks, and Java's `ArrayList`/`HashMap` map directly to Python's built-in `list` and `dict`. Java's 10-line class definition often compresses to 3 lines of Python.",
     diffs: [
       { category: 'Verbosity',       from: 'Every variable needs a declared type. Getters/setters are explicit methods.', to: 'Dynamic typing. Properties are plain attributes. 10 lines of Java often becomes 3.' },
       { category: 'Memory',          from: 'JVM garbage collector. Objects allocated on heap explicitly via new.',          to: 'CPython reference counting + cyclic GC. No new keyword.' },
@@ -338,6 +343,7 @@ class Person:
 
   // ── javascript → typescript ───────────────────────────────────────────────
   'javascript-typescript': {
+    intro: "TypeScript is a strict superset of JavaScript, so most JavaScript code is valid TypeScript — but the value comes from adding type annotations. Converting JavaScript to TypeScript means introducing interface and type declarations, annotating function parameters and return types, replacing `any`-typed patterns with proper generics, and enabling strict null checks. The result catches entire classes of runtime bugs at compile time.",
     diffs: [
       { category: 'Type safety',    from: 'No types. Errors appear at runtime when values have unexpected shapes.', to: 'Static type checking catches shape mismatches at compile time.' },
       { category: 'Tooling',        from: 'IDE hints rely on JSDoc comments or type inference from assignment.',    to: 'Rich autocomplete, refactoring, and error highlighting from the type graph.' },
@@ -411,6 +417,7 @@ async function getUser(id: number): Promise<string> {
 
   // ── typescript → javascript ───────────────────────────────────────────────
   'typescript-javascript': {
+    intro: "Stripping TypeScript to JavaScript means removing type annotations, interface declarations, generics, and enum definitions while preserving all runtime logic unchanged. The resulting JavaScript runs anywhere without a build step, which is useful for lightweight scripts, serverless functions with cold-start constraints, or open-source libraries targeting the broadest possible audience.",
     diffs: [
       { category: 'Build step',    from: 'Requires tsc, esbuild, SWC, or a bundler before code can run.',             to: 'Runs directly in Node.js, Deno, or the browser. Zero build step.' },
       { category: 'Type safety',   from: 'Compile-time type checking catches bugs before runtime.',                     to: 'All type errors become runtime errors. Defensive checks must be manual.' },
@@ -475,6 +482,7 @@ function move(dir) {
 
   // ── python → go ───────────────────────────────────────────────────────────
   'python-go': {
+    intro: "Python's dynamic typing and interpreted runtime trade raw speed for development velocity; Go's compiled, statically typed runtime inverts that trade-off. Converting Python to Go requires explicitly typing every variable and function signature, replacing Python's exception handling with Go's idiomatic `error` return values, and restructuring goroutine-friendly concurrency patterns in place of Python threads or `asyncio`. Python's `dict` becomes Go's `map`, and slices replace lists.",
     diffs: [
       { category: 'Type system',    from: 'Dynamic; type hints optional and unenforced at runtime.',                to: 'Static; every variable and parameter must have a declared type.' },
       { category: 'Error handling', from: 'Exceptions raised with raise; caught with try/except.',                  to: 'Errors returned as second return value. No exceptions (except panic for fatal bugs).' },
@@ -551,6 +559,7 @@ func (r Rectangle) Perimeter() float64 {
 
   // ── go → python ───────────────────────────────────────────────────────────
   'go-python': {
+    intro: "Go's explicit error returns, goroutines, and static typing give way to Python's exceptions, `asyncio`, and dynamic runtime when porting in this direction. Go's `struct` types map to Python dataclasses or plain classes, goroutines can be approximated with `asyncio` tasks or `threading.Thread`, and Go's interface-based polymorphism translates to Python's duck-typed protocols. The resulting Python is typically far shorter but trades compile-time safety for runtime flexibility.",
     diffs: [
       { category: 'Error handling', from: 'Explicit (value, error) returns. Callers must check err != nil.',           to: 'Exceptions raised and propagated automatically. try/except at the boundary.' },
       { category: 'Typing',         from: 'Static; every symbol has a concrete type known at compile time.',           to: 'Dynamic; duck typing. Optional hints with mypy for static analysis.' },
@@ -619,6 +628,7 @@ class Point:
 
   // ── python → rust ─────────────────────────────────────────────────────────
   'python-rust': {
+    intro: "Rust's ownership model and borrow checker represent a fundamentally different memory management philosophy from Python's garbage collector. When porting Python to Rust, every variable must have a defined lifetime, `list` becomes `Vec<T>`, `dict` becomes `HashMap<K, V>`, and Python exceptions are replaced with Rust's `Result<T, E>` type. The gain is predictable, zero-overhead performance with memory safety guarantees and no GC pauses.",
     diffs: [
       { category: 'Memory model',   from: 'Garbage collected via reference counting (CPython). No manual memory.',    to: 'Ownership + borrow checker. Compile-time memory safety. No GC pauses.' },
       { category: 'Error handling', from: 'Exceptions with try/except. Arbitrary nesting allowed.',                   to: 'Result<T, E> and Option<T>. Errors are values, not control flow.' },
@@ -691,6 +701,7 @@ impl Rectangle {
 
   // ── rust → python ─────────────────────────────────────────────────────────
   'rust-python': {
+    intro: "Rewriting Rust in Python prioritises developer ergonomics and iteration speed over Rust's zero-cost abstractions and memory-safety guarantees. Rust's ownership and lifetimes disappear — Python's garbage collector handles memory automatically. Rust's `Result` and `Option` types map to Python's exception handling and `None`. The tradeoff is reduced performance and no compile-time memory safety, but significantly faster development and a much shorter codebase.",
     diffs: [
       { category: 'Memory model',   from: 'Ownership + borrow checker. No GC. Compile-time lifetime enforcement.', to: 'Garbage collected (reference counting). No manual memory management.' },
       { category: 'Error handling', from: 'Result<T,E> and Option<T> as return values. ? operator for propagation.', to: 'Exceptions. try/except at boundaries. No checked errors.' },
@@ -767,6 +778,7 @@ impl Counter {
 
   // ── java → javascript ─────────────────────────────────────────────────────
   'java-javascript': {
+    intro: "Java's JVM-based, class-centric object model is architecturally different from JavaScript's prototype chain and event-loop runtime. Converting Java to JavaScript means replacing interfaces with duck typing or TypeScript interfaces, mapping Java's threading model to JavaScript's async/await, and replacing Java's `ArrayList`/`HashMap` with native arrays and objects. Java's checked exceptions translate to try/catch with untyped errors.",
     diffs: [
       { category: 'Runtime',        from: 'JVM — cross-platform bytecode interpreted by the Java Virtual Machine.',  to: 'V8 / SpiderMonkey in browsers; Node.js or Deno on the server.' },
       { category: 'OOP model',      from: 'Nominal typing. Classes must explicitly implement or extend.',            to: 'Prototype chain. Duck typing — no implements keyword.' },
@@ -829,6 +841,7 @@ class Circle implements Shape {
 
   // ── javascript → java ─────────────────────────────────────────────────────
   'javascript-java': {
+    intro: "JavaScript's dynamic, single-threaded runtime gives way to Java's strongly typed, multithreaded JVM when converting in this direction. Every variable and return type needs an explicit type declaration, `Promise`-based async patterns become Java's `CompletableFuture` or synchronous blocking calls, and JavaScript's objects become Java classes with defined fields and constructors. Java's verbosity is offset by compile-time correctness guarantees.",
     diffs: [
       { category: 'Typing',         from: 'Dynamic. Types resolved at runtime. No compile step.',                    to: 'Static, nominal typing. Every variable and method needs a declared type.' },
       { category: 'Async',          from: 'Single-threaded event loop. Promises and async/await are idiomatic.',     to: 'Multi-threaded. CompletableFuture for async; ExecutorService for thread pools.' },
@@ -901,6 +914,7 @@ CompletableFuture<String> fetchUser(int id) {
 
   // ── python → java ─────────────────────────────────────────────────────────
   'python-java': {
+    intro: "Python's concise, script-friendly syntax expands dramatically when converted to Java's enterprise-grade structure. Python functions become Java class methods, Python's `list` and `dict` map to `ArrayList` and `HashMap`, optional type hints become mandatory type declarations, and Python's `try/except` becomes Java's checked-exception `try/catch` blocks. A single Python file often becomes multiple Java files organized by class hierarchy.",
     diffs: [
       { category: 'Verbosity',      from: 'Functions are first-class. No class wrapper needed for utilities.',       to: 'All code must live in a class. Static methods for utilities.' },
       { category: 'Type system',    from: 'Dynamic. Hints optional.',                                                to: 'Static, nominal. Every parameter and return type required.' },
@@ -964,6 +978,7 @@ System.out.println(filtered);`,
 
   // ── java → go ─────────────────────────────────────────────────────────────
   'java-go': {
+    intro: "Java's JVM ecosystem and object-oriented class hierarchy contrast with Go's lean compiled runtime and structural typing. Converting Java to Go replaces abstract classes and interfaces with Go interfaces (defined by method sets, not inheritance), maps Java's thread-pool executor to goroutines and channels, and substitutes Java's checked exceptions with Go's explicit `(value, error)` return convention. The result is typically leaner, faster, and more explicit.",
     diffs: [
       { category: 'OOP model',      from: 'Nominal typing; abstract classes, explicit implements, extends.',        to: 'Structural typing; interfaces satisfied implicitly by method sets. No inheritance.' },
       { category: 'Error handling', from: 'Checked exceptions declared with throws. try/catch/finally.',            to: 'Errors as return values. No exceptions. defer for cleanup.' },
@@ -1039,6 +1054,7 @@ func (d Dog) Name()  string { return d.name }
 
   // ── cpp → python ──────────────────────────────────────────────────────────
   'cpp-python': {
+    intro: "C++ requires manual memory management, explicit type declarations, and compile-time resolution — Python automates all of that. Porting C++ to Python means replacing `new`/`delete` with Python's garbage collector, translating pointer arithmetic to list indexing, converting C++ templates to Python generics or duck-typed functions, and replacing `std::vector`/`std::map` with `list`/`dict`. Header files disappear entirely.",
     diffs: [
       { category: 'Memory',         from: 'Manual new/delete or RAII smart pointers. Destructors run deterministically.', to: 'Garbage collected. Reference counting via CPython. No delete.' },
       { category: 'Typing',         from: 'Static, strong. Every variable has a compile-time type.',                to: 'Dynamic, duck-typed. Type hints optional. No compile step.' },
@@ -1106,6 +1122,7 @@ public:
 
   // ── python → cpp ──────────────────────────────────────────────────────────
   'python-cpp': {
+    intro: "Python's dynamic, garbage-collected runtime is replaced by C++'s manual memory model and compile-time type system when porting in this direction. Python lists become `std::vector<T>`, dicts become `std::unordered_map<K, V>`, and Python exceptions map to C++ exception classes or error codes. Developers gain deterministic performance and direct hardware access at the cost of significantly more verbose and complex code.",
     diffs: [
       { category: 'Memory',         from: 'GC handles allocation/deallocation. No pointers.',                       to: 'Manual management or smart pointers (unique_ptr, shared_ptr). RAII idiom.' },
       { category: 'Typing',         from: 'Dynamic; types resolved at runtime.',                                    to: 'Static; every variable needs a type at declaration. Compilation fails otherwise.' },
@@ -1179,6 +1196,7 @@ public:
 
   // ── kotlin → java ─────────────────────────────────────────────────────────
   'kotlin-java': {
+    intro: "Kotlin compiles to the same JVM bytecode as Java and is fully interoperable with it, so the conversion is largely syntactic. Kotlin's data classes become Java POJOs with getters/setters/equals/hashCode, `val`/`var` declarations become typed Java fields, extension functions become static utility methods, and Kotlin's null safety (`?` types) maps to Java's `Optional` or `@Nullable` annotations. Kotlin coroutines translate to `CompletableFuture` or `ExecutorService`.",
     diffs: [
       { category: 'Null safety',    from: 'Type system distinguishes nullable (T?) from non-null (T) at compile time.', to: 'All references nullable by default. NPE is a runtime risk. Use Optional<T> or @Nullable.' },
       { category: 'Data classes',   from: 'data class generates equals, hashCode, copy, toString automatically.',      to: 'Record (Java 16+) gives similar benefits; POJO requires manual implementation.' },
@@ -1244,6 +1262,7 @@ public record User(
 
   // ── java → kotlin ─────────────────────────────────────────────────────────
   'java-kotlin': {
+    intro: "Kotlin dramatically reduces Java boilerplate while remaining fully JVM-compatible. Java's verbose getter/setter POJOs collapse into Kotlin `data class` declarations, `Optional<T>` is replaced by Kotlin's built-in null-safety operators (`?.`, `?:`, `!!`), anonymous inner classes become lambdas, and Java's checked exceptions simply disappear. The same logic that takes 50 lines of Java often fits in 15 lines of idiomatic Kotlin.",
     diffs: [
       { category: 'Verbosity',      from: 'Full class/field/getter/setter boilerplate for every model.',            to: 'data class gives equals/hashCode/copy/toString in one line.' },
       { category: 'Null safety',    from: 'All references nullable. NullPointerException at runtime.',              to: 'T vs T? enforced by compiler. Safe-call (?.) and Elvis (?:) operators.' },
@@ -1303,6 +1322,7 @@ public record User(
 
   // ── php → python ──────────────────────────────────────────────────────────
   'php-python': {
+    intro: "PHP's web-centric execution model and dynamic typing share similarities with Python, but the idioms diverge significantly. PHP's `$` variable prefix and array functions (`array_map`, `array_filter`) translate to Python's plain variables and built-in `list` methods. PHP's mixed-type arrays become Python lists or dicts, `echo` statements become `print`, and PHP's `require`/`include` becomes Python's `import` system.",
     diffs: [
       { category: 'Variable prefix', from: 'All variables prefixed with $. $name, $count, $user.',                 to: 'No prefix. Plain names: name, count, user.' },
       { category: 'Type system',     from: 'Weakly typed; automatic coercion between strings and numbers.',         to: 'Dynamically typed; explicit conversion required (int("5") not "5" + 1).' },
@@ -1365,6 +1385,7 @@ print(', '.join(str(n) for n in squared))  # 4, 16, 36, 64`,
 
   // ── ruby → python ─────────────────────────────────────────────────────────
   'ruby-python': {
+    intro: "Ruby and Python share a philosophy of developer happiness and readable syntax, making this one of the more natural conversions. Ruby's blocks and `yield` map closely to Python's first-class functions and decorators, Ruby's `Enumerable` methods (`map`, `select`, `reduce`) have direct Python equivalents, and Ruby's `nil` becomes Python's `None`. Ruby's `snake_case` convention is shared, though Ruby uses `end` keywords where Python uses indentation.",
     diffs: [
       { category: 'Blocks',         from: 'Blocks (do..end or {}) are anonymous closures passed to methods implicitly.', to: 'No blocks. Use lambda, closures via def, or comprehensions.' },
       { category: 'Syntax',         from: 'end keyword closes blocks, methods, classes. No braces.',                to: 'Indentation defines blocks. No end keyword.' },
@@ -1443,4 +1464,9 @@ end`,
 /** Returns unique rich content for a language pair, or null if not available. */
 export function getPairContent(from: string, to: string): PairContent | null {
   return DATA[`${from}-${to}`] ?? null
+}
+
+/** Returns unique intro paragraph for a language pair, or null if not available. */
+export function getPairIntro(from: string, to: string): string | null {
+  return DATA[`${from}-${to}`]?.intro ?? null
 }
