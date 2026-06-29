@@ -1,0 +1,62 @@
+{
+  "intro": "Porting C# applications to Scala shifts engineering architecture from an imperative, enterprise-centric framework (.NET) to an advanced, highly functional object-oriented ecosystem on the JVM. Developers swap boilerplate class designs and basic LINQ pipelines for powerful pattern-matching mechanisms, monadic error models, and advanced macro compilation systems. This transition dramatically enhances safety and scaling guarantees for complex data and concurrent messaging grids.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static nominal checking framework built around class definitions, reified generic bounds, and interface definitions.",
+      "to": "Advanced static system supporting path-dependent types, structural implicits/givens, and generalized constraints."
+    },
+    {
+      "category": "Syntax",
+      "from": "Strict imperative block structures with automatic properties, explicit loops, and statement-based flows.",
+      "to": "Expression-oriented, functional layout prioritizing immutable variables, inline expressions, and pattern matching."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed .NET GC using stack allocations for custom value types alongside multi-generation heap scans.",
+      "to": "JVM tracking layer abstracting memory through standard garbage collection, optimizing immutable states dynamically."
+    },
+    {
+      "category": "Async",
+      "from": "Task Parallel Library running concurrent multi-threaded actions across global system thread pools.",
+      "to": "Functional async effect engines (ZIO, Cats Effect) or Monadic Futures providing thread isolation layers."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Deep base framework providing universal enterprise utilities, web interfaces, and database mapping.",
+      "to": "Immense functional structures suite optimizing lazy pipelines, immutable maps, and analytical operations."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Pattern Matching Data Slicing",
+      "description": "Compares basic C# type pattern matching structures against highly expressive structural pattern matching inside Scala.",
+      "fromCode": "public abstract class Notification {}\npublic class Email : Notification { public string Body { get; set; } }\n\npublic class Router {\n    public string Route(Notification n) {\n        return n switch {\n            Email e => $\"Email: {e.Body}\",\n            _ => \"Unknown\"\n        };\n    }\n}",
+      "toCode": "sealed trait Notification\ncase class Email(body: String) extends Notification\n\nobject Router {\n  def route(n: Notification): String = n match {\n    case Email(b) => s\"Email: $b\"\n    case _        => \"Unknown\"\n  }\n}"
+    },
+    {
+      "title": "Functional Pipeline Aggregation",
+      "description": "Contrasts C# LINQ transformations with an idiomatic, pure functional folding sequence inside Scala.",
+      "fromCode": "using System.Collections.Generic;\nusing System.Linq;\n\npublic class Calculator {\n    public static int SumItems(List<int> vals) {\n        return vals.Select(x => x * 2).Sum();\n    }\n}",
+      "toCode": "object Calculator {\n  def sumItems(vals: List[Int]): Int = \n    vals.map(_ * 2).sum\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Treat Everything as an Expression",
+      "body": "In Scala, structures like `if-else` blocks and `match` sequences are full expressions that return an active value payload. Stop defining temporary mutable tracking variables before conditional blocks."
+    },
+    {
+      "title": "Swap Exceptions for Monads",
+      "body": "Avoid runtime exceptions (`try/catch`). Wrap operations that can fail inside Scala's type-safe `Option` or `Either` value boxes to enforce explicit compile-time error management within the type signatures."
+    },
+    {
+      "title": "Use Givens and Context Abstractions",
+      "body": "Replace C# dynamic runtime reflection or explicit dependency injection frameworks with Scala 3 `given` definitions and `using` parameters to inject configuration contexts at compile time."
+    },
+    {
+      "title": "Default to Complete Immutability",
+      "body": "Replace mutable C# lists and properties with Scala `List` wrappers and immutable `val` declarations. This structural practice eliminates memory data races across highly concurrent application models."
+    }
+  ]
+}

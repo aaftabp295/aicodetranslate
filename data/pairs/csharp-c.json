@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating C# source to procedural C requires stripping away the entire .NET runtime, garbage collection infrastructure, object-oriented paradigms, and type safety layers. Developers must transition to bare-metal systems programming, manually managing memory layouts, raw pointer manipulation, and platform-specific compilation constraints. This structural downshift guarantees absolute control and minimal hardware footprints at the expense of developer velocity and safety guarantees.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal object-oriented environment providing reflection, reified generics, and runtime type tracking.",
+      "to": "Weak, static procedural typing system supporting raw typecasting, explicit structural alignment, and zero runtime type metadata."
+    },
+    {
+      "category": "Syntax",
+      "from": "High-level object design supporting structural classes, automated properties, lambda closures, and integrated namespaces.",
+      "to": "Low-level imperative block configuration using bare structs, global function implementations, macro definitions, and header inclusions."
+    },
+    {
+      "category": "Memory",
+      "from": "Completely automated allocation framework managed by a multi-generation runtime heap garbage collection engine.",
+      "to": "Manual execution control requiring precise calls to malloc/calloc/free, explicit stack sizing, and raw pointer management."
+    },
+    {
+      "category": "Async",
+      "from": "High-level Task Parallel Library scheduling multi-threaded data mutations safely via built-in async/await constructs.",
+      "to": "Low-level operating system threads (POSIX pthreads or Windows API threads), raw mutex locks, and manual state synchronization controls."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Comprehensive .NET base framework containing high-level web tools, cryptographic objects, and deep relational query layers.",
+      "to": "Minimal system wrapper set (libc) providing fundamental memory operations, low-level file I/O streams, and basic math routines."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Dynamic Data Container Allocation",
+      "description": "Compares an automated C# object lifecycle with manual dynamic memory allocation and clean-up execution in C.",
+      "fromCode": "public class BufferHolder {\n    public byte[] Data { get; }\n    public BufferHolder(int size) {\n        Data = new byte[size];\n    }\n}",
+      "toCode": "#include <stdlib.h>\n\ntypedef struct {\n    unsigned char* data;\n    int size;\n} BufferHolder;\n\nBufferHolder* create_buffer(int size) {\n    BufferHolder* b = (BufferHolder*)malloc(sizeof(BufferHolder));\n    b->data = (unsigned char*)malloc(size);\n    b->size = size;\n    return b;\n}\n\nvoid free_buffer(BufferHolder* b) {\n    free(b->data);\n    free(b);\n}"
+    },
+    {
+      "title": "Structural String Comparison",
+      "description": "Contrasts object string instance value checks in C# with raw character buffer calculations via standard library tools in C.",
+      "fromCode": "public class Validator {\n    public static bool Match(string a, string b) {\n        return a == b;\n    }\n}",
+      "toCode": "#include <string.h>\n#include <stdbool.h>\n\nbool match(const char* a, const char* b) {\n    return strcmp(a, b) == 0;\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Track All Allocated Pointer References",
+      "body": "C has no runtime protection against memory leaks or out-of-bounds corruption. Every single `malloc` call must be explicitly paired with a corresponding `free` statement across all code execution branches."
+    },
+    {
+      "title": "Replace Classes with Structs and Pointers",
+      "body": "Deconstruct C# class models into standard flat C `struct` types. Emulate object methodology by passing an explicit instance pointer reference (conventionally named `this` or `self`) as the first argument of functions."
+    },
+    {
+      "title": "Enforce String Null-Termination",
+      "body": "C# strings track character length safely inside class memory wrappers. C strings are bare byte arrays requiring a trailing null character (`\\0`) to terminate functions; always allocate an extra byte for this marker."
+    },
+    {
+      "title": "Implement Manual Error Signatures",
+      "body": "C completely lacks structured exception handling (`try/catch`). Rewrite error workflows to return integer error codes or status enums from functions, and pass output payloads back through dedicated pointer parameters."
+    }
+  ]
+}

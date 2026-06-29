@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning code from C# to Rust shifts an application from a managed runtime environment (.NET) to a system-level language that eliminates garbage collection entirely through compile-time ownership tracking. Developers trade object-oriented hierarchies and runtime abstraction layers for absolute memory safety, predictable performance, and bare-metal execution control. This change guarantees zero undefined behavior and optimal memory usage without a heavy runtime footprint.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal object system featuring runtime type metadata reflection, reified generics, and class inheritance.",
+      "to": "Static, structural and nominal type layout featuring zero-cost generics, traits, and powerful algebraic data types (enums)."
+    },
+    {
+      "category": "Syntax",
+      "from": "Imperative brace-scoped design, property shortcuts, automated class definitions, and integrated LINQ syntax engines.",
+      "to": "Expression-based layout utilizing strict block rules, explicit macro invocations, pattern matching, and minimal boilerplate."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed via a multi-generational runtime garbage collector tracking object lifetimes dynamically on the heap.",
+      "to": "Compile-time ownership semantics tracking resource lifecycles via strict single-owner borrowing and scope lifetime validation rules."
+    },
+    {
+      "category": "Async",
+      "from": "Task Parallel Library running async operations across system thread pools using standard async/await keywords.",
+      "to": "Zero-cost asynchronous futures architecture requiring an explicit runtime engine execution host (like Tokyo or async-std)."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Comprehensive corporate runtime providing web servers, database connectors, and enterprise infrastructure components.",
+      "to": "Minimal systems foundation focusing strictly on basic safety primitives, OS abstractions, and high-performance containers."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Pattern Matching Option Handling",
+      "description": "Compares C# null-checking validations against a type-safe Rust algebraic Option enum pattern matching block.",
+      "fromCode": "public class Validator {\n    public static int GetLength(string name) {\n        if (name == null) return -1;\n        return name.Length;\n    }\n}",
+      "toCode": "fn get_length(name: Option<String>) -> i32 {\n    match name {\n        Some(s) => s.len() as i32,\n        None => -1,\n    }\n}"
+    },
+    {
+      "title": "Thread-Safe Data Composition",
+      "description": "Demonstrates converting a C# thread-safe class property lock setup into a modern Rust mutually isolated Arc/Mutex wrapper.",
+      "fromCode": "using System.Threading;\n\npublic class ThreadCounter {\n    private int _count = 0;\n    public void Increment() {\n        Interlocked.Increment(ref _count);\n    }\n}",
+      "toCode": "import java.util.concurrent.atomic.AtomicInteger;\n\nuse std::sync::atomic::{AtomicI32, Ordering};\n\nstruct ThreadCounter {\n    count: AtomicI32,\n}\n\nimpl ThreadCounter {\n    fn increment(&self) {\n        self.count.fetch_add(1, Ordering::SeqCst);\n    }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Internalize Ownership and Borrowing",
+      "body": "Understand Rust's core constraint: data has exactly one owner at a time. To pass variables without transferring ownership, learn to use references (`&T` for shared read-only, `&mut T` for exclusive write permissions)."
+    },
+    {
+      "title": "Replace Inheritance with Traits",
+      "body": "Rust completely rejects object-oriented class inheritance structures. Translate C# abstract base classes and interfaces into highly performant, static Rust Traits to achieve decoupling."
+    },
+    {
+      "title": "Pick an Asynchronous Executor",
+      "body": "Rust has async/await built into the language syntax, but lacks a built-in async runtime engine. Add the `tokio` crate dependency to your project to replicate the asynchronous thread scheduling behavior of C#'s TPL."
+    },
+    {
+      "title": "Use Result Over Exceptions",
+      "body": "Rust does not throw exceptions. Functions that can fail must return a `Result<T, E>` enum. Use the question mark operator (`?`) to propagate errors cleanly up the call stack without structural `try/catch` clutter."
+    }
+  ]
+}

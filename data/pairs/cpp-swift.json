@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating from C++ to Swift transitions a codebase from manual memory management and template-heavy metaprogramming to a modern, memory-safe environment with powerful type inference. Swift replaces complex C++ object lifecycles with Automatic Reference Counting (ARC) and enforces strict null safety. This shift drastically reduces undefined behavior while maintaining high-performance execution via LLVM.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "C++ relies on structural and nominal typing with weak enforcement, supporting unsafe type casting, implicit conversions, and unchecked pointer arithmetic.",
+      "to": "Swift uses a strict, nominal type system with advanced type inference, protocol-oriented programming, and explicit structural optionals that eliminate null pointer errors."
+    },
+    {
+      "category": "Syntax",
+      "from": "Syntax requires heavy boilerplate, explicit header/source separation, semicolons, and manual type declarations for complex nested structures.",
+      "to": "Syntax is concise and modern, doing away with headers, semicolons, and explicit types where inference succeeds, using clear keywords like 'let' and 'var'."
+    },
+    {
+      "category": "Memory",
+      "from": "Manual or RAII-based management utilizing stack allocation, raw pointers, smart pointers (std::unique_ptr, std::shared_ptr), and explicit deletes.",
+      "to": "Automatic Reference Counting (ARC) manages heap lifecycles natively, combined with strong value-type semantics (structs/enums) to minimize heap allocations."
+    },
+    {
+      "category": "Async",
+      "from": "Relies on std::thread, raw mutexes, condition variables, and futures/promises introduced in C++11, lacking built-in language-level structural concurrency.",
+      "to": "Features built-in async/await keywords, structured concurrency tasks, and Actors to isolate mutable state and guarantee compile-time data-race safety."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The STL provides low-level algorithms, manual iterator management, data structures, and heavy reliance on generic templates via header files.",
+      "to": "The Swift Standard Library delivers high-level collections, functional primitives (map, filter), unicode-safe strings, and seamless integration with Foundation."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Value Types and Initialization",
+      "description": "Demonstrates converting a C++ struct with a constructor to a Swift struct utilizing memberwise initializers.",
+      "fromCode": "#include <string>\n\nstruct User {\n    std::string name;\n    int id;\n\n    User(std::string n, int i) : name(n), id(i) {}\n};",
+      "toCode": "struct User {\n    let name: String\n    let id: Int\n}"
+    },
+    {
+      "title": "Lambda Expression vs Closure",
+      "description": "Shows filtering a collection using a C++ lambda expression with explicit captures versus a native Swift closure expression.",
+      "fromCode": "#include <vector>\n#include <algorithm>\n\nstd::vector<int> filter_even(const std::vector<int>& nums) {\n    std::vector<int> result;\n    std::copy_if(nums.begin(), nums.end(), std::back_inserter(result), [](int n) {\n        return n % 2 == 0;\n    });\n    return result;\n}",
+      "toCode": "func filterEven(_ nums: [Int]) -> [Int] {\n    return nums.filter { $0 % 2 == 0 }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Map Value Semantics Carefully",
+      "body": "C++ classes and structs behave similarly except for default visibility. In Swift, structs are strictly value types (copied on assignment) and classes are reference types. Default to Swift structs for data models."
+    },
+    {
+      "title": "Transition RAII to Deinitializers",
+      "body": "C++ uses destructors for resource management via scoping. In Swift classes, use 'deinit', but remember that ARC dictates when it runs, not scope exit. For immediate release, scoped closures or explicit defer blocks are preferred."
+    },
+    {
+      "title": "Leverage Protocol-Oriented Programming",
+      "body": "Replace complex C++ multiple inheritance structures and abstract base classes with Swift protocols and protocol extensions to avoid object-slicing and diamond-inheritance issues."
+    },
+    {
+      "title": "Utilize Interoperability Features",
+      "body": "Swift features native bidirectional C++ interoperability. Avoid rewriting massive systems instantly; instead, import C++ headers directly into Swift using a bridging header or module map."
+    }
+  ]
+}

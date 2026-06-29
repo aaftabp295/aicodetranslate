@@ -1,0 +1,62 @@
+{
+  "intro": "Moving code from C++ to R switches the paradigm from high-performance systems engineering to domain-specific statistical computing and data analysis. R replaces manual algorithms and precise type definitions with high-level vectorized calculations, dynamic arrays, and native mathematical matrix tools. This transition accelerates data prototyping and statistical exploration at the cost of execution speed and memory predictability.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, rigidly compiled type structures with strict class mechanics, type coercion rules, and explicit memory offsets.",
+      "to": "Dynamic, optionally typed, focused heavily on vectorized primitives (vectors, matrices, lists, data frames) and dynamic evaluation."
+    },
+    {
+      "category": "Syntax",
+      "from": "Complex imperative syntax requiring object specifications, block layouts, explicit pointers, and explicit iteration limits.",
+      "to": "Expressive mathematical and functional syntax built entirely around implicit vector pipelines, function arguments, and dynamic attributes."
+    },
+    {
+      "category": "Memory",
+      "from": "Explicit execution over stack structures, raw heap segments, and strict scope lifecycles using RAII mechanisms.",
+      "to": "Automatically managed through a dynamic garbage collector, heavily utilizing copy-on-write semantics for complex data modifications."
+    },
+    {
+      "category": "Async",
+      "from": "Multi-threaded native environments utilizing std::thread, raw locks, condition variables, and parallel STL algorithms.",
+      "to": "Primarily single-threaded execution context, relying on secondary parallel processing packages (parallel, future) or background worker processes."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Low-level structures providing fundamental containers, thread control, generic search layouts, and binary IO tools.",
+      "to": "Deep statistical ecosystem providing built-in linear regression, distribution tools, plotting, and matrix manipulation primitives."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Vector Element Multiplication",
+      "description": "Compares an explicit C++ loop multiplying array elements with R's native vectorized multiplication syntax.",
+      "fromCode": "#include <vector>\n\nstd::vector<double> multiply_vectors(const std::vector<double>& a, const std::vector<double>& b) {\n    std::vector<double> result;\n    result.reserve(a.size());\n    for(size_t i = 0; i < a.size(); ++i) {\n        result.push_back(a[i] * b[i]);\n    }\n    return result;\n}",
+      "toCode": "multiply_vectors <- function(a, b) {\n  return(a * b)\n}"
+    },
+    {
+      "title": "Linear Filtering Conditions",
+      "description": "Demonstrates conditional filtering using C++ algorithm loops versus R index mask filtering.",
+      "fromCode": "#include <vector>\n#include <algorithm>\n\nstd::vector<double> filter_positive(const std::vector<double>& input) {\n    std::vector<double> out;\n    for(double val : input) {\n        if(val > 0.0) out.push_back(val);\n    }\n    return out;\n}",
+      "toCode": "filter_positive <- function(input) {\n  return(input[input > 0])\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Eliminate Explicit For-Loops",
+      "body": "Avoid translating C++ loops directly into R. For-loops are slow in R; always leverage vectorized functions or the 'apply' function family to let lower-level compiled code do the heavy lifting."
+    },
+    {
+      "title": "Use Rcpp for Speed Bottlenecks",
+      "body": "If critical components suffer performance loss during migration, do not rewrite them completely. Use the 'Rcpp' package to embed legacy C++ code chunks directly inside your R workflows."
+    },
+    {
+      "title": "Understand One-Based Indexing",
+      "body": "Beware array boundaries. C++ uses zero-based indexing (`0` to `N-1`), while R uses one-based indexing (`1` to `N`). Direct formula translations will offset outputs if not adjusted."
+    },
+    {
+      "title": "Leverage Data Frames for Matrix State",
+      "body": "Replace complex C++ structures or multi-dimensional arrays with native R 'data.frame' or 'data.table' objects when managing heterogeneous tabular datasets."
+    }
+  ]
+}

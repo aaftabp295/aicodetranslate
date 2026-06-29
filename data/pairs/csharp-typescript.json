@@ -1,0 +1,62 @@
+{
+  "intro": "Moving from C# to TypeScript transitions a backend developer into a modern, static-typed environment engineered to scale JavaScript development across the web tier. TypeScript perfectly bridges the conceptual gap for C# developers by providing familiar structural interfaces, generic parameters, class abstractions, and structural type checkers. The entire type system compile-time layer compiles down to standard JavaScript, providing frictionless execution across any JS host environment.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal typing layout where type equivalence is strictly bound to explicit name definitions and declarations.",
+      "to": "Static, structural typing layout where type equivalence is determined entirely by the shapes and properties of the object structures."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose, class-centric structure requiring access scope declarations, assembly imports, and strict namespaces.",
+      "to": "Modern, expressive layout supporting type unions, literal types, intersection states, and structural interfaces without runtime metadata."
+    },
+    {
+      "category": "Memory",
+      "from": "Rigid memory layout optimizing value types on stack and class objects across generational garbage-collected segments.",
+      "to": "Abstracted runtime memory mapping dictated by the underlying JavaScript host engine's automatic garbage collection tools."
+    },
+    {
+      "category": "Async",
+      "from": "Multi-threaded scheduling via Tasks, using advanced thread pool tracking loops and synchronized critical block sections.",
+      "to": "Single-threaded event loop engine routing async operations via native Promises and non-blocking macro/micro task queues."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Deeply integrated .NET BCL framework providing multi-threaded structures, security foundations, and data abstractions.",
+      "to": "Standard JavaScript runtime primitives combined with comprehensive type definitions covering DOM or Node.js API suites."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Interface and Object Definition",
+      "description": "Compares a standard nominal C# interface implementation with structural type verification inside TypeScript.",
+      "fromCode": "public interface IRepository {\n    void Save(string data);\n}\n\npublic class DbRepository : IRepository {\n    public void Save(string data) { /* ... */ }\n}",
+      "toCode": "interface Repository {\n  save(data: string): void;\n}\n\nconst dbRepository: Repository = {\n  save(data: string) { /* ... */ }\n};"
+    },
+    {
+      "title": "Union Types vs Polymorphism",
+      "description": "Contrasts C# subclass hierarchy structures against an idiomatic TypeScript structural union type matching pattern.",
+      "fromCode": "public abstract class Shape {}\npublic class Circle : Shape { public double Radius { get; set; } }\npublic class Square : Shape { public double Side { get; set; } }",
+      "toCode": "type Circle = { kind: 'circle'; radius: number };\ntype Square = { kind: 'square'; side: number };\ntype Shape = Circle | Square;"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Understand Structural Typing",
+      "body": "C# is nominal: two identical classes with different names cannot be interchanged. TypeScript is structural: if two objects share the exact same properties, they are considered structural equivalents regardless of name."
+    },
+    {
+      "title": "Leverage Advanced Union Types",
+      "body": "Avoid deep inheritance trees for data models. Take advantage of TypeScript's union types (`string | number`) and discriminated unions to handle conditional model varieties concisely."
+    },
+    {
+      "title": "Activate Strict Compiler Flags",
+      "body": "Ensure maximum application safety by turning on `strict: true` inside the `tsconfig.json` compiler options file. This activates strict null checking to replicate C#'s null-safety safeguards."
+    },
+    {
+      "title": "Types Vanish at Runtime",
+      "body": "Remember that TypeScript undergoes type erasure. Interfaces and type declarations disappear entirely after compilation; you cannot use C#-style reflection (`typeof` or `is`) to inspect complex types at runtime."
+    }
+  ]
+}

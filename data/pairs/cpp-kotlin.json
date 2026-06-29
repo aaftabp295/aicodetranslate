@@ -1,0 +1,62 @@
+{
+  "intro": "Converting from C++ to Kotlin moves an application from a hardware-centric, manually optimized landscape to the managed, garbage-collected JVM or Kotlin/Native ecosystems. Kotlin replaces C++ manual resource tracking and pointers with absolute type safety, zero-overhead nullability tracking, and clean object orientation. This migration improves developer velocity and memory safety while utilizing Kotlin's lightweight concurrency primitives.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal, and structural system with unchecked conversions, template metaprogramming, and raw pointer reinterpretation.",
+      "to": "Static, nominal system featuring explicit nullability annotations, smart casts, generics with variance, and sealed class hierarchies."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbosely expressive with semicolons, explicit memory operators (*, &), forward declarations, and header inclusion syntax.",
+      "to": "Clean, highly expressive layout eliminating semicolons, header files, and boilerplate properties via data classes and concise lambdas."
+    },
+    {
+      "category": "Memory",
+      "from": "Determined via stack allocations, strict block-scoped RAII lifecycles, and manual or reference-counted heap allocations.",
+      "to": "Managed primarily by the JVM Garbage Collector (or ARC/tracing GC in Kotlin/Native), abstracting explicit allocations entirely."
+    },
+    {
+      "category": "Async",
+      "from": "Managed via std::thread, platform threads, POSIX primitives, or heavy third-party event loops like libuv.",
+      "to": "Powered by Coroutines, providing non-blocking, sequential-looking asynchronous code through suspend functions and structured channels/flows."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Provides low-level containers, memory utilities, basic algorithmic functions, and direct OS wrapper utilities.",
+      "to": "Rich collection API, functional utilities, cross-platform IO abstractions, and extensive string manipulation frameworks."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Data Containment Class",
+      "description": "Compares a boilerplate-heavy C++ data class containing custom equality and hashing with a Kotlin data class.",
+      "fromCode": "#include <string>\n\nclass Product {\npublic:\n    std::string name;\n    double price;\n    Product(std::string n, double p) : name(n), price(p) {}\n};",
+      "toCode": "data class Product(val name: String, val price: Double)"
+    },
+    {
+      "title": "Null Safety and Optional Value Handling",
+      "description": "Contrasts checking for null pointers or std::optional in C++ with Kotlin's safe call operator and Elvis operator.",
+      "fromCode": "#include <string>\n#include <optional>\n\nstd::string get_name(std::optional<std::string> opt_name) {\n    if (opt_name.has_value()) {\n        return opt_name.value();\n    }\n    return \"Unknown\";\n}",
+      "toCode": "func getName(name: String?): String {\n    return name ?: \"Unknown\"\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Replace Templates with Generics",
+      "body": "C++ templates generate code at compile time per type instance. Kotlin generics use type erasure (on JVM) and enforce variance (in/out). Redesign template metaprogramming into interface-driven design."
+    },
+    {
+      "title": "Adopt Data Classes for State",
+      "body": "Stop writing custom copy constructors, assignment operators, and hash functions for simple objects. Use Kotlin's 'data class' keyword to auto-generate these utilities safely."
+    },
+    {
+      "title": "Handle Destructors with Closeable",
+      "body": "Kotlin lacks RAII scoping for stack objects. Replace deterministic C++ destructors by implementing the 'AutoCloseable' interface and wrapping usage inside the '.use {}' extension function."
+    },
+    {
+      "title": "Bridge native assets via JNI/JNA",
+      "body": "If porting incrementally, use Java Native Interface (JNI) or Kotlin/Native interoperability layers to call legacy C++ shared libraries (.so/.dll) without breaking existing performance-critical modules."
+    }
+  ]
+}

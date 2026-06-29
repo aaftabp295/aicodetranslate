@@ -1,0 +1,62 @@
+{
+  "intro": "Converting applications from C# to Ruby switches logic from a structured, enterprise-grade architecture (.NET) to an elegant, dynamically typed language optimized for developer happiness and object-oriented purity. Developers trade rigid compilation rules, high-performance static types, and strict interface validation for extreme object malleability, powerful runtime metaprogramming, and minimal syntax overhead. This migration maximizes scripting agility at the expense of raw computation velocity.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal type structure checking code reliability strictly at compile time via explicit class signatures.",
+      "to": "Dynamic, strong object type framework using duck-typing rules and resolving method evaluation completely at runtime."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose brace layout requiring access block visibility specifications, semicolons, and extensive namespaces.",
+      "to": "Clean, highly expressive human-readable structure using blocks instead of braces, omitting semicolons, and hiding parentheses."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed .NET generational memory allocation optimizing local stack allocations alongside tracked heap objects.",
+      "to": "Automated runtime object tracing garbage collection tracking and sweeping dynamic object graphs automatically."
+    },
+    {
+      "category": "Async",
+      "from": "Advanced Task scheduler engine routing concurrent actions across multiple CPU core allocations.",
+      "to": "Fiber-based and thread abstractions restricted historically by a Global Interpreter Lock (GIL) or utilizing async fiber loops."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Comprehensive corporate framework handling enterprise network layers, cryptographic streams, and LINQ transformations.",
+      "to": "Rich, highly focused scripting core library emphasizing advanced text extraction, system scripting, and block iterations."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Iterative Array Mapping Blocks",
+      "description": "Compares an inline C# lambda projection sequence with an idiomatic, clean Ruby enumerable block structure.",
+      "fromCode": "using System.Collections.Generic;\nusing System.Linq;\n\npublic class Multiplier {\n    public static List<int> DoubleItems(List<int> items) {\n        return items.Select(x => x * 2).ToList();\n    }\n}",
+      "toCode": "def double_items(items)\n  items.map { |x| x * 2 }\nend"
+    },
+    {
+      "title": "Dynamic Dynamic Property Inspection",
+      "description": "Contrasts C# complex metadata reflection with simple, instantaneous method interrogation features inside Ruby.",
+      "fromCode": "using System.Reflection;\n\npublic class Reflector {\n    public static bool HasMethod(object obj, string name) {\n        return obj.GetType().GetMethod(name) != null;\n    }\n}",
+      "toCode": "def has_method?(obj, name)\n  obj.respond_to?(name)\nend"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Everything is a Concrete Object",
+      "body": "In Ruby, numbers, primitive booleans, and nil values are not primitive types; they are full objects containing methods. You can call methods directly on raw numeric literals (e.g., `5.times`)."
+    },
+    {
+      "title": "Embrace Block and Yield Semantics",
+      "body": "Replace C# delegates and inline lambda parameters with native Ruby blocks. Use the `yield` keyword within methods to seamlessly pass custom execution logic down into functions."
+    },
+    {
+      "title": "Utilize Built-in Duck Typing",
+      "body": "Stop building complex interface definitions just to verify type compliance. If a Ruby object implements the exact method you need, call it; the runtime resolves matching properties implicitly."
+    },
+    {
+      "title": "Leverage Metaprogramming Intelligently",
+      "body": "Replace verbose C# reflection boilerplates with Ruby dynamic metaprogramming tools like `method_missing` or `define_method` to generate class functionalities dynamically at runtime."
+    }
+  ]
+}

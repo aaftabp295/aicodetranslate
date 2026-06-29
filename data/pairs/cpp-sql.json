@@ -1,0 +1,62 @@
+{
+  "intro": "Converting logic from C++ to SQL transforms code from an imperative, step-by-step memory manipulation application into a declarative, set-based database execution model. Instead of designing manual iterators and algorithms to slice arrays, SQL describes *what* data subset is needed and lets the database optimizer execute the extraction. This transition drastically reduces latency for data-heavy tasks by executing operations directly where the data resides.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, object-oriented system built around class compositions, pointer addresses, and strict template variables.",
+      "to": "Relational, schema-bound types specifying discrete tabular columns, constraints, null states, and explicit primary keys."
+    },
+    {
+      "category": "Syntax",
+      "from": "Imperative structure utilizing explicit assignment expressions, scoped conditional branching loops, and object declarations.",
+      "to": "Declarative syntax using uniform query clauses (SELECT, JOIN, WHERE, GROUP BY) acting entirely on rows and relations."
+    },
+    {
+      "category": "Memory",
+      "from": "Granular control over stack frame scopes, heap segment structures, allocation pools, and raw memory addresses.",
+      "to": "Abstracted completely by the database engine buffer manager, which optimizes memory caching, indexes, and execution plans."
+    },
+    {
+      "category": "Async",
+      "from": "Thread abstractions, lock primitives, memory boundaries, and asynchronous callback loops.",
+      "to": "Implicit parallel query execution engines, isolated completely via transactional ACID properties and locking levels."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Containers, computational sorting, string tools, and operating system IO utilities.",
+      "to": "Aggregations (SUM, AVG, COUNT), window functions, table joins, and transactional database isolation controls."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Conditional Collection Aggregation",
+      "description": "Compares manual filtration and calculation over an object loop in C++ against a declarative SQL aggregate grouping.",
+      "fromCode": "#include <vector>\n#include <string>\n\nstruct Record { std::string dept; double salary; };\n\ndouble get_dept_total(const std::vector<Record>& records, const std::string& target_dept) {\n    double total = 0.0;\n    for(const auto& r : records) {\n        if(r.dept == target_dept) total += r.salary;\n    }\n    return total;\n}",
+      "toCode": "SELECT SUM(salary) AS total_salary \nFROM records \nWHERE dept = :target_dept;"
+    },
+    {
+      "title": "Inner Equi-Join Equivalent",
+      "description": "Shows mapping two separate object groups via nested hash iteration in C++ versus a standardized relational SQL JOIN statement.",
+      "fromCode": "#include <vector>\n#include <unordered_map>\n\nstruct User { int id; std::string name; };\nstruct Order { int id; int user_id; double amount; };\n\nvoid print_joined(const std::vector<User>& users, const std::vector<Order>& orders) {\n    std::unordered_map<int, std::string> u_map;\n    for(auto& u : users) u_map[u.id] = u.name;\n    for(auto& o : orders) {\n        if(u_map.count(o.user_id)) {\n            // match found: u_map[o.user_id], o.amount\n        }\n    }\n}",
+      "toCode": "SELECT users.name, orders.amount \nFROM users \nINNER JOIN orders ON users.id = orders.user_id;"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Adopt Set-Based Thinking",
+      "body": "Never attempt to emulate C++ loops using SQL Cursors unless absolutely necessary. Cursors execute line-by-line and slow down relational engines; instead, use JOINs and window functions to process blocks uniformly."
+    },
+    {
+      "title": "Offload Constraints to Schema",
+      "body": "Replace C++ validation rules with relational database constraints like `FOREIGN KEY`, `UNIQUE`, `CHECK`, and `NOT NULL` to ensure absolute structural safety directly at the persistence layer."
+    },
+    {
+      "title": "Leverage Database Indexes",
+      "body": "In C++, lookups depend on picking the right container (like `std::unordered_map`). In SQL, ensure columns utilized frequently in `WHERE` and `JOIN` expressions are explicitly indexed to maintain rapid performance."
+    },
+    {
+      "title": "Use Stored Procedures for Logic",
+      "body": "For complex structural algorithms, write Stored Procedures or Common Table Expressions (CTEs) to execute complex data transformations inside the database without incurring network round-trip overhead."
+    }
+  ]
+}

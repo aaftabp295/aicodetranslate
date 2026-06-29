@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating C# to Go simplifies architecture by switching from a feature-rich, enterprise runtime framework (.NET) to a minimal, concurrency-first systems language designed by Google. Developers trade verbose object hierarchies, inheritance, and rich language features for extreme compilation speeds, explicit error checking, and lightweight goroutines. This change emphasizes compositional simplicity and minimal resource footprints over syntactic abstractions.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal system featuring a unified object hierarchy, classical class inheritance, and explicit interface implementations.",
+      "to": "Static, structural system rejecting class inheritance in favor of composition, structural interfaces, and strict basic type rules."
+    },
+    {
+      "category": "Syntax",
+      "from": "Brace-scoped, verbose, object-oriented syntax with property shortcuts, annotations (attributes), and extensive LINQ methods.",
+      "to": "Minimalist syntax eliminating semicolons, requiring explicit block formats, and lacking inheritance keywords or annotations."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed via the .NET generational garbage collector, separating stack allocations from optimized heap object pools.",
+      "to": "Managed via a highly optimized, low-latency, concurrent tri-color mark-and-sweep garbage collector utilizing escape analysis."
+    },
+    {
+      "category": "Async",
+      "from": "Asynchronous task allocation utilizing async/await keywords backed by thread-pool scheduled Task workers.",
+      "to": "Concurrency built directly into the language runtime using lightweight Goroutines, synchronized via Channels and Select blocks."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Deep base class hierarchy providing comprehensive web, database, cryptography, and enterprise platform integration.",
+      "to": "Lean, high-performance library focused on networking, web services, microservice architecture, and basic structural utilities."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Interface Structuring",
+      "description": "Contrasts a C# explicit interface implementation with Go's structural (implicit) interface system.",
+      "fromCode": "public interface IGreet {\n    string SayHello();\n}\n\npublic class Human : IGreet {\n    public string SayHello() => \"Hello\";\n}",
+      "toCode": "type Greeter interface {\n\tSayHello() string\n}\n\ntype Human struct{}\n\nfunc (h Human) SayHello() string {\n\treturn \"Hello\"\n}"
+    },
+    {
+      "title": "Concurrent Execution Channel Pipeline",
+      "description": "Compares C# async parallel processing with a native Go channel and goroutine synchronization routine.",
+      "fromCode": "using System.Threading.Tasks;\n\npublic class Worker {\n    public static async Task RunConcurrent(System.Action job) {\n        await Task.Run(job);\n    }\n}",
+      "toCode": "func runConcurrent(job func()) {\n\tgo job()\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Embrace Structural Interfaces",
+      "body": "In Go, structs do not explicitly declare that they implement an interface. If a struct implements all methods defined in an interface, it satisfies the interface implicitly, making decoupling natural."
+    },
+    {
+      "title": "Handle Errors as Values",
+      "body": "Go does not use exceptions (`try/catch`). Functions return an error interface as their final return value. Check errors explicitly after every operation using idiomatic `if err != nil` code blocks."
+    },
+    {
+      "title": "Favor Composition Over Inheritance",
+      "body": "Go has no `extends` keyword. Replicate C# class inheritance hierarchies by embedding structs within structs, allowing child types to transparently inherit inner structural methods."
+    },
+    {
+      "title": "Transition Tasks to Goroutines",
+      "body": "Replace expensive C# Task pipelines with low-overhead Go channels and goroutines. Goroutines use dynamic, segmented stacks starting at 2KB, allowing millions of concurrent execution steps."
+    }
+  ]
+}

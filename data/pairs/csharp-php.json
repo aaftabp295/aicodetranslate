@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating logic from C# to PHP transitions code from a strictly compiled backend framework (.NET) to an interpreted, dynamic language engineered specifically for rapid web development. Developers trade strong compile-time checks, multi-threading capabilities, and memory optimizations for dynamic scripting agility, massive web hosting compatibility, and flexible execution lifecycles. This paradigm shift accelerates web-page delivery and simplifies continuous deployment loops.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, strict nominal typing requiring comprehensive compile-time checks, reified generics, and safe null constraints.",
+      "to": "Dynamic typing supporting gradual type declarations, return type hints, runtime union types, and automatic data coercion."
+    },
+    {
+      "category": "Syntax",
+      "from": "Traditional brace design requiring strict namespace configurations, assembly definitions, and strict access modifiers.",
+      "to": "C-style scripting syntax using dollar signs (`$`) for variable prefixes, dot operators for strings, and flexible arrays."
+    },
+    {
+      "category": "Memory",
+      "from": "Long-lived system process using a generational garbage collection engine to optimize long-running heap structures.",
+      "to": "Short-lived request lifecycle execution, allocating and purging all transaction memory instantly upon web request termination."
+    },
+    {
+      "category": "Async",
+      "from": "Asynchronous multi-threaded task management leveraging integrated language async/await and system thread pools.",
+      "to": "Synchronous single-threaded architecture, executing sequentially per web request unless augmented via extensions like Swoole."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Enterprise class library containing advanced network structures, custom thread models, and LINQ pipelines.",
+      "to": "Huge functional global namespace providing immediate, built-in access to web processing, database manipulation, and text parsing."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Heterogeneous Data Array Definition",
+      "description": "Compares a typed C# dictionary definition with a highly flexible native PHP associative array layout.",
+      "fromCode": "using System.Collections.Generic;\n\npublic class Mapper {\n    public static Dictionary<string, int> GetAges() {\n        return new Dictionary<string, int> {\n            { \"Alice\", 30 },\n            { \"Bob\", 25 }\n        };\n    }\n}",
+      "toCode": "function getAges(): array {\n    return [\n        \"Alice\" => 30,\n        \"Bob\" => 25\n    ];\n}"
+    },
+    {
+      "title": "Web Class Initialization",
+      "description": "Shows mapping a standard C# class construct to a PHP object utilizing modern constructor property promotion.",
+      "fromCode": "public class User {\n    public string Name { get; }\n    public User(string name) {\n        Name = name;\n    }\n}",
+      "toCode": "class User {\n    public function __construct(\n        public string $name\n    ) {}\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Understand the Shared-Nothing Model",
+      "body": "C# stays alive across hours, keeping state in memory. PHP resets completely after every HTTP request finishes. Offload long-term state data to cache engines like Redis or databases between user connections."
+    },
+    {
+      "title": "Enable Strict Type Checking",
+      "body": "To minimize runtime bugs when leaving C#, place `declare(strict_types=1);` at the very top of every PHP source file to enforce strict parameter type checking across your codebase."
+    },
+    {
+      "title": "Leverage Associative Arrays",
+      "body": "PHP associative arrays function as arrays, lists, and hash maps all at once. Use them to pass structured data quickly without building formal classes for simple internal data schemas."
+    },
+    {
+      "title": "Utilize Modern PHP Features",
+      "body": "Avoid old PHP habits. Modern PHP (8.x+) includes powerful tools like constructor property promotion, match expressions, attributes, and union types that match C# structures very closely."
+    }
+  ]
+}

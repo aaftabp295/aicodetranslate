@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating C# to JavaScript shifts logic from a compiled, multi-threaded enterprise architecture (.NET) to a dynamic, single-threaded event-driven environment native to the web ecosystem. Developers trade explicit structural interfaces, type safety, and classical inheritance for highly flexible prototypes, dynamic objects, and non-blocking asynchronous I/O loops. This transition facilitates universal browser/server execution but introduces runtime safety challenges.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal type layout requiring explicit definitions, interface compliance, and rigid generic type bounds.",
+      "to": "Dynamic, weak type configuration relying on loose coercion, runtime evaluation, and prototype assignments."
+    },
+    {
+      "category": "Syntax",
+      "from": "Strict class structures requiring access modifiers (public/private), namespace blocks, and mandatory compilation entry points.",
+      "to": "Flexible, multi-paradigm layout supporting functional coding, first-class closure bindings, and class abstractions without rigid type schemas."
+    },
+    {
+      "category": "Memory",
+      "from": "Optimized .NET garbage collection scheme separating execution stacks from generational garbage collector heap layers.",
+      "to": "V8 engine or target host runtime tracing garbage collector managing all dynamic structures and lexical closure scopes."
+    },
+    {
+      "category": "Async",
+      "from": "Task Parallel Library processing routines operating asynchronously across system hardware thread allocations.",
+      "to": "Single-threaded execution loop using a concurrency model based on an event loop, Promises, microtask queues, and async/await mechanics."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Enormous platform base class library containing low-level IO, concurrent collections, and robust cryptography systems.",
+      "to": "Minimal global runtime scope providing primitive manipulations, basic array mutations, and web platform API extensions."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Object Structure and Mapping",
+      "description": "Compares class-based projection in C# against direct dynamic object modification and map iteration in JavaScript.",
+      "fromCode": "using System.Collections.Generic;\nusing System.Linq;\n\npublic class Item { public string Name { get; set; } }\n\npublic class Transfomer {\n    public static List<string> Extract(List<Item> items) {\n        return items.Select(i => i.Name).ToList();\n    }\n}",
+      "toCode": "function extract(items) {\n  return items.map(i => i.name);\n}"
+    },
+    {
+      "title": "Promise Delay Execution",
+      "description": "Shows mapping C# Task delays to JavaScript native Promise wrappers using async/await syntax structures.",
+      "fromCode": "using System.Threading.Tasks;\n\npublic class Operator {\n    public static async Task DelayAction() {\n        await Task.Delay(1000);\n    }\n}",
+      "toCode": "async function delayAction() {\n  await new Promise(resolve => setTimeout(resolve, 1000));\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Guard Against Dynamic Coercion",
+      "body": "JavaScript automatically coerces conflicting variable types during logic checks. Always use strict equality operators (`===` and `!==`) instead of abstract equality (`==`) to replicate C# comparison rules safely."
+    },
+    {
+      "title": "Embrace First-Class Functions",
+      "body": "Do not build heavy class hierarchies just to pass behavior. JavaScript supports first-class functions; pass functions directly into variables or callbacks without routing through interfaces or delegates."
+    },
+    {
+      "title": "Isolate Blocking Code Blocks",
+      "body": "Long-running computational loops block JavaScript's single thread completely, freezing user interfaces. Offload heavy numerical processes or complex data parsers to background Web Workers."
+    },
+    {
+      "title": "Use Linters and Modern Tooling",
+      "body": "Because JavaScript does not check types at compile time, use `ESLint` configurations along with strict runtime mode (`\"use strict\";`) to catch syntax typos and scope leaks early in development."
+    }
+  ]
+}

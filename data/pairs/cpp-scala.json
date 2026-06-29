@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from C++ to Scala shifts development from an imperative, hardware-aware architecture to a highly expressive hybrid functional-object ecosystem running on the JVM or Scala Native. Scala trades C++ manual pointer operations and templates for strong functional primitives, type-safe macros, and advanced pattern matching. This eliminates memory corruption classes while heavily scaling concurrent data architectures.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static and nominal with unsafe casts, template specialization, structural overloading, and platform-dependent types.",
+      "to": "Static, advanced type system featuring path-dependent types, structural types, implicits/givens, traits, and generalized type constraints."
+    },
+    {
+      "category": "Syntax",
+      "from": "Low-level imperative style requiring explicit types, macro preprocessors, semicolons, and manual memory access operators.",
+      "to": "High-level, expressive syntax combining object-oriented and functional designs, favoring expressions over statements and omitting semicolons."
+    },
+    {
+      "category": "Memory",
+      "from": "Deterministic allocation managed via stack scopes, explicit heap requests, and automated RAII smart pointer hierarchies.",
+      "to": "Automatic memory abstraction managed by a garbage collector, prioritizing immutable object references and persistent data structures."
+    },
+    {
+      "category": "Async",
+      "from": "Low-level threading via std::thread, synchronization primitives, or system-level non-blocking event loops.",
+      "to": "Functional concurrency using Monadic Futures, Monad Transformers, or advanced effect systems like Cats Effect and ZIO."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Standard Template Library (STL) focused on algorithmic primitives, execution policies, and bare-metal abstractions.",
+      "to": "Deeply integrated functional collection suite featuring immutable structures, advanced stream APIs, and pattern-matching toolsets."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Pattern Matching vs Switch-Case",
+      "description": "Demonstrates switching over types and structures using C++ variant matching vs Scala's powerful native pattern matching.",
+      "fromCode": "#include <variant>\n#include <string>\n#include <iostream>\n\nusing Msg = std::variant<int, std::string>;\nvoid process(Msg m) {\n    std::visit([](auto&& arg) {\n        using T = std::decay_t<decltype(arg)>;\n        if constexpr (std::is_same_v<T, int>) std::cout << \"Int: \" << arg;\n        else if constexpr (std::is_same_v<T, std::string>) std::cout << \"Str: \" << arg;\n    }, m);\n}",
+      "toCode": "sealed trait Msg\ncase class IntMsg(value: Int) extends Msg\ncase class StrMsg(value: String) extends Msg\n\ndef process(m: Msg): Unit = m match {\n  case IntMsg(v) => println(s\"Int: $v\")\n  case StrMsg(v) => println(s\"Str: $v\")\n}"
+    },
+    {
+      "title": "Immutable Collection Mapping",
+      "description": "Transforms a vector using an inline lambda mutation in C++ versus a clean, functional map expression in Scala.",
+      "fromCode": "#include <vector>\n#include <algorithm>\n\nstd::vector<int> square(const std::vector<int>& source) {\n    std::vector<int> dest;\n    dest.reserve(source.size());\n    for(int x : source) dest.push_back(x * x);\n    return dest;\n}",
+      "toCode": "def square(source: List[Int]): List[Int] = \n  source.map(x => x * x)"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Embrace Immutability By Default",
+      "body": "Replace C++ mutable states and pointer references with Scala 'val' assignments and immutable collections. This guarantees thread safety and completely eliminates side-effect bugs."
+    },
+    {
+      "title": "Convert Templates to Traits and Givens",
+      "body": "Translate complex C++ compile-time template metaprogramming structures into Scala Traits for polymorphic behavior and 'given/using' instances (Scala 3) for contextual abstractions."
+    },
+    {
+      "title": "Rethink Errors as Values",
+      "body": "Instead of throwing runtime exceptions or returning error codes, use Scala's 'Option', 'Either', or 'Try' types to force explicit compile-time error handling within the type signature."
+    },
+    {
+      "title": "Leverage Case Classes for Modeling",
+      "body": "Avoid boilerplate object modeling. Use Scala 'case class' constructs to instantaneously gain structural equality, unapply extractors for pattern matching, and built-in serialization mechanisms."
+    }
+  ]
+}

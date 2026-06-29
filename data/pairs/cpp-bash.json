@@ -1,0 +1,62 @@
+{
+  "intro": "Porting C++ routines to Bash shifts logic from compiled, highly performant type-safe systems to interpreted Unix shell scripts designed for process orchestration. Bash strips away the static overhead, compilers, and structural safety of C++ in favor of string-based environment interaction and command pipeline manipulation. This migration drastically simplifies infrastructure tasks and filesystem operations while sacrificing computational speed.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, rigidly enforced nominal system with complex abstract classes, compile-time templates, and explicit memory alignments.",
+      "to": "Untyped system where all variables are internally handled as text strings, with explicit context-driven integer evaluation flags."
+    },
+    {
+      "category": "Syntax",
+      "from": "Strict token-based syntax utilizing curly braces, terminators, headers, and extensive namespace configurations.",
+      "to": "Command-line driven syntax prioritizing whitespace separation, stream redirection structures, and reliance on external binaries."
+    },
+    {
+      "category": "Memory",
+      "from": "Granular execution over execution stacks, heap segments, explicit reference structures, and RAII tracking scopes.",
+      "to": "Abstracted process environment allocations managed automatically by the shell host process lifetime and subshell contexts."
+    },
+    {
+      "category": "Async",
+      "from": "Native multi-threading APIs, execution policies, locks, and shared memory mapping utilities.",
+      "to": "Process-level concurrency achieved using background workers (&), job controls, wait primitives, and named pipes."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The STL delivers algorithmic foundations, generic collection primitives, and system io stream handles.",
+      "to": "Relies completely on standard POSIX command utilities (sed, awk, grep, find) and operating system pipeline pipes."
+    }
+  ],
+  "examples": [
+    {
+      "title": "File Existence Verification",
+      "description": "Compares checking if a file exists using C++17 filesystem libraries vs a native Bash flag verification.",
+      "fromCode": "#include <filesystem>\n#include <iostream>\n\nbool file_exists(const std::string& path) {\n    return std::filesystem::exists(path);\n}",
+      "toCode": "file_exists() {\n  [[ -f \"$1\" ]]\n}"
+    },
+    {
+      "title": "Subprocess Loop Capture",
+      "description": "Demonstrates invoking a system command and processing lines in C++ via pipes versus native Bash command substitution.",
+      "fromCode": "#include <cstdio>\n#include <iostream>\n#include <memory>\n\nvoid run_ls() {\n    auto pipe = popen(\"ls\", \"r\");\n    char buffer[128];\n    while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {\n        std::cout << buffer;\n    }\n    pclose(pipe);\n}",
+      "toCode": "for file in $(ls); do\n  echo \"$file\"\ndone"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Always Quote Variable References",
+      "body": "Bash performs word splitting and globbing on unquoted variables. Always wrap expressions in double quotes (e.g., `\"$VAR\"`) to handle whitespace safely, unlike C++ type-bound strings."
+    },
+    {
+      "title": "Check Process Exit Statuses",
+      "body": "Bash does not throw exceptions. Interrogate the `$?` variable immediately after an operation or use `set -e` at the top of scripts to automatically exit on unexpected runtime command failures."
+    },
+    {
+      "title": "Replace Vectors with Core Arrays",
+      "body": "For basic listing, use Bash indexed arrays (`declare -a arr`) and associative arrays (`declare -A map`). Avoid string accumulation hacks when managing multi-item sets."
+    },
+    {
+      "title": "Delegate Math to External Tools",
+      "body": "Bash performs basic integer arithmetic only via `$((expression))`. If your C++ code involves floating-point numbers or advanced equations, pipe the logic to `bc` or `awk` inside the script."
+    }
+  ]
+}

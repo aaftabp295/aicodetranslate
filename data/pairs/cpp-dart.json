@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating C++ code to Dart shifts code from a bare-metal, system-level environment to a high-level, client-optimized language engineered for multi-platform application UI. Dart eliminates the dangers of raw pointer manipulation and manual memory deallocation by using an isolated runtime thread model backed by advanced garbage collection. This transition speeds up front-end prototyping and application stability across web, mobile, and desktop tiers.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, non-unified type layout featuring structural overloading, implicit coercions, templates, and raw hardware addresses.",
+      "to": "Static, sound nominal system with mandatory sound null safety, runtime type interrogation, and generic collections."
+    },
+    {
+      "category": "Syntax",
+      "from": "Highly verbose layout requiring header specifications, scoped access characters, explicit namespaces, and complex brackets.",
+      "to": "Clean object-oriented syntax heavily influenced by Java/C# standards, omitting structural headers and simplifying class constructors."
+    },
+    {
+      "category": "Memory",
+      "from": "Direct control over objects using manual heap requests, execution stack configurations, and explicit RAII cleanup routines.",
+      "to": "Automatic heap tracking using a generational garbage collector designed specifically for rapid short-lived allocations."
+    },
+    {
+      "category": "Async",
+      "from": "Low-level multi-threading infrastructure using std::thread, raw mutices, condition variables, and system-level task schedulers.",
+      "to": "Event-loop driven model based on discrete Isolates, utilizing modern Futures, async/await blocks, and Streams for reactive tracking."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The STL provides bare-metal mathematical algorithms, system string structures, file streams, and basic containers.",
+      "to": "Comprehensive framework focusing on dynamic core collections, web utility sets, text processing, and deep asynchronous pipelines."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Asynchronous Delay Execution",
+      "description": "Compares blocking/non-blocking timing loops via std::this_thread sleep in C++ with standard asynchronous Future handling in Dart.",
+      "fromCode": "#include <thread>\n#include <chrono>\n#include <iostream>\n\nvoid wait_and_print() {\n    std::this_thread::sleep_for(std::chrono::seconds(2));\n    std::cout << \"Done\";\n}",
+      "toCode": "Future<void> waitAndPrint() async {\n  await Future.delayed(Duration(seconds: 2));\n  print('Done');\n}"
+    },
+    {
+      "title": "Class and Constructor Design",
+      "description": "Shows custom initializing list patterns inside C++ classes versus concise initialization syntax in Dart.",
+      "fromCode": "#include <string>\n\nclass Profile {\npublic:\n    std::string handle;\n    int rank;\n    Profile(std::string h, int r) : handle(h), rank(r) {}\n};",
+      "toCode": "class Profile {\n  final String handle;\n  final int rank;\n\n  Profile(this.handle, this.rank);\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Understand the Isolate Model",
+      "body": "Dart executes inside memory-isolated event threads called 'Isolates'. Unlike C++, where multiple threads share memory directly by default, Dart requires explicit message parsing to move data between parallel background Isolates."
+    },
+    {
+      "title": "Enforce Strict Sound Null Safety",
+      "body": "Leverage Dart's sound null safety system. Explicitly specify non-nullable variables by default and append `?` only when null is expected, avoiding the unexpected segmentation faults common in C++."
+    },
+    {
+      "title": "Use FFI for Native Libraries",
+      "body": "If you have complex C++ logic that is too difficult to rewrite, use `dart:ffi` (Foreign Function Interface) to directly load and call your compiled C++ shared libraries with zero performance loss."
+    },
+    {
+      "title": "Utilize Named Constructors",
+      "body": "Dart does not support standard function/constructor overloading like C++. Use Dart's clear named constructor capability (`Class.fromJSON(...)`) to provide distinct instantiation pathways cleanly."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Converting code from C# to Java transitions an application across the most closely related ecosystems in modern enterprise architecture, changing execution engines from .NET to the Java Virtual Machine (JVM). While the core languages share nearly identical syntax structures, object models, and garbage collection mechanisms, developers must carefully adapt to differences in generics processing, property patterns, and asynchronous design architectures. This migration trade-off changes operating frameworks while maintaining static security structures.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal system featuring value types (structs), reified generics that preserve types at runtime, and strict nullability markers.",
+      "to": "Static, nominal system utilizing type erasure for generics, requiring object packaging for primitives inside collections, and lacking built-in null safety guarantees."
+    },
+    {
+      "category": "Syntax",
+      "from": "Rich feature set supporting properties with getter/setter shortcuts, explicit pointer access options, custom delegates, and implicit var allocation.",
+      "to": "Traditional structured layout requiring explicit getter/setter method definitions, interface patterns, and strict class encapsulation standards."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed .NET GC with stack allocations for value types (structs), minimizing garbage collections via local structural references.",
+      "to": "Managed JVM GC allocating all object instances exclusively on the heap (pending escape analysis optimization) with automatic garbage collection."
+    },
+    {
+      "category": "Async",
+      "from": "Built-in async/await structure tied directly into the thread-pool-driven Task Parallel Library (TPL).",
+      "to": "Managed via thread pools, CompletableFuture abstractions, and modern lightweight Virtual Threads (Project Loom) for structural scaling."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Unified .NET Base Class Library (BCL) containing LINQ extension chains, advanced IO, and modern networking stacks.",
+      "to": "Deep JVM ecosystem providing robust core stream pipelines, concurrent collections, and modular system packaging foundations."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Property and Getters/Setters",
+      "description": "Compares modern C# auto-implemented properties with traditional Java getter/setter boilerplate code layouts.",
+      "fromCode": "public class Account {\n    public string Owner { get; set; }\n    public decimal Balance { get; private set; }\n}",
+      "toCode": "public class Account {\n    private String owner;\n    private double balance;\n\n    public String getOwner() { return owner; }\n    public void setOwner(String owner) { this.owner = owner; }\n    public double getBalance() { return balance; }\n}"
+    },
+    {
+      "title": "Collection Mutation Streams",
+      "description": "Demonstrates transforming numbers using a fluent C# LINQ syntax query versus a traditional Java Stream pipeline.",
+      "fromCode": "using System.Collections.Generic;\nusing System.Linq;\n\npublic class Processor {\n    public static List<int> Square(List<int> inputs) {\n        return inputs.Select(x => x * x).ToList();\n    }\n}",
+      "toCode": "import java.util.List;\nimport java.util.stream.Collectors;\n\npublic class Processor {\n    public static List<Integer> square(List<Integer> inputs) {\n        return inputs.stream().map(x -> x * x).collect(Collectors.toList());\n    }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Account for Generic Type Erasure",
+      "body": "Java removes generic types during compilation. You cannot execute operations like `typeof(T)` or `new T()` inside a Java generic class method. Pass an explicit `Class<T>` instance parameter to retain runtime type checking."
+    },
+    {
+      "title": "Convert Properties to Methods",
+      "body": "Java lacks native language-level properties. C# properties must be split out into explicit `getX()` and `setX()` methods, or managed using compile-time boilerplate plugins like Lombok (`@Getter/@Setter`)."
+    },
+    {
+      "title": "Swap LINQ for Stream Pipelines",
+      "body": "Translate C# LINQ method chains directly to Java 8+ Streams. Remember to append `.collect(Collectors.toList())` at the end of the Java pipeline to finalize stream evaluation into a concrete collection."
+    },
+    {
+      "title": "Leverage Virtual Threads for Scaling",
+      "body": "When translating C# async/await operations, avoid writing verbose nested callbacks. Use Java 21+ Virtual Threads to write synchronous-looking, blocking code that scales across massive concurrent workloads efficiently."
+    }
+  ]
+}

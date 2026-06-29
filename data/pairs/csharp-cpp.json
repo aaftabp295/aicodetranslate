@@ -1,0 +1,62 @@
+{
+  "intro": "Porting software from C# to C++ switches execution from a managed JIT-compiled environment (.NET) to a multi-paradigm, bare-metal native system using direct compilation via LLVM or MSVC. This migration gives up structural safety nets, automated runtime reflection, and automatic garbage collection in exchange for deterministic memory management, zero-overhead abstractions, and explicit hardware access optimization. The resulting codebase achieves minimal latency and overhead.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal system providing uniform object bases, managed interface implementations, and runtime type metadata reflection.",
+      "to": "Static, highly expressive structural/nominal system supporting multiple inheritance, template metaprogramming, and unsafe casting."
+    },
+    {
+      "category": "Syntax",
+      "from": "Clean imperative brace design, automated properties, pattern matching expressions, and high-level structural declarations.",
+      "to": "Complex syntax requiring distinct header/source configuration, explicit scoping indicators, explicit pointer/reference markers, and macros."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed heap memory layer optimizing allocations via runtime tracking threads and multi-generational garbage tracking.",
+      "to": "Deterministic value lifecycle based heavily on local stack layouts, RAII object models, and managed smart pointers (unique_ptr)."
+    },
+    {
+      "category": "Async",
+      "from": "Integrated asynchronous execution paths running Tasks concurrently via system thread-pool managers.",
+      "to": "Low-level multi-threading configurations via std::thread, system coroutine specifications, and explicit synchronization locks."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Deep system abstraction class ecosystem providing rapid web connections, database hooks, and generic collection arrays.",
+      "to": "The Standard Template Library (STL) providing highly generic data containers, low-level stream utilities, and raw algorithm maps."
+    }
+  ],
+  "examples": [
+    {
+      "title": "RAII Dynamic Resource Acquisition",
+      "description": "Demonstrates converting a C# managed disposal routine (`using` block) into a deterministic stack-allocated C++ RAII object destructor setup.",
+      "fromCode": "using System.IO;\n\npublic class Writer {\n    public static void Log(string path, string msg) {\n        using var sw = new StreamWriter(path);\n        sw.WriteLine(msg);\n    }\n}",
+      "toCode": "#include <fstream>\n#include <string>\n\nvoid log(const std::string& path, const std::string& msg) {\n    std::ofstream file(path);\n    file << msg << \"\\n\";\n    // file automatically flushes and closes on scope exit via its destructor\n}"
+    },
+    {
+      "title": "Smart Heap Allocation Management",
+      "description": "Compares an ordinary C# class heap instance generation against a modern C++ explicit unique pointer object declaration.",
+      "fromCode": "public class Node {\n    public int Value { get; set; }\n}\n\npublic class Orchestrator {\n    public void Run() {\n        Node n = new Node { Value = 42 };\n    }\n}",
+      "toCode": "#include <memory>\n\nclass Node {\npublic:\n    int value;\n};\n\nvoid run() {\n    auto n = std::make_unique<Node>();\n    n->value = 42;\n    // allocated object safely destroyed on function termination\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Master RAII Scoping Rules",
+      "body": "Avoid porting every C# object instance into raw C++ dynamic `new` heap allocations. Embrace local stack allocation and RAII constructs to allow object destructors to clean up resources automatically upon scope exit."
+    },
+    {
+      "title": "Replace Generics with Templates",
+      "body": "Convert C# runtime generics into C++ compile-time templates. C++ templates generate dedicated binary variants per argument type, unlocking deep structural optimizations and faster processing pipelines."
+    },
+    {
+      "title": "Utilize Standard Smart Pointers",
+      "body": "When dynamic heap lifecycles are absolutely required, use `std::unique_ptr` for single-ownership structures and `std::shared_ptr` for shared dependencies to replicate C# safe allocation semantics."
+    },
+    {
+      "title": "Ditch Reflection Mechanics",
+      "body": "C++ lacks a native runtime metadata layer (`GetType()`). Re-architect structural dependency reflection paths using compile-time templates, abstract virtual class patterns, or static registration patterns."
+    }
+  ]
+}

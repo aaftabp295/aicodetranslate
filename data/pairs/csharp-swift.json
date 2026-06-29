@@ -1,0 +1,62 @@
+{
+  "intro": "Porting systems from C# to Swift transitions code from a JIT-compiled enterprise backend language (.NET) to a highly compiled native systems language optimized for Apple ecosystems via LLVM. Developers swap a managed garbage collection environment for deterministic Automatic Reference Counting (ARC) and true compilation to machine code. This shift eliminates runtime VM overhead, drastically reduces application startup latency, and guarantees absolute sound null safety.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal system providing reified generics, runtime type metadata reflection, and nullable warning states.",
+      "to": "Static, nominal system featuring sound type inference, protocol-oriented architecture, and true compiler-enforced Optionals."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose C-style brace design requiring explicit access parameters, namespace layers, and structural semicolons.",
+      "to": "Clean, modern, lightweight syntax omitting semicolons, simplifying arguments, and omitting class packaging boilerplate."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed dynamic heap system governed by a multi-generational runtime tracking thread garbage collector.",
+      "to": "Deterministic Automatic Reference Counting (ARC) tracking reference allocations alongside fast stack-allocated value types."
+    },
+    {
+      "category": "Async",
+      "from": "Task Parallel Library running concurrent multi-threaded actions across global system thread-pool rings.",
+      "to": "Built-in async/await structural concurrency isolated compile-time via Actors to prevent memory data races."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Deep base framework optimized heavily for web applications, database routing, and large backend services.",
+      "to": "Client-focused, high-performance toolkit specializing in core data streams, text parsing, and platform layout binding."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Struct-Based Value Modeling",
+      "description": "Compares mutable class layouts in C# with a modern, high-performance immutable value struct representation in Swift.",
+      "fromCode": "public class Coordinate {\n    public double X { get; set; }\n    public double Y { get; set; }\n}",
+      "toCode": "struct Coordinate {\n    var x: Double\n    var y: Double\n}"
+    },
+    {
+      "title": "Secure Null Control Execution",
+      "description": "Contrasts C# null conditional checks against absolute compiler-enforced if-let optional unwrapping in Swift.",
+      "fromCode": "public class Evaluator {\n    public static int Check(string data) {\n        return data?.Length ?? 0;\n    }\n}",
+      "toCode": "func check(data: String?) -> Int {\n    if let rawData = data {\n        return rawData.count\n    }\n    return 0\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Prefer Structs Over Classes",
+      "body": "C# relies heavily on classes (reference types). Swift favors value types; use structs for standard data schemas because they copy implicitly and avoid the memory allocation overhead of heap-bound objects."
+    },
+    {
+      "title": "Understand Weak/Unowned References",
+      "body": "Swift's ARC does not detect cyclical reference loops automatically like a garbage collector does. Use `weak` or `unowned` declarations on child reference instances to prevent memory leaks."
+    },
+    {
+      "title": "Adopt Protocol-Oriented Programming",
+      "body": "Replace C# abstract classes and interface inheritance models with Swift protocols and protocol extensions to share reusable behavior across structs and classes cleanly."
+    },
+    {
+      "title": "Ditch Runtime Type Reflection",
+      "body": "Swift enforces type safety at compile time and drops deep reflection metadata. Re-architect structural dependency code paths to leverage generics and static protocol mappings instead of C# runtime type inspection."
+    }
+  ]
+}

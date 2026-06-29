@@ -1,0 +1,62 @@
+{
+  "intro": "Porting applications from C# to Python shifts development from a strictly structured, type-safe enterprise framework (.NET) to a highly dynamic, interpreted language focused on expressiveness and rapid iteration. Developers trade rigid class contracts, JIT compilation, and predictable performance for dynamic duck-typing, lightweight scripting syntax, and an expansive data science ecosystem. This change eliminates verbose compilation workflows at the expense of runtime type safety and raw execution speed.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal, strong typing system featuring compile-time checks, generics, and explicit nullability context controls.",
+      "to": "Dynamic, strong typing system utilizing duck-typing rules, runtime evaluation, and optional gradual type hints (mypy)."
+    },
+    {
+      "category": "Syntax",
+      "from": "Brace-scoped, verbose, object-oriented syntax requiring strict class encapsulation, access modifiers, and structural semicolons.",
+      "to": "Indentation-scoped, clean, minimal layout supporting multi-paradigm execution (procedural, functional, object-oriented) without boilerplate."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed via the .NET Generational Garbage Collector, optimizing heap object structures and stack value types (structs).",
+      "to": "Managed via Reference Counting augmented by a cyclical generational garbage collector, wrapping all primitives as heap objects."
+    },
+    {
+      "category": "Async",
+      "from": "Advanced async/await keyword integration backed by the thread-pool-driven Task Parallel Library (TPL) engine.",
+      "to": "Single-threaded event loop architecture managed via asyncio, constrained historically by the Global Interpreter Lock (GIL)."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Deep enterprise-focused System namespaces handling high-performance networks, reflection, cryptography, and parallel queries.",
+      "to": "Extensive 'batteries included' library providing immediate solutions for scripting, text parsing, math, and rapid network prototyping."
+    }
+  ],
+  "examples": [
+    {
+      "title": "LINQ Filter vs List Comprehension",
+      "description": "Demonstrates converting a C# LINQ query statement into a native, high-performance Python list comprehension block.",
+      "fromCode": "using System.Collections.Generic;\nusing System.Linq;\n\npublic class Filter\n{\n    public static List<int> GetEvens(List<int> numbers)\n    {\n        return numbers.Where(n => n % 2 == 0).ToList();\n    }\n}",
+      "toCode": "def get_evens(numbers: list[int]) -> list[int]:\n    return [n for n in numbers if n % 2 == 0]"
+    },
+    {
+      "title": "Asynchronous Task Processing",
+      "description": "Contrasts C# Task operations with Python asyncio execution to fetch external text resources asynchronously.",
+      "fromCode": "using System.Net.Http;\nusing System.Threading.Tasks;\n\npublic class Web\n{\n    public static async Task<string> FetchDataAsync(string url)\n    {\n        using var client = new HttpClient();\n        return await client.GetStringAsync(url);\n    }\n}",
+      "toCode": "import asyncio\nimport aiohttp\n\nasync def fetch_data_async(url: str) -> str:\n    async with aiohttp.ClientSession() as session:\n        async with session.get(url) as response:\n            return await response.text()"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Enforce Gradual Type Hinting",
+      "body": "Maintain architectural reliability when leaving C# by utilizing Python's type hints and running static checkers like `mypy` or `pyright` inside your continuous integration pipelines."
+    },
+    {
+      "title": "Swap LINQ for Comprehensions",
+      "body": "Avoid searching for direct LINQ method chains in Python. Master list, dictionary, and generator comprehensions to write idiomatic and highly performant collection mutations."
+    },
+    {
+      "title": "Beware the Single Event Loop",
+      "body": "Unlike C# TPL which dispatches async tasks across multiple CPU cores via thread pools, Python's `asyncio` runs on a single thread. CPU-bound work must be explicitly delegated to `ProcessPoolExecutor` blocks."
+    },
+    {
+      "title": "Leverage Dictionaries Over Classes",
+      "body": "C# relies heavily on structures and anonymous classes for temporary data structures. In Python, use lightweight dictionaries, `namedtuple`, or `dataclasses` to avoid the overhead of heavy class boilerplate."
+    }
+  ]
+}
