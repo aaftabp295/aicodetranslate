@@ -1,0 +1,63 @@
+{
+  "intro": "C++ expands on C by introducing high-level abstractions like object-oriented programming, classes, template metaprogramming, and RAII. Downscaling from C++ back to C means removing these complex abstractions to focus on a minimal, procedural subset that maps directly to target assembly instructions. Developers convert C++ assets to C to eliminate heavy runtime dependencies, simplify ABI compilation targets, and ensure compatibility with legacy or micro-embedded systems.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static nominal typing supported by function overloading, explicit template parameters, and class hierarchies.",
+      "to": "Static, procedural type system relying strictly on fundamental types, basic structs, and generic void pointers."
+    },
+    {
+      "category": "Syntax",
+      "from": "Rich, multi-paradigm layout utilizing namespaces, classes, templates, and reference tokens (`&`).",
+      "to": "Minimalist procedural syntax centered entirely on functions, files, and explicit pointer markers (`*`)."
+    },
+    {
+      "category": "Memory",
+      "from": "Automated allocation bounds tracked through class scopes, constructors, destructors, and smart pointer wrappers.",
+      "to": "Explicit application-driven allocation routines using manual heap allocators like `malloc` and `free`.",
+      "category_override": "Memory Management"
+    },
+    {
+      "category": "Async",
+      "from": "Standard abstractions like `std::thread`, mutex frameworks, futures, and modern coroutine pipelines.",
+      "to": "No native concurrency primitives; developers must rely directly on underlying platform interfaces like `pthreads`."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The vast STL, providing comprehensive template collections, string streams, and advanced algorithms.",
+      "to": "The minimal standard C library, focused primarily on low-level string arrays, file I/O operations, and system macros."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Polymorphic Structures",
+      "description": "Replacing C++ class virtual function tables with explicit function pointers inside a traditional C struct.",
+      "fromCode": "class Logger {\\npublic:\\n    virtual void log(const char* msg) = 0;\\n};\\n\\nclass ConsoleLogger : public Logger {\\npublic:\\n    void log(const char* msg) override {\\n        printf(\\\"%s\\\\n\\\", msg);\\n    }\\n};",
+      "toCode": "struct Logger {\\n    void (*log)(const char* msg);\\n};\\n\\nvoid console_log(const char* msg) {\\n    printf(\\\"%s\\\\n\\\", msg);\\n}\\n\\nvoid init_logger(struct Logger* l) {\\n    l->log = console_log;\\n}"
+    },
+    {
+      "title": "Memory Block Allocation",
+      "description": "Replacing modern type-safe operators with explicit byte-sized dynamic allocations.",
+      "fromCode": "#include <memory>\\n\\nvoid allocate() {\\n    auto buffer = std::make_unique<int[]>(100);\\n    buffer[0] = 5;\\n    // Automatically freed when it goes out of scope\\n}",
+      "toCode": "#include <stdlib.h>\\n\\nvoid allocate() {\\n    int* buffer = (int*)malloc(100 * sizeof(int));\\n    if (buffer == NULL) return;\\n    buffer[0] = 5;\\n    free(buffer); // Must be explicitly called to avoid leaks\\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Implement Explicit Resource Cleanup Routines",
+      "body": "C has no built-in destructors. You must write explicit initialization and cleanup functions (e.g., `init_obj`, `free_obj`) for your custom structs, and remember to call them manually."
+    },
+    {
+      "title": "Mangle Function Names to Replace Overloading",
+      "body": "C does not allow multiple functions to share the same name with different signatures. You must differentiate them by choosing unique names, such as `print_int` and `print_float`."
+    },
+    {
+      "title": "Pass Explicit Pointers to Simulate Context",
+      "body": "Since C structs cannot contain internal methods, you must pass an explicit pointer to the target struct (often named `self` or `this`) as the first argument of your functions."
+    },
+    {
+      "title": "Use Explicit Error Codes Instead of Exceptions",
+      "body": "C does not support `try/catch` exceptions. Instead, have functions return integer error codes or boolean flags, and verify those return statuses immediately after every invocation."
+    }
+  ]
+}

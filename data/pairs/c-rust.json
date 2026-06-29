@@ -1,0 +1,62 @@
+{
+  "intro": "C provides total operational freedom, delegating memory safety and pointer validity entirely to the engineer's discipline. Rust implements an uncompromising, compile-time borrow checker that guarantees memory safety and data-race prevention without runtime overhead. Migrating to Rust eliminates systemic security exploits like use-after-free and buffer overflows while preserving bare-metal performance characteristics.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, weakly enforced type checking with high reliance on structural casts and void pointers.",
+      "to": "Static, strongly typed system with affine types (ownership semantics) and robust algebraic data types via enums."
+    },
+    {
+      "category": "Syntax",
+      "from": "Pre-ANSI or ANSI macro-driven layout with separation of declarations (.h) and implementations (.c).",
+      "to": "Modern, expression-oriented syntax with structural pattern matching, modular item scope, and integrated macro rules."
+    },
+    {
+      "category": "Memory",
+      "from": "Explicit application-controlled manual heap layout through allocator APIs (`malloc`, `free`).",
+      "to": "Compile-time ownership model enforcing strict scoping, borrowing limitations, and deterministic stack/heap cleanup (RAII)."
+    },
+    {
+      "category": "Async",
+      "from": "Low-level OS abstractions using polling loops, `select/poll`, or external event libraries.",
+      "to": "Zero-cost `async/await` state machines abstracting decoupled asynchronous runtimes like Tokio or async-std."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimal standard definitions focusing strictly on hardware I/O interfaces and platform bridges.",
+      "to": "Extensive library tracking cross-platform thread synchronization, standard collections, and robust error wrappers."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Safe Memory Allocation",
+      "description": "Replacing vulnerable manual heap allocations with Rust's automated RAII guarantees.",
+      "fromCode": "#include <stdlib.h>\\n#include <stdio.h>\\n\\nvoid process() {\\n    int* data = (int*)malloc(sizeof(int) * 5);\\n    if (!data) return;\\n    data[0] = 42;\\n    printf(\\\"%d\\\\n\\\", data[0]);\\n    free(data); // Mandatory to prevent leak\\n}",
+      "toCode": "fn process() {\\n    let mut data = vec![0; 5];\\n    data[0] = 42;\\n    println!(\\\"{}\\\", data[0]);\\n    // Deallocation is automatically triggered here via Drop trait\\n}"
+    },
+    {
+      "title": "Error Handling Optimization",
+      "description": "Replacing unpredictable sentinels with type-safe, compile-enforced Result variants.",
+      "fromCode": "#include <stdio.h>\\n\\nint divide(int a, int b, int* result) {\\n    if (b == 0) return -1; // Error code\\n    *result = a / b;\\n    return 0; // Success\\n}\\n\\nint main() {\\n    int res;\\n    if (divide(10, 0, &res) != 0) {\\n        printf(\\\"Division failed\\\\n\\\");\\n    }\\n}",
+      "toCode": "fn divide(a: i32, b: i32) -> Result<i32, &'static str> {\\n    if b == 0 {\\n        Err(\\\"Division by zero\\\")\\n    } else {\\n        Ok(a / b)\\n    }\\n}\\n\\nfn main() {\\n    match divide(10, 0) {\\n        Ok(res) => println!(\\\"Result: {}\\\", res),\\n        Err(e) => println!(\\\"Error: {}\\\", e),\\n    }\\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Internalize Lifetime Paradigms First",
+      "body": "Do not duplicate C's architecture of passing arbitrary raw pointers. Rust forces you to formally declare who owns the data and how long references exist using strict lifetime parameters (`'a`)."
+    },
+    {
+      "title": "Use Unsafe Code Blocks Deliberately",
+      "body": "When interfacing directly with hardware registers or raw hardware drivers, isolate those modules within explicit `unsafe {}` boundaries to maintain general application invariants."
+    },
+    {
+      "title": "Leverage Options Instead of NULL Pointers",
+      "body": "Null pointers do not exist safely in Rust. Replace functions returning `NULL` with the standard `Option<T>` enum, requiring patterns to handle the `None` variation before accessing contents."
+    },
+    {
+      "title": "Rely heavily on Cargo Tools",
+      "body": "Abandon complex Makefiles or custom build configurations. Rust utilizes Cargo to seamlessly integrate dependency resolution, builds, configurations, testing, and continuous benchmarking out-of-the-box."
+    }
+  ]
+}

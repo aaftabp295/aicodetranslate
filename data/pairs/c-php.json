@@ -1,0 +1,62 @@
+{
+  "intro": "C operates at the bare-metal layer, compiling down to fast, platform-dependent binary distributions that manage system memory directly. PHP is a high-level, dynamically typed scripting engine optimized explicitly for web application generation and server-side HTTP lifecycle automation. Transitioning from C to PHP simplifies server architecture deployment, drastically lowers development cycle times, and abstracts system safety exploits entirely.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, rigid type checking bounded by explicit low-level byte and alignment layouts.",
+      "to": "Dynamic, highly flexible typing supporting optional runtime strict scalar declarations and dynamic evaluation."
+    },
+    {
+      "category": "Syntax",
+      "from": "Imperative structural syntax mapping closely to assembly control logic and operations.",
+      "to": "Web-centric, object-oriented, mixable syntax leveraging distinct dollar-sigil variable bindings (`$var`)."
+    },
+    {
+      "category": "Memory",
+      "from": "Complete manual control, leaving the developer solely responsible for memory layout lifecycles.",
+      "to": "Automated engine-level tracking utilizing reference counting mechanisms optimized for short stateless request bounds."
+    },
+    {
+      "category": "Async",
+      "from": "Multiplexed explicit low-level system polling loops or platform threading models.",
+      "to": "Stateless, single-threaded execution per request model, scaling via external process managers like FPM or Fibers."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Basic operating system abstractions focusing on mathematical models, raw file arrays, and terminal structures.",
+      "to": "Extensive, high-level array utilities, database wrappers, native encryption drivers, and deep HTTP protocol integrations."
+    }
+  ],
+  "examples": [
+    {
+      "title": "HTTP Processing Loop",
+      "description": "Transitioning from custom TCP socket parsing to abstract global request parsing.",
+      "fromCode": "// Highly simplified conceptual C socket responder sketch\\n#include <stdio.h>\\n#include <sys/socket.h>\\n#include <unistd.h>\\n\\nvoid handle_request(int client_fd) {\\n    char response[] = \\\"HTTP/1.1 200 OK\\\\r\\\\nContent-Type: text/plain\\\\r\\\\n\\\\r\\\\nHello\\\";\\n    write(client_fd, response, sizeof(response) - 1);\\n    close(client_fd);\\n}",
+      "toCode": "<?php\\n// PHP handles connection plumbing automatically via web server gateway (SAPI/FPM)\\nheader('Content-Type: text/plain');\\necho 'Hello';\\n?>"
+    },
+    {
+      "title": "Associative Array Mappings",
+      "description": "Replacing custom hashmap algorithms or structural lookups with built-in dynamic dictionaries.",
+      "fromCode": "#include <stdio.h>\\n#include <string.h>\\n\\nstruct MapEntry { char key[20]; int value; };\\n\\nint lookup(struct MapEntry* map, int size, const char* key) {\\n    for(int i = 0; i < size; i++) {\\n        if(strcmp(map[i].key, key) == 0) return map[i].value;\\n    }\\n    return -1;\\n}",
+      "toCode": "<?php\\n$map = [\\n    \\\"first\\\" => 42,\\n    \\\"second\\\" => 84\\n];\\n\\necho $map[\\\"first\\\"];\\n?>"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Enable Declare Strict Types Everywhere",
+      "body": "To prevent unexpected runtime conversions inherent to PHP's dynamic core, always include `declare(strict_types=1);` at the entry point of every codebase file."
+    },
+    {
+      "title": "Leverage Comprehensive Superglobals",
+      "body": "Do not parse raw HTTP payloads. Use built-in PHP context structures like `$_GET`, `$_POST`, and `$_SERVER` to instantly extract incoming transmission attributes safely."
+    },
+    {
+      "title": "Abandon Manual Lifecycle Retention",
+      "body": "C structures require active resource cleanups. In PHP, understand that everything instantiated within a request execution path is systematically cleaned up at end of execution."
+    },
+    {
+      "title": "Utilize Composer for Package Tracking",
+      "body": "Instead of modifying static system paths or manual binary linking, deploy Composer to standardize your third-party integrations, autoload configurations, and packages."
+    }
+  ]
+}

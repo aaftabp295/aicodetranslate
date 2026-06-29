@@ -1,0 +1,62 @@
+{
+  "intro": "C requires developers to govern all stack allocations, type boundary offsets, and raw pointers with absolute discipline to avoid memory exploits. Swift balances compiled optimization with modern type safety, utilizing automatic reference counting, strict optional checking, and clean syntax definitions. Developers upgrade from C to Swift to create performant, robust application logic inside Apple or Linux server ecosystems without risking raw segmentation faults.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, loose type architecture allowing arbitrary bit-casts and dangerous structural overlays.",
+      "to": "Static, type-safe environment providing robust type inference, generics, protocols, and explicit non-nil optionals."
+    },
+    {
+      "category": "Syntax",
+      "from": "Imperative procedural style relying heavily on text preprocessors and manual forward structuring.",
+      "to": "Clean, expression-forward layout supporting functional patterns, trailing closures, and explicit module imports."
+    },
+    {
+      "category": "Memory",
+      "from": "Total control over hardware addresses via standard allocation steps (`malloc`, `free`).",
+      "to": "Automated system management using Automatic Reference Counting (ARC) tracking object graph lifecycles deterministically."
+    },
+    {
+      "category": "Async",
+      "from": "External integration points referencing POSIX APIs or specific low-level system call constructs.",
+      "to": "Modern language-level `async/await` syntax backed by compile-safe structured concurrency patterns and distinct Actors."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimal interfaces for platform bridging, fundamental byte manipulations, and basic file streaming structures.",
+      "to": "Feature-dense system tracking Unicode-compliant strings, native high-performance collections, and protocol extensions."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Optional Data Handling",
+      "description": "Replacing error-prone null pointer conditions with strict Swift Optional types.",
+      "fromCode": "#include <stdio.h>\\n\\nint* find_value(int* source, int size, int target) {\\n    for(int i = 0; i < size; i++) {\\n        if(source[i] == target) return &source[i];\\n    }\\n    return NULL; // Return dangerous null if not present\\n}",
+      "toCode": "func findValue(in source: [Int], target: Int) -> Int? {\\n    return source.firstIndex(of: target).map { source[$0] }\\n    // Returns nil safely, forcing appropriate handling downstream\\n}"
+    },
+    {
+      "title": "Struct Definitions and Initialization",
+      "description": "Migrating from raw memory structure footprints to safe encapsulated custom types.",
+      "fromCode": "#include <stdio.h>\\n\\ntypedef struct {\\n    int id;\\n    double velocity;\\n} Particle;\\n\\nint main() {\\n    Particle p = {1, 9.81}; // Structural assignment initialization\\n    printf(\\\"Particle ID: %d\\\\n\\\", p.id);\\n    return 0;\\n}",
+      "toCode": "struct Particle {\\n    let id: Int\\n    let velocity: Double\\n}\\n\\nlet p = Particle(id: 1, velocity: 9.81) // Automatically generated memberwise initializer\\nprint(\\\"Particle ID: \\\\(p.id)\\\")"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Leverage Guard and Optional Unwrapping Patterns",
+      "body": "Never force unwrap data using `!`. Make regular use of `if let` or `guard let` structures to safely validate optional variables before entering processing zones."
+    },
+    {
+      "title": "Differentiate Value Types vs Reference Types",
+      "body": "Understand that Swift `struct` and `enum` structures use value semantics (copied on assignment), while `class` structures pass by reference, tracking allocation via ARC."
+    },
+    {
+      "title": "Isolate Unsafe Operations if Interoperating",
+      "body": "If you must perform direct pointer transformations, isolate those processes strictly within specialized Swift types like `UnsafeRawPointer` or `UnsafeMutablePointer` wrappers."
+    },
+    {
+      "title": "Enforce Memory Isolation via System Actors",
+      "body": "When developing concurrent routines, employ Swift `actor` types to shield mutable internal states from concurrent data races across threads automatically."
+    }
+  ]
+}

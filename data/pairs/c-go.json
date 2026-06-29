@@ -1,0 +1,62 @@
+{
+  "intro": "C is a procedural, manually managed language requiring explicit control over hardware, memory layout, and pointer arithmetic. Go introduces modern concurrency primitives via goroutines, automatic memory management via garbage collection, and a strict structural type system while compiling directly to machine code. Developers transition from C to Go to eliminate memory corruption bugs and drastically simplify the implementation of networked, concurrent services.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Weakly enforced, static typing with implicit conversions and unsafe pointer arithmetic.",
+      "to": "Strongly enforced, static typing with explicit conversions only and structural interface implementation."
+    },
+    {
+      "category": "Syntax",
+      "from": "Minimalist imperative syntax requiring header files, forward declarations, and explicit pointer notation.",
+      "to": "Modern, cleaner syntax with no headers, implicit variable assignment (`:=`), and automatic semicolon insertion."
+    },
+    {
+      "category": "Memory",
+      "from": "Manual memory allocation and deallocation using `malloc`, `calloc`, and `free`, vulnerable to leaks and buffer overflows.",
+      "to": "Automated memory management via a low-latency, concurrent garbage collector, paired with escape analysis."
+    },
+    {
+      "category": "Async",
+      "from": "No native language constructs; relies heavily on OS-level primitives like `pthread` or platform-specific libraries.",
+      "to": "First-class concurrency using lightweight `goroutines` managed by the runtime and typed `channels` for communication."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Barebones library focused on basic I/O, math, string manipulation, and system calls.",
+      "to": "Comprehensive, modern library providing out-of-the-box HTTP servers, JSON parsing, cryptography, and testing tools."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Concurrent Execution",
+      "description": "Replacing raw OS threads with language-level goroutines.",
+      "fromCode": "#include <pthread.h>\\n#include <stdio.h>\\n\\nvoid* worker(void* arg) {\\n    printf(\\\"Running thread\\\\n\\\");\\n    return NULL;\\n}\\n\\nint main() {\\n    pthread_t thread;\\n    pthread_create(&thread, NULL, worker, NULL);\\n    pthread_join(thread, NULL);\\n    return 0;\\n}",
+      "toCode": "package main\\n\\nimport (\\n\\t\\\"fmt\\\"\\n\\t\\\"sync\\\"\\n)\\n\\nfunc worker(wg *sync.WaitGroup) {\\n\\tdefer wg.Done()\\n\\tfmt.Println(\\\"Running goroutine\\\")\\n}\\n\\nfunc main() {\\n\\tvar wg sync.WaitGroup\\n\\twg.Add(1)\\n\\tgo worker(&wg)\\n\\twg.Wait()\\n}"
+    },
+    {
+      "title": "String Concatenation",
+      "description": "Safe heap allocations replacing dynamic array allocations and buffer copy operations.",
+      "fromCode": "#include <stdio.h>\\n#include <stdlib.h>\\n#include <string.h>\\n\\nchar* join_strings(const char* a, const char* b) {\\n    char* res = malloc(strlen(a) + strlen(b) + 1);\\n    strcpy(res, a);\\n    strcat(res, b);\\n    return res;\\n}",
+      "toCode": "package main\\n\\nimport \\\"strings\\\"\\n\\nfunc joinStrings(a, b string) string {\\n\\treturn a + b\\n\\t// Or strings.Builder for optimal performance with multiple segments\\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Shift from Pointer Arithmetic to Slices",
+      "body": "Go does not allow pointer arithmetic unless utilizing `unsafe.Pointer`. Instead of tracking array sizes and offsets manually via pointer increments, use Go slices which encapsulate a pointer, length, and capacity dynamically."
+    },
+    {
+      "title": "Handle Errors explicitly, Don't Use Return Codes",
+      "body": "Abandon C integer error status patterns or `errno`. Idiomatic Go utilizes multiple return values where the last parameter is an `error` interface, forcing caller validation at the point of invocation."
+    },
+    {
+      "title": "Replace Macros with Constants and Functions",
+      "body": "Go lacks a preprocessor. Replace C `#define` macros with typed or untyped `const` blocks, or generic functions to enforce type safety and enable debugger visibility."
+    },
+    {
+      "title": "Adopt Interface Composition over Struct Nesting",
+      "body": "Go provides no inheritance. Replace nested C structs used for pseudo-polymorphism with flat structures that satisfy behaviors implicitly via decoupled Go `interface` definitions."
+    }
+  ]
+}

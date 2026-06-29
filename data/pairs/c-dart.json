@@ -1,0 +1,62 @@
+{
+  "intro": "C targets low-level hardware structures, requiring manual pointer tracking and explicit platform compilation configurations to operate securely. Dart delivers a modern, object-oriented, client-optimized application language featuring solid sound type checking, automated garbage collections, and multi-platform compilation paths. Migrating software designs from C to Dart empowers developers to safely scale cross-platform user interfaces and asynchronous network components.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, loose type rules permitting arbitrary pointer conversions and memory structural overlaps.",
+      "to": "Static, sound type system featuring robust type inference and strict compile-time null safety validations."
+    },
+    {
+      "category": "Syntax",
+      "from": "Procedural syntax separating layouts across distinct header layouts and function targets.",
+      "to": "Modern, class-based object-oriented structure resembling Java/C# with native functional additions."
+    },
+    {
+      "category": "Memory",
+      "from": "Manual application-driven allocations managed using allocator pointers (`malloc`/`free`).",
+      "to": "Automatic memory allocation pipelines leveraging a generational garbage collector engine."
+    },
+    {
+      "category": "Async",
+      "from": "Low-level multi-threading operations using custom operating system process hooks.",
+      "to": "First-class single-threaded event loops supported by explicit `Future` interfaces and `async/await` syntax."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Basic operating system bridges tracking binary data formats and standard file descriptors.",
+      "to": "Comprehensive cross-platform libraries tracking collection structures, HTTP operations, and string encodings."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Asynchronous Operations",
+      "description": "Replacing manual thread blocking operations with clean async event-driven promises.",
+      "fromCode": "#include <stdio.h>\\n#include <unistd.h>\\n\\nvoid delay_print() {\\n    sleep(2); // Blocks the current native OS thread entirely\\n    printf(\\\"Delayed execution\\\\n\\\");\\n}",
+      "toCode": "Future<void> delayPrint() async {\\n  await Future.delayed(Duration(seconds: 2));\\n  print('Delayed execution');\\n}"
+    },
+    {
+      "title": "Collection Management",
+      "description": "Replacing raw sized buffer pointers with dynamic managed lists.",
+      "fromCode": "#include <stdio.h>\\n#include <stdlib.h>\\n\\nint main() {\\n    int* list = malloc(3 * sizeof(int));\\n    list[0] = 10; list[1] = 20; list[2] = 30;\\n    free(list);\\n    return 0;\\n}",
+      "toCode": "void main() {\\n  final list = [10, 20, 30];\\n  list.add(40); // Dynamically handles capacity updates\\n  print(list);\\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Leverage Sound Null Safety Rules",
+      "body": "Enforce clear variable structures using trailing question marks (e.g., `String?`) to explicitly identify types that are permitted to contain null states."
+    },
+    {
+      "title": "Isolate Heavy Compute Paths using Isolates",
+      "body": "Dart code executes inside an isolated single thread loop. For intensive calculations that might stall user interfaces, spawn explicit `Isolate` workers to run concurrent threads safely."
+    },
+    {
+      "title": "Utilize FFI only for Legacy Extensions",
+      "body": "If you must reuse legacy low-level C libraries, integrate Dart's `dart:ffi` system to pass data across runtime boundaries without compromising general code structure."
+    },
+    {
+      "title": "Use Cascades for Concise Object Configuration",
+      "body": "Simplify repetitive field assignments or sequential method calls on a single object instance by using Dart's double-dot operator syntax (`..`)."
+    }
+  ]
+}

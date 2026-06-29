@@ -1,0 +1,61 @@
+{
+  "intro": "C++ compiles down to high-performance native machine code, requiring developers to carefully manage memory structures, hardware access, and thread pools. PHP is an interpreted scripting language explicitly tailored for fast web development, dynamic HTML generation, and stateless server request routing. Transitioning applications from C++ to PHP trades absolute execution speed for rapid feature deployment, simplified web routing, and automatic memory safety.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static nominal typing supported by powerful compile-time templates, multi-inheritance, and structural pointer casts.",
+      "to": "Dynamic typing with optional type annotations, return type declarations, and dynamic type coercion."
+    },
+    {
+      "category": "Syntax",
+      "from": "Complex layout requiring separate headers, scope resolution operators (`::`), and explicit pointer/reference markers.",
+      "to": "C-style scripting syntax using variable prefix sigils (`$`), unified string concatenations, and dynamic arrays."
+    },
+    {
+      "category": "Memory",
+      "from": "Manual and RAII-driven stack and heap allocations tracked using constructors, destructors, and smart pointer wrappers.",
+      "to": "Automated runtime management using reference-counting garbage collection, optimized for short-lived HTTP cycles."
+    },
+    {
+      "category": "Async",
+      "from": "Native multi-core concurrency using system threads, atomics, and low-level synchronization variables.",
+      "to": "Stateless, single-threaded execution per request model, scaling via external process managers like FPM or Fibers."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The STL, which focuses on performance-tuned computer algorithms, system file streams, and vector collections.",
+      "to": "Built-in web utilities providing extensive database connectors, JSON serializers, array operations, and global request parameters."
+    }
+  ],
+  "examples": [
+    {
+      "title": "HTTP Response Pipeline",
+      "description": "Replacing complex C++ network socket loops with an abstract PHP header configuration.",
+      "fromCode": "// Complex multi-page C++ network socket configuration usually required\\n#include <iostream>\\nvoid sendResponse() { std::cout << \\\"Content-Type: text/html\\\\n\\\\nHello\\\"; }"
+    },
+    {
+      "title": "Dynamic Map Configuration",
+      "description": "Replacing rigid compile-time map tracking configurations with fluid literal objects.",
+      "fromCode": "#include <iostream>\\n#include <map>\\n#include <string>\\n\\nint main() {\\n    std::map<std::string, int> config;\\n    config[\\\"port\\\"] = 8080;\\n    config[\\\"timeout\\\"] = 30;\\n    std::cout << config[\\\"port\\\"] << std::endl;\\n    return 0;\\n}",
+      "toCode": "<?php\\n$config = [\\n    \\\"port\\\" => 8080,\\n    \\\"timeout\\\" => 30\\n];\\n\\necho $config[\\\"port\\\"];\\n?>"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Enable Declare Strict Types Everywhere",
+      "body": "To prevent unexpected runtime conversions inherent to PHP's dynamic core, always include `declare(strict_types=1);` at the entry point of every codebase file."
+    },
+    {
+      "title": "Leverage Comprehensive Superglobals",
+      "body": "Do not parse raw HTTP payloads. Use built-in PHP context structures like `$_GET`, `$_POST`, and `$_SERVER` to instantly extract incoming transmission attributes safely."
+    },
+    {
+      "title": "Abandon Manual Lifecycle Retention",
+      "body": "C++ structures require active resource cleanups. In PHP, understand that everything instantiated within a request execution path is systematically cleaned up at end of execution."
+    },
+    {
+      "title": "Utilize Composer for Package Tracking",
+      "body": "Instead of modifying static system paths or manual binary linking, deploy Composer to standardize your third-party integrations, autoload configurations, and packages."
+    }
+  ]
+}

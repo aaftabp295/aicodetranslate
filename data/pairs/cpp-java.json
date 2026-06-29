@@ -1,0 +1,62 @@
+{
+  "intro": "C++ relies on native compilation and deterministic resource management via RAII, giving developers precise control over system memory layouts. Java routes source execution through a cross-platform Virtual Machine (JVM), relying on a dynamic garbage collector and bytecode verifier to ensure absolute memory runtime safety. Moving codebases from C++ to Java trades away manual memory layout controls to improve cross-platform uniformity, application safety, and enterprise ecosystem scale.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static nominal typing supported by powerful compile-time templates, multi-inheritance, and structural pointer casts.",
+      "to": "Static nominal system with single inheritance, interfaces, and runtime-erased generic type validation rules."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose procedural and object-oriented syntax featuring explicit memory access tokens (`*`, `&`, `->`).",
+      "to": "Strictly object-oriented, clean structural syntax where all operational contexts must reside within class blocks."
+    },
+    {
+      "category": "Memory",
+      "from": "Manual and RAII-driven stack/heap tracking using constructors, destructors, and explicit allocator boundaries.",
+      "to": "Automated runtime tracking governed by a highly optimized, configurable virtual machine garbage collector."
+    },
+    {
+      "category": "Async",
+      "from": "Direct hardware thread access, memory fencing mechanisms, and low-level atomic primitives.",
+      "to": "Built-in thread objects, synchronized locks, robust concurrency libraries, and modern Virtual Threads (Project Loom)."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The STL, which focuses heavily on high-speed computational algorithms and value-type vector layouts.",
+      "to": "The extensive JDK, providing out-of-the-box enterprise networking tools, cross-platform UI systems, and unified database layers."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Class and Inheritance Structuring",
+      "description": "Converting a C++ class with manual destructor rules into a standard garbage-collected Java class.",
+      "fromCode": "#include <string>\\n#include <iostream>\\n\\nclass Document {\\npublic:\\n    std::string title;\\n    Document(std::string t) : title(t) {}\\n    ~Document() { // Destructor for resource cleanup\\n        std::cout << \\\"Closing resource\\\" << std::endl;\\n    }\\n};",
+      "toCode": "public class Document implements AutoCloseable {\\n    public String title;\\n    public Document(String t) {\\n        this.title = t;\\n    }\\n    @Override\\n    public void close() { // Replaces destructor via try-with-resources\\n        System.out.println(\\\"Closing resource\\\");\\n    }\\n}"
+    },
+    {
+      "title": "Polymorphic Collection Management",
+      "description": "Replacing explicit pointer vector stores with a managed reference List collection.",
+      "fromCode": "#include <vector>\\n#include <memory>\\n\\nclass Shape { public: virtual void draw() = 0; };\\n\\nvoid render(const std::vector<std::shared_ptr<Shape>>& shapes) {\\n    for(const auto& s : shapes) {\\n        s->draw();\\n    }\\n}",
+      "toCode": "import java.util.List;\\n\\ninterface Shape { void draw(); }\\n\\npublic class Renderer {\\n    public void render(List<Shape> shapes) {\\n        for(Shape s : shapes) {\\n            s.draw();\\n        }\\n    }\\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Replace Destructors with AutoCloseable Implementations",
+      "body": "Java lacks deterministic destructors. For unmanaged resources like file handles or sockets, implement `AutoCloseable` and wrap usage in `try-with-resources` statements."
+    },
+    {
+      "title": "Understand Java Reference Semantics",
+      "body": "Object variables in Java are implicit references, not local value copies. Assigning one class variable to another copies the reference pointer, not the underlying object data."
+    },
+    {
+      "title": "Watch Out for Generic Type Erasure",
+      "body": "Unlike C++ templates that compile unique binary variations for each type parameter, Java erases generic parameters at compile time, replacing them with generic `Object` bounds."
+    },
+    {
+      "title": "Utilize Final Fields to Enforce Immutability",
+      "body": "Replace C++ `const` parameter modifications by using the `final` keyword to ensure variables or fields cannot be reassigned after their initial binding."
+    }
+  ]
+}

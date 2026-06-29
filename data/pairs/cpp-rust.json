@@ -1,0 +1,62 @@
+{
+  "intro": "C++ delivers exceptional performance and precise manual memory control through RAII, though it leaves code vulnerable to subtle pointer bugs if not carefully managed. Rust matches this native performance profile while using a strict, compile-time borrow checker to guarantee absolute memory safety and eliminate data races. Switching from C++ to Rust helps organizations secure critical infrastructure and rule out undefined runtime exploits entirely.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static nominal typing with template metaprogramming, class inheritance, and unchecked type conversions.",
+      "to": "Static typing backed by affine ownership systems, type-safe trait constraints, and algebraic data enums."
+    },
+    {
+      "category": "Syntax",
+      "from": "Complex layout requiring separate headers, scoping tokens (`::`), templates, and source implementations.",
+      "to": "Modern expression-forward syntax with built-in pattern matching, clean module paths, and macro rules."
+    },
+    {
+      "category": "Memory",
+      "from": "Explicit manual and RAII-driven allocations managed via pointer lifecycles and standard smart wrappers.",
+      "to": "Compile-time ownership semantics that automatically free resources when variables go out of scope without GC overhead."
+    },
+    {
+      "category": "Async",
+      "from": "Native OS threads combined with mutex models, atomics, and custom coroutine extensions.",
+      "to": "Zero-overhead state-machine compilation using `async/await` blocks, executed via decoupled runtimes like Tokio."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The STL, which provides highly optimized algorithm templates and generic vector collections.",
+      "to": "Core runtime libraries tracking standard safe structures, cross-platform thread synchronization, and clean error types."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Safe Memory Ownership Transfer",
+      "description": "Demonstrating how Rust's borrow checker prevents use-after-free bugs at compile time.",
+      "fromCode": "#include <vector>\\n#include <iostream>\\n\\nvoid process() {\\n    std::vector<int> v = {1, 2, 3};\\n    auto v2 = v; // Deep copy or move depending on context\\n    std::cout << v[0] << std::endl; // Might access uninitialized state if moved\\n}",
+      "toCode": "fn process() {\\n    let v = vec![1, 2, 3];\\n    let _v2 = v; // Ownership is explicitly moved here\\n    // println!(\\\"{}\\\", v[0]); // Triggers a compile-time error, preventing use-after-move bugs\\n}"
+    },
+    {
+      "title": "Pattern Matching Variant Extraction",
+      "description": "Replacing subclass casting with type-safe algebraic enums and matching expressions.",
+      "fromCode": "#include <variant>\\n#include <iostream>\\n\\nvoid check(std::variant<int, std::string> v) {\\n    if (std::holds_alternative<int>(v)) {\\n        std::cout << std::get<int>(v) << std::endl;\\n    }\\n}",
+      "toCode": "fn check(v: Result<i32, String>) {\\n    match v {\\n        Ok(num) => println!(\\\"Number: {}\\\", num),\\n        Err(err) => println!(\\\"Error string: {}\\\", err),\\n    }\\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Understand the Rules of Borrowing",
+      "body": "Rust allows either one mutable reference or multiple immutable references to a variable at any given time, but never both simultaneously. This design effectively prevents data races at compile time."
+    },
+    {
+      "title": "Replace Class Inheritance with Trait Layouts",
+      "body": "Rust doesn't support abstract classes or inheritance. Define shared behaviors using `trait` configurations, and implement those traits across distinct structs."
+    },
+    {
+      "title": "Use Option Types Instead of Null Pointers",
+      "body": "Rust doesn't have raw null references. Wrap optional states inside the compile-checked `Option<T>` enum, forcing you to explicitly handle the `None` case before accessing values."
+    },
+    {
+      "title": "Isolate Hardware Interfaces inside Unsafe Blocks",
+      "body": "When working directly with hardware registers or low-level C libraries, wrap those specific routines inside explicit `unsafe {}` blocks to preserve general application safety guarantees."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "C focuses on step-by-step, imperative algorithms that manage localized memory and CPU operations explicitly. SQL shifts the design paradigm to a declarative format, allowing developers to define what relational data is required while leaving the underlying database query engine to optimize storage retrieval. Engineers switch implementation tasks to SQL to efficiently manage, filter, and aggregate massive, persistent datasets across relational backends.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, platform-dependent primitives mapping directly to raw byte configurations.",
+      "to": "Static, relational types optimized for database constraints, variable character lengths, and null values."
+    },
+    {
+      "category": "Syntax",
+      "from": "Imperative structure requiring loops, explicit variable tracking, and condition flags.",
+      "to": "Declarative syntax focusing on set theory operations (`SELECT`, `JOIN`, `WHERE`, `GROUP BY`)."
+    },
+    {
+      "category": "Memory",
+      "from": "Complete control over heap segments and pointer allocations.",
+      "to": "Managed internally by the database engine, utilizing cache pools and indexing configurations."
+    },
+    {
+      "category": "Async",
+      "from": "Custom implementations built with multi-threading libraries or operational polling routines.",
+      "to": "Managed implicitly by the database engine via isolated connection threads and transactional locks."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Basic math operations, terminal string formatting tools, and file system abstractions.",
+      "to": "Built-in relational aggregations, window operations, date adjustments, and transaction controls."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Data Filtering and Selection",
+      "description": "Replacing raw structural loops with a declarative dataset query.",
+      "fromCode": "#include <stdio.h>\\n\\ntypedef struct { int id; int age; } User;\\n\\nvoid filter_users(User* users, int count) {\\n    for (int i = 0; i < count; i++) {\\n        if (users[i].age > 21) {\\n            printf(\\\"User: %d\\\\n\\\", users[i].id);\\n\\n        }\\n    }\\n}",
+      "toCode": "SELECT id \\nFROM users \\nWHERE age > 21;"
+    },
+    {
+      "title": "Dataset Aggregation",
+      "description": "Replacing nested manual array accumulations with native grouping functions.",
+      "fromCode": "#include <stdio.h>\\n\\ntypedef struct { char department[20]; double salary; } Employee;\\n\\nvoid sum_salaries(Employee* emps, int count) {\\n    // Requires building a manual hash map or tracking structure to handle grouping accumulated costs\\n}",
+      "toCode": "SELECT department, SUM(salary) AS total_budget\\nFROM employees\\nGROUP BY department;"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Think in Sets instead of Iterative Loops",
+      "body": "Avoid treating database rows as individual elements in a loop. Apply filtering and transformations across entire sets of records simultaneously to maximize execution performance."
+    },
+    {
+      "title": "Leverage Indexes to Accelerate Filtering",
+      "body": "Ensure columns frequently targeted by `WHERE`, `JOIN`, or `ORDER BY` operations are backed by appropriate structural database indexes to avoid expensive full-table scans."
+    },
+    {
+      "title": "Use Parameterized Queries to Prevent Injection",
+      "body": "Never concatenate raw inputs directly into SQL strings. Use prepared statements and bind parameters to protect applications against database safety vulnerabilities."
+    },
+    {
+      "title": "Analyze Execution Plans Regularly",
+      "body": "Use database analysis tools like `EXPLAIN` to inspect how the query optimizer interprets your code, helping you pinpoint slow joins or missing indices early."
+    }
+  ]
+}

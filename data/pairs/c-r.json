@@ -1,0 +1,62 @@
+{
+  "intro": "C is engineered for system-level programming, demanding explicit low-level array manipulation and memory tracking for mathematical computations. R is an interpreted, vector-oriented language designed explicitly for statistical computing, data analysis, and graphical visualization. Data scientists migrate tasks from C to R to drastically accelerate exploratory data modeling, statistical algorithm deployment, and report rendering.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, minimalist scalar types mapped strictly to fixed hardware bit sizes.",
+      "to": "Dynamic, high-level system where all core objects are inherently vector-based arrays."
+    },
+    {
+      "category": "Syntax",
+      "from": "Imperative, block-scoped syntax utilizing structural loops and explicit index targeting.",
+      "to": "Functional, expressive syntax incorporating mathematical notations and native vector operations."
+    },
+    {
+      "category": "Memory",
+      "from": "Total manual application allocations and structural cleanups via standard heap APIs.",
+      "to": "Automated engine-level tracking utilizing automated memory allocation and garbage collection."
+    },
+    {
+      "category": "Async",
+      "from": "Low-level multi-threading constructs reliant on OS-specific scheduling layers.",
+      "to": "Single-threaded execution core by default, utilizing external parallel backends (e.g., `parallel`, `future`)."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimal interfaces restricted to foundational system input/output and simple memory buffers.",
+      "to": "Vast collection of embedded statistical formulas, linear algebra solvers, and matrix manipulation tooling."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Vector Multiplication Operations",
+      "description": "Replacing raw loops with native, highly-optimized vector expressions.",
+      "fromCode": "#include <stdio.h>\\n\\nvoid multiply_arrays(double* a, double* b, double* result, int size) {\\n    for (int i = 0; i < size; i++) {\\n        result[i] = a[i] * b[i];\\n    }\\n}",
+      "toCode": "# R applies element-wise operations natively down to underlying vectors\\nmultiply_vectors <- function(a, b) {\\n  return(a * b)\\n}"
+    },
+    {
+      "title": "Linear Regression Computation",
+      "description": "Replacing complex numerical algorithm implementations with built-in high-level modeling functions.",
+      "fromCode": "// Complex multi-page implementation of Least Squares fitting omitted for briefness\\nvoid fit_linear(double* x, double* y, int n, double* slope, double* intercept) {\\n    // Extensive mathematical loops and summation tracking logic required\\n}",
+      "toCode": "# Native statistical modeling formula evaluation\\nfit_linear <- function(data_frame) {\\n  return(lm(y ~ x, data = data_frame))\\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Think in Vectors, Not Scalar Loops",
+      "body": "Avoid using structural loops like `for` or `while` inside R. Vectorized functions process complete data arrays far faster by leveraging internal optimized compiled loops."
+    },
+    {
+      "title": "Leverage CRAN Package Repository Ecosystem",
+      "body": "Do not code analytical workflows from scratch. Explore extensive visualization and modeling extensions like `tidyverse` and `data.table` for production data transformations."
+    },
+    {
+      "title": "Mind the 1-Based Indexing Standard",
+      "body": "Note that R data structures utilize 1-based indexing conventions. Accessing the initial element of a collection requires index pointer `1`, not index pointer `0`."
+    },
+    {
+      "title": "Integrate Fast Execution Layers using Rcpp",
+      "body": "If heavy algorithms hit memory or execution ceilings in interpreted R, safely bridge the performance gap by utilizing `Rcpp` to invoke specialized C++ calculation subroutines."
+    }
+  ]
+}

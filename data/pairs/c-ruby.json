@@ -1,0 +1,62 @@
+{
+  "intro": "C prioritizes hyper-optimized performance and procedural instruction sets over abstract readability, forcing full control over raw system allocations. Ruby shifts the architecture entirely to a dynamic, pure object-oriented scripting environment focused heavily on developer happiness and runtime flexibility. Moving from C to Ruby trading away raw processing velocity to gain massive acceleration in application design prototyping and text processing pipelines.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, unsafe types allowing arbitrary memory casting and pointer reinterpretation.",
+      "to": "Dynamic, strong, object-oriented type system relying entirely on late binding and duck typing."
+    },
+    {
+      "category": "Syntax",
+      "from": "Rigid, brace-delimited imperative structure requiring meticulous layout declaration semantics.",
+      "to": "Highly readable, flexible expression-driven layout omitting parenthetical requirements and explicitly terminating via `end` tags."
+    },
+    {
+      "category": "Memory",
+      "from": "Explicit application-controlled manual heap layouts utilizing precise operational allocation points.",
+      "to": "Automatic memory abstraction backed by a generational, mark-and-sweep garbage collection subsystem."
+    },
+    {
+      "category": "Async",
+      "from": "Manual multiplexing implementation against hardware flags or kernel thread libraries.",
+      "to": "Thread abstractions constrained historical by a Global VM Lock (GVL), supplemented by modern Ractors and Fibers."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimal baseline utilities oriented toward raw storage, terminal standard streams, and mathematical logic.",
+      "to": "Rich object library containing complex regular expressions, file systems drivers, network layers, and object introspection."
+    }
+  ],
+  "examples": [
+    {
+      "title": "File Reading Pipeline",
+      "description": "Simplifying raw low-level buffers into standard streaming object iterations.",
+      "fromCode": "#include <stdio.h>\\n#include <stdlib.h>\\n\\nvoid read_file() {\\n    FILE *fp = fopen(\\\"data.txt\\\", \\\"r\\\");\\n    if (!fp) return;\\n    char buffer[256];\\n    while (fgets(buffer, sizeof(buffer), fp)) {\\n        printf(\\\"%s\\\", buffer);\\n    }\\n    fclose(fp);\\n}",
+      "toCode": "def read_file\\n  File.foreach('data.txt') do |line|\\n    puts line\\n  end\\nend"
+    },
+    {
+      "title": "Dynamic List Storage",
+      "description": "Replacing complex variable array reallocations with abstract Array container objects.",
+      "fromCode": "#include <stdio.h>\\n#include <stdlib.h>\\n\\nint main() {\\n    int *arr = malloc(sizeof(int) * 2);\\n    arr[0] = 10; arr[1] = 20;\\n    // Growing array necessitates explicit realloc updates\\n    arr = realloc(arr, sizeof(int) * 3);\\n    arr[2] = 30;\\n    free(arr);\\n    return 0;\\n}",
+      "toCode": "# Arrays dynamically track capacity natively\\narr = [10, 20]\\narr << 30\\n# Garbage collector automatically cleans up allocation scope"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Everything in Ruby represents an Object",
+      "body": "Discard primitive scalar mindsets. In Ruby, literal integers (like `42`), strings, and classes are concrete object instances possessing functional methods."
+    },
+    {
+      "title": "Embrace Dynamic Metaprogramming Features",
+      "body": "Instead of writing complex C macro generators, utilize Ruby tools like `method_missing` or `define_method` to modify runtime structural behaviors on the fly safely."
+    },
+    {
+      "title": "Understand the Global VM Lock (GVL)",
+      "body": "Ruby threads run concurrently but are managed under a GVL framework that limits simultaneous execution of CPU-bound ruby instructions on multiple native cores."
+    },
+    {
+      "title": "Utilize Native Extensions for Critical Performance",
+      "body": "If specific data algorithms demand C speed, write encapsulated Ruby C Extensions to expose fast compiled operations inside standard Ruby gems."
+    }
+  ]
+}

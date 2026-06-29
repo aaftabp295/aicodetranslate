@@ -1,0 +1,62 @@
+{
+  "intro": "C++ focuses on absolute hardware optimization and explicit resource lifetimes through RAII, introducing significant syntax complexity to achieve low-level performance. Ruby prioritizes developer productivity and code readability by providing a fully object-oriented, dynamic scripting runtime environment. Transitioning components from C++ to Ruby trades raw compilation performance for rapid application prototyping, clean text parsing, and highly flexible runtime metaprogramming.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal type layout requiring explicit compile-time resolution, templates, and strict casting rules.",
+      "to": "Dynamic, strong type model relying completely on late runtime method dispatch and duck typing conventions."
+    },
+    {
+      "category": "Syntax",
+      "from": "Dense, bracket-delimited structure utilizing namespaces, pointer markers, and separate declarations.",
+      "to": "Clean, highly expressive layout omitting parenthetical requirements and explicitly terminating blocks via `end` keywords."
+    },
+    {
+      "category": "Memory",
+      "from": "Meticulous manual or RAII-driven stack and heap tracking utilizing deterministic smart pointer lifecycles.",
+      "to": "Automated memory tracking governed by an internal generational mark-and-sweep garbage collection engine."
+    },
+    {
+      "category": "Async",
+      "from": "Native multi-core concurrency using system threads, atomics, and low-level synchronization variables.",
+      "to": "Thread abstractions constrained historically by a Global VM Lock (GVL), supplemented by modern Ractors and Fibers."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The STL, which provides precise, performance-tuned system algorithms and collection containers.",
+      "to": "Rich object-oriented collections tracking sophisticated regex pipelines, system file interactions, and web string tools."
+    }
+  ],
+  "examples": [
+    {
+      "title": "File Streaming Iteration",
+      "description": "Simplifying verbose structural file loops into an elegant block iteration pattern.",
+      "fromCode": "#include <fstream>\\n#include <string>\\n#include <iostream>\\n\\nvoid readFile() {\\n    std::ifstream file(\\\"data.txt\\\");\\n    std::string line;\\n    while (std::getline(file, line)) {\\n        std::cout << line << std::endl;\\n    }\\n}",
+      "toCode": "def read_file\\n  File.foreach('data.txt') do |line|\\n    puts line\\n  end\\nend"
+    },
+    {
+      "title": "Dynamic Vector Array Management",
+      "description": "Replacing rigid vector collections with dynamic auto-resizing array objects.",
+      "fromCode": "#include <vector>\\n#include <iostream>\\n\\nint main() {\\n    std::vector<int> nums = {10, 20};\\n    nums.push_back(30);\\n    std::cout << nums.size() << std::endl;\\n    return 0;\\n}",
+      "toCode": "# Arrays dynamically track capacity natively\\nnums = [10, 20]\\nnums << 30\\nputs nums.length"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Treat Everything as a Concrete Object",
+      "body": "Discard primitive scalar mindsets. In Ruby, literal numbers (like `100`), text strings, and full class models are concrete object instances that expose executable methods."
+    },
+    {
+      "title": "Leverage Dynamic Metaprogramming Capabilities",
+      "body": "Instead of writing heavy C++ compile-time templates, use Ruby tools like `define_method` or `method_missing` to safely modify object structures at runtime."
+    },
+    {
+      "title": "Understand the Limits of the Global VM Lock",
+      "body": "Be aware that standard Ruby code patterns are managed under a GVL framework, which limits concurrent CPU-bound instruction streams on multi-core systems."
+    },
+    {
+      "title": "Expose Performance Critical Blocks via C Extensions",
+      "body": "If specific algorithmic operations hit runtime speed ceilings, wrap those performance-critical segments in custom native C/C++ extensions to run them inside your Ruby gems."
+    }
+  ]
+}

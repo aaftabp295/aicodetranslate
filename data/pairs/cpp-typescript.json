@@ -1,0 +1,62 @@
+{
+  "intro": "C++ delivers complete structural and runtime control over native hardware operations, combining static typing with zero-overhead resource abstractions. TypeScript overlays a flexible structural type layer on top of JavaScript, adding compile-time checks while retaining compatibility with dynamic web runtimes. Engineers move from C++ to TypeScript to build scalable, type-safe web and cloud applications without sacrificing the fast iteration cycles of a modern scripting language.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal type system resolved at compile time to map exact memory layouts and structural alignments.",
+      "to": "Static, structural type configuration evaluating object shapes, supporting unions, intersections, and mapped types."
+    },
+    {
+      "category": "Syntax",
+      "from": "Complex multi-layered syntax involving explicit header boundaries, namespaces, and template constraints.",
+      "to": "Modern, readable syntax extending standard ECMAScript with explicit type annotations, interfaces, and enums."
+    },
+    {
+      "category": "Memory",
+      "from": "Strict, explicit tracking architectures utilizing stack mechanics and RAII smart pointer frameworks.",
+      "to": "Abstracted runtime memory management handled entirely by the host platform's garbage collector."
+    },
+    {
+      "category": "Async",
+      "from": "Native multi-core concurrency using system threads, atomics, and low-level synchronization variables.",
+      "to": "Event-driven asynchronous flows powered by an event loop, utilizing `Promises` and `async/await` syntax."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The Standard Template Library (STL), providing precise, performance-tuned system algorithms and collection containers.",
+      "to": "Standard ECMAScript APIs combined with Node.js or browser environment layers, focusing on I/O and text streams."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Interface and Shape Definition",
+      "description": "Replacing nominal struct models with flexible, compile-verified structural interfaces.",
+      "fromCode": "#include <string>\\n#include <iostream>\\n\\nstruct User {\\n    std::string name;\\n    int id;\\n};\\n\\nvoid printUser(const User& u) {\\n    std::cout << u.name << \\\": \\\" << u.id << std::endl;\\n}",
+      "toCode": "interface User {\\n  name: string;\\n  id: number;\\n}\\n\\nfunction printUser(u: User): void {\\n  console.log(`${u.name}: ${u.id}`);\\n}"
+    },
+    {
+      "title": "Generic Collection Wrappers",
+      "description": "Migrating from template specialization logic to runtime structural generic interfaces.",
+      "fromCode": "#include <vector>\\n\\ntemplate <typename T>\\nclass Box {\\nprivate:\\n    std::vector<T> contents;\\npublic:\\n    void add(T item) { contents.push_back(item); }\\n};",
+      "toCode": "class Box<T> {\\n  private contents: T[] = [];\\n  add(item: T): void {\\n    this.contents.push(item);\\n  }\\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Avoid Overusing the Any Escape Hatch",
+      "body": "Do not default variables to `any` just to bypass compiler diagnostics. Use the explicit `unknown` type when input structures are unverified, forcing safe runtime type guards."
+    },
+    {
+      "title": "Leverage Structural, Not Nominal Matching",
+      "body": "Remember that TypeScript evaluates type compatibility by checking if object properties match, rather than relying strictly on named class inheritances."
+    },
+    {
+      "title": "Enable Strict Compilation Properties",
+      "body": "Ensure `strict: true` is enabled in your `tsconfig.json` file to turn on vital safety features, such as strict null validation checks across your code."
+    },
+    {
+      "title": "Use Type Unions Instead of Enum Cascades",
+      "body": "Instead of defining heavy runtime `enum` objects, use clean literal string union combinations (e.g., `'read' | 'write'`) to enforce type constraints at compile time."
+    }
+  ]
+}

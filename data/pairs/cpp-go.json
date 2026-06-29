@@ -1,0 +1,62 @@
+{
+  "intro": "C++ gives developers total control over memory management, templates, and compiler settings, optimizing code for high performance. Go prioritizes simplicity and fast compilation by providing lightweight concurrency through goroutines, structural typing, and automatic garbage collection. Porting systems from C++ to Go simplifies ongoing maintenance, eliminates data races, and makes network service scaling much easier.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, nominal typing with complex inheritance hierarchies, function overloading, and template metaprogramming.",
+      "to": "Static, structural type system with implicit interface satisfaction and no class inheritance or method overloading."
+    },
+    {
+      "category": "Syntax",
+      "from": "Dense, multi-paradigm layout utilizing explicit pointer/reference tokens and separate declaration files.",
+      "to": "Minimalist, clean syntax featuring implicit assignments (`:=`) and no header dependencies."
+    },
+    {
+      "category": "Memory",
+      "from": "Manual and RAII-driven allocation bounds monitored through explicit class constructors and smart pointers.",
+      "to": "Automated runtime tracking governed by a low-latency concurrent garbage collector engine."
+    },
+    {
+      "category": "Async",
+      "from": "Direct system thread manipulation, atomic structures, and manual condition synchronization primitives.",
+      "to": "First-class language concurrency powered by lightweight goroutines and communications channels."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The STL, which focuses on performance-optimized calculations, mathematical utilities, and collection vectors.",
+      "to": "Comprehensive modern library providing integrated production HTTP servers, cryptography modules, and JSON handlers."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Concurrent Task Management",
+      "description": "Replacing raw OS thread synchronization setups with lightweight goroutines and channels.",
+      "fromCode": "#include <iostream>\\n#include <thread>\\n\\nvoid task() {\\n    std::cout << \\\"Thread processing\\\" << std::endl;\\n}\\n\\nint main() {\\n    std::thread t(task);\\n    t.join();\\n    return 0;\\n}",
+      "toCode": "package main\\n\\nimport (\\n\\t\\\"fmt\\\"\\n\\t\\\"sync\\\"\\n)\\n\\nfunc task(wg *sync.WaitGroup) {\\n\\tdefer wg.Done()\\n\\tfmt.Println(\\\"Goroutine processing\\\")\\n}\\n\\nfunc main() {\\n\\tvar wg sync.WaitGroup\\n\\twg.Add(1)\\n\\tgo task(&wg)\\n\\twg.Wait()\\n}"
+    },
+    {
+      "title": "Interface Structuring",
+      "description": "Converting explicit abstract base class inheritances into implicit structural interface mappings.",
+      "fromCode": "class Reader {\\npublic:\\n    virtual void read() = 0;\\n};\\n\\nclass FileReader : public Reader {\\npublic:\\n    void read() override {}\\n};",
+      "toCode": "package main\\n\\n// Interfaces are satisfied implicitly without explicit registration tags\\ntype Reader interface {\\n\\tRead()\\n}\\n\\ntype FileReader struct{}\\n\\nfunc (f FileReader) Read() {}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Abandon Class Hierarchies for Composition",
+      "body": "Go has no inheritance. Rather than subclassing deep structures, combine small, focused structs using composition and satisfy distinct interfaces implicitly."
+    },
+    {
+      "title": "Return Errors Explicitly as Values",
+      "body": "Go doesn't support structured exceptions. Functions return an `error` interface as their final value, requiring callers to check and handle errors immediately."
+    },
+    {
+      "title": "Use Slices to Manage Arrays Flexibly",
+      "body": "Avoid raw pointer math. Use Go slices, which provide safe dynamic windows into arrays, automatically tracking underlying capacity and length parameters."
+    },
+    {
+      "title": "Avoid Shared Memory; Pass Data via Channels",
+      "body": "Instead of using mutexes to protect shared states across threads, share memory by communicating data across typed Go channels."
+    }
+  ]
+}

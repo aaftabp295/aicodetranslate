@@ -1,0 +1,62 @@
+{
+  "intro": "C++ is a strongly typed, compiled systems language that emphasizes hardware optimization, resource control, and predictable deterministic memory lifecycles through RAII. JavaScript is a dynamically typed, interpreted web scripting engine optimized for event-driven interfaces, flexible object shapes, and non-blocking asynchronous interaction workflows. Developers migrate from C++ to JavaScript to accelerate user interface iterations, simplify full-stack web architectures, and abstract low-level memory issues.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static, strict type matching enforcing structural layouts, template metaprogramming, and explicit inheritance.",
+      "to": "Dynamic, loose type resolution relying on runtime evaluations, prototypes, and implicit type conversions."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose syntax featuring header files, scoping operators (`::`), explicit pointer abstractions, and templates.",
+      "to": "Flexible C-style syntax using dynamic variable definitions, inline closure declarations, and object literals."
+    },
+    {
+      "category": "Memory",
+      "from": "Explicit manual or RAII-driven stack and heap tracking via smart pointers (`std::unique_ptr`).",
+      "to": "Automatic memory allocation tracking handled implicitly by a tracing garbage collection subsystem."
+    },
+    {
+      "category": "Async",
+      "from": "Multi-threaded synchronization models requiring explicit locks (`std::mutex`), conditions, and atomics.",
+      "to": "Single-threaded event loop engine driving asynchronous executions via `Promises` and `async/await` blocks."
+    },
+    {
+      "category": "Standard Library",
+      "from": "High-performance systems algorithms, file streams, thread management, and complex template containers.",
+      "to": "Web-centric abstractions tracking JSON parsing, regex pipelines, URI manipulation, and DOM/fetch interfaces."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Asynchronous Web Fetching",
+      "description": "Replacing low-level manual network socket loops with an abstract promise chain.",
+      "fromCode": "// Extremely low-level conceptual C++ socket connection mockup\\n#include <iostream>\\n// Requires substantial system socket setup code or inclusion of heavy libraries like Boost.Asio",
+      "toCode": "// Native promise-based network tracking\\nasync function fetchData() {\\n  try {\\n    const response = await fetch('https://api.example.com/data');\\n    const data = await response.json();\\n    console.log(data);\\n  } catch (error) {\\n    console.error('Fetch failed', error);\\n  }\\n}"
+    },
+    {
+      "title": "Dynamic Map Configuration",
+      "description": "Replacing rigid compile-time map tracking configurations with fluid literal objects.",
+      "fromCode": "#include <iostream>\\n#include <map>\\n#include <string>\\n\\nint main() {\\n    std::map<std::string, int> config;\\n    config[\\\"port\\\"] = 8080;\\n    config[\\\"timeout\\\"] = 30;\\n    std::cout << config[\\\"port\\\"] << std::endl;\\n    return 0;\\n}",
+      "toCode": "const config = {\\n  port: 8080,\\n  timeout: 30\\n};\\n\\nconsole.log(config.port);"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Beware of Loose Equality Hazards",
+      "body": "Avoid using the double-equals operator (`==`) because JavaScript attempts runtime conversions. Always enforce strict verification using the triple-equals comparison (`===`)."
+    },
+    {
+      "title": "Understand Prototypal Inheritance Mechanics",
+      "body": "JavaScript does not utilize classic static class blueprints. Even modern `class` wrappers rely on runtime prototype modifications and linkages."
+    },
+    {
+      "title": "Avoid Blocking the Main Event Loop",
+      "body": "JavaScript relies on a single thread. Do not implement heavy synchronous mathematical processing blocks that could freeze script rendering execution cycles."
+    },
+    {
+      "title": "Compile Performance Blocks using WebAssembly",
+      "body": "If specific subroutines demand absolute C++ computation speed, compile those isolated assets down to WebAssembly targets to run efficiently inside JS runtimes."
+    }
+  ]
+}
