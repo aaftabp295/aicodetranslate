@@ -6,7 +6,6 @@ import { Loader2, Copy, Check, ArrowLeftRight, Sparkles, BookOpen, AlertTriangle
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -20,15 +19,16 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
+  DialogHeader,
 } from '@/components/ui/dialog'
 
-import { LANGUAGES, LANGUAGE_DISPLAY, Language } from '@/lib/languages'
+import { LANGUAGES, LANGUAGE_DISPLAY } from '@/lib/languages'
 import { cn } from '@/lib/utils'
 import { CodeEditor } from '@/components/converter/CodeEditor'
 import { LanguageIcon } from '@/components/converter/LanguageIcon'
+import { useConverterStore } from '@/lib/store/useConverterStore'
+import { useHydration } from '@/lib/hooks/useHydration'
 
 interface ConverterPanelProps {
   defaultFrom?: string
@@ -39,170 +39,66 @@ export function ConverterPanel({
   defaultFrom = 'python',
   defaultTo = 'javascript',
 }: ConverterPanelProps) {
-  // Inputs & Langs State
-  const [code, setCode] = React.useState('')
-  const [convertedCode, setConvertedCode] = React.useState('')
-  const [fromLang, setFromLang] = React.useState(defaultFrom)
-  const [toLang, setToLang] = React.useState(defaultTo)
+  const hydrated = useHydration()
 
-  // UI Status State
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [isExplaining, setIsExplaining] = React.useState(false)
-  const [showExplain, setShowExplain] = React.useState(false)
-  const [explanation, setExplanation] = React.useState('')
-   const [copied, setCopied] = React.useState(false)
-  const [highlightedHtml, setHighlightedHtml] = React.useState('')
-  const [activeMaximize, setActiveMaximize] = React.useState<'input' | 'output' | null>(null)
+  const {
+    code,
+    setCode,
+    convertedCode,
+    fromLang,
+    setFromLang,
+    toLang,
+    setToLang,
+    isLoading,
+    isExplaining,
+    showExplain,
+    explanation,
+    copied,
+    setCopied,
+    highlightedHtml,
+    activeMaximize,
+    setActiveMaximize,
+    remaining,
+    limit,
+    showUpgradeDialog,
+    setShowUpgradeDialog,
+    fetchQuota,
+    convertCode,
+    explainCode,
+    swapLanguages,
+  } = useConverterStore()
 
-  // Rate Limiting & Subs State
-  const [remaining, setRemaining] = React.useState<number | null>(null)
-  const [limit, setLimit] = React.useState<number>(5)
-  const [showUpgradeDialog, setShowUpgradeDialog] = React.useState(false)
+  // Hydration-aware parameters
+  const currentFrom = hydrated ? fromLang : defaultFrom
+  const currentTo = hydrated ? toLang : defaultTo
+  const currentCode = hydrated ? code : ''
+  const currentConvertedCode = hydrated ? convertedCode : ''
+  const currentHighlightedHtml = hydrated ? highlightedHtml : ''
+  const currentExplanation = hydrated ? explanation : ''
+  const currentShowExplain = hydrated ? showExplain : false
 
   // Fetch current quota limit and remaining tokens on mount
   React.useEffect(() => {
-    async function fetchQuota() {
-      try {
-        const res = await fetch('/api/quota')
-        if (res.ok) {
-          const data = await res.json()
-          setRemaining(data.remaining)
-          setLimit(data.limit)
-        } else {
-          setRemaining(5)
-        }
-      } catch (err) {
-        console.error('Failed to load quota:', err)
-        setRemaining(5)
-      }
-    }
     fetchQuota()
-  }, [])
+  }, [fetchQuota])
 
-  // Handle conversion trigger
-  const handleConvert = async () => {
-    if (!code.trim()) {
-      toast.error('Please enter some code to convert.')
-      return
-    }
-
-    if (code.length > 10000) {
-      toast.error('Code exceeds 10,000 character limit')
-      return
-    }
-
-    setIsLoading(true)
-    setShowExplain(false)
-    setExplanation('')
-
-    try {
-      const response = await fetch('/api/convert', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, fromLang, toLang }),
-      })
-
-      if (response.status === 429) {
-        setRemaining(0)
-        setShowUpgradeDialog(true)
-        setIsLoading(false)
-        return
+  // Sync route parameters with store if store is empty on hydration
+  React.useEffect(() => {
+    if (hydrated) {
+      if (defaultFrom && fromLang !== defaultFrom && !code) {
+        setFromLang(defaultFrom)
       }
-
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}))
-        throw new Error(errData.error || 'Conversion failed. Please try again.')
-      }
-
-      const data = await response.json()
-      setConvertedCode(data.converted)
-      setRemaining(data.remaining)
-      setHighlightedHtml(data.highlightedHtml)
-      
-      toast.success('Code converted successfully!')
-    } catch (error: any) {
-      console.error('Conversion error:', error)
-      toast.error(error?.message || 'Failed to convert code.')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  // Handle explanation trigger
-  const handleExplain = async () => {
-    if (!convertedCode) return
-
-    setIsExplaining(true)
-    try {
-      const response = await fetch('/api/explain', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fromLang,
-          toLang,
-          originalCode: code,
-          convertedCode,
-        }),
-      })
-
-      if (response.status === 429) {
-        setRemaining(0)
-        setShowUpgradeDialog(true)
-        setIsExplaining(false)
-        return
-      }
-
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}))
-        throw new Error(errData.error || 'Failed to generate explanation.')
-      }
-
-      const data = await response.json()
-      setExplanation(data.explanation)
-      setShowExplain(true)
-      toast.success('Explanation generated!')
-    } catch (error: any) {
-      console.error('Explanation error:', error)
-      toast.error(error?.message || 'Failed to generate explanation.')
-    } finally {
-      setIsExplaining(false)
-    }
-  }
-
-  // Swap source and target languages (and swap code values if output exists)
-  const handleSwapLanguages = async () => {
-    if (fromLang === toLang) return
-
-    const tempLang = fromLang
-    setFromLang(toLang)
-    setToLang(tempLang)
-
-    if (convertedCode) {
-      const tempCode = code
-      setCode(convertedCode)
-      setConvertedCode(tempCode)
-
-      try {
-        const response = await fetch('/api/highlight', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code: tempCode, lang: tempLang }),
-        })
-        if (response.ok) {
-          const data = await response.json()
-          setHighlightedHtml(data.highlightedHtml)
-        }
-      } catch (err) {
-        console.error('Failed to highlight swapped code:', err)
+      if (defaultTo && toLang !== defaultTo && !code) {
+        setToLang(defaultTo)
       }
     }
-  }
+  }, [hydrated, defaultFrom, defaultTo, fromLang, toLang, code, setFromLang, setToLang])
 
   // Copy converted code to clipboard
   const handleCopy = async () => {
-    if (!convertedCode) return
+    if (!currentConvertedCode) return
     try {
-      await navigator.clipboard.writeText(convertedCode)
+      await navigator.clipboard.writeText(currentConvertedCode)
       setCopied(true)
       toast.success('Copied to clipboard!')
       setTimeout(() => setCopied(false), 2000)
@@ -221,7 +117,7 @@ export function ConverterPanel({
           <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center space-x-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Source Language</span>
-              <Select value={fromLang} onValueChange={(val) => setFromLang(val)}>
+              <Select value={currentFrom} onValueChange={(val) => setFromLang(val)}>
                 <SelectTrigger className="w-[180px] h-9 border-border bg-background focus:ring-primary">
                   <SelectValue placeholder="Select Language" />
                 </SelectTrigger>
@@ -242,7 +138,7 @@ export function ConverterPanel({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={handleSwapLanguages}
+                onClick={swapLanguages}
                 title="Swap Languages"
                 className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer"
               >
@@ -262,14 +158,14 @@ export function ConverterPanel({
           
           <CardContent className="p-0 flex-1 flex flex-col overflow-hidden">
             <CodeEditor
-              value={code}
+              value={currentCode}
               onChange={setCode}
-              language={fromLang}
-              placeholder={`Paste your ${LANGUAGE_DISPLAY[fromLang as typeof LANGUAGES[number]] || fromLang} code here...`}
+              language={currentFrom}
+              placeholder={`Paste your ${LANGUAGE_DISPLAY[currentFrom as typeof LANGUAGES[number]] || currentFrom} code here...`}
             />
             <div className="px-6 py-3 border-t border-border flex justify-end text-xs shrink-0 bg-muted/10">
-              <span className={code.length > 8000 ? 'text-destructive font-semibold' : 'text-muted-foreground'}>
-                {code.length.toLocaleString()}/10,000
+              <span className={currentCode.length > 8000 ? 'text-destructive font-semibold' : 'text-muted-foreground'}>
+                {currentCode.length.toLocaleString()}/10,000
               </span>
             </div>
           </CardContent>
@@ -280,7 +176,7 @@ export function ConverterPanel({
           <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center space-x-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Target Language</span>
-              <Select value={toLang} onValueChange={(val) => setToLang(val)}>
+              <Select value={currentTo} onValueChange={(val) => setToLang(val)}>
                 <SelectTrigger className="w-[180px] h-9 border-border bg-background focus:ring-primary">
                   <SelectValue placeholder="Select Language" />
                 </SelectTrigger>
@@ -298,7 +194,7 @@ export function ConverterPanel({
             </div>
             
             <div className="flex items-center space-x-1">
-              {convertedCode && (
+              {currentConvertedCode && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -323,7 +219,7 @@ export function ConverterPanel({
           
           <CardContent className={cn(
             "p-0 flex-1 flex flex-col overflow-hidden bg-muted/20 dark:bg-muted/5",
-            highlightedHtml || isLoading ? "justify-start" : "justify-center"
+            currentHighlightedHtml || isLoading ? "justify-start" : "justify-center"
           )}>
             {isLoading ? (
               <div className="space-y-4 w-full h-full flex flex-col justify-start p-6">
@@ -334,10 +230,10 @@ export function ConverterPanel({
                 <Skeleton className="h-4 w-full bg-muted" />
                 <Skeleton className="h-4 w-5/6 bg-muted" />
               </div>
-            ) : highlightedHtml ? (
+            ) : currentHighlightedHtml ? (
               <div 
                 className="output-highlight w-full flex-1 font-mono text-sm overflow-auto text-left min-h-0 p-6 no-scrollbar"
-                dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+                dangerouslySetInnerHTML={{ __html: currentHighlightedHtml }}
               />
             ) : (
               <div className="text-center space-y-2 py-12 p-6 w-full">
@@ -372,7 +268,7 @@ export function ConverterPanel({
 
         {/* Action Button */}
         <Button
-          onClick={handleConvert}
+          onClick={convertCode}
           disabled={isLoading || remaining === 0}
           className="w-full sm:w-[200px] h-11 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold cursor-pointer shrink-0 shadow-sm flex items-center justify-center gap-2"
         >
@@ -391,12 +287,12 @@ export function ConverterPanel({
       </div>
 
       {/* Explanation Section */}
-      {convertedCode && (
+      {currentConvertedCode && (
         <div className="space-y-4">
           <div className="flex justify-center">
             <Button
               variant="outline"
-              onClick={handleExplain}
+              onClick={explainCode}
               disabled={isExplaining}
               className="border-border hover:bg-muted font-medium cursor-pointer flex items-center gap-2"
             >
@@ -414,7 +310,7 @@ export function ConverterPanel({
             </Button>
           </div>
 
-          {showExplain && explanation && (
+          {currentShowExplain && currentExplanation && (
             <Card className="border-border bg-card shadow-sm max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
               <CardHeader className="pb-3 border-b border-border">
                 <CardTitle className="text-base font-semibold flex items-center gap-2">
@@ -426,7 +322,7 @@ export function ConverterPanel({
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6 text-sm text-foreground/90 space-y-4 leading-relaxed whitespace-pre-line text-left">
-                {explanation}
+                {currentExplanation}
               </CardContent>
             </Card>
           )}
@@ -481,8 +377,8 @@ export function ConverterPanel({
             <div>
               <DialogTitle className="text-lg font-bold">
                 {activeMaximize === 'input' 
-                  ? `Source Code (${LANGUAGE_DISPLAY[fromLang as typeof LANGUAGES[number]] || fromLang})` 
-                  : `Converted Code (${LANGUAGE_DISPLAY[toLang as typeof LANGUAGES[number]] || toLang})`}
+                  ? `Source Code (${LANGUAGE_DISPLAY[currentFrom as typeof LANGUAGES[number]] || currentFrom})` 
+                  : `Converted Code (${LANGUAGE_DISPLAY[currentTo as typeof LANGUAGES[number]] || currentTo})`}
               </DialogTitle>
               <DialogDescription className="text-xs text-muted-foreground">
                 {activeMaximize === 'input' 
@@ -491,7 +387,7 @@ export function ConverterPanel({
               </DialogDescription>
             </div>
             
-            {activeMaximize === 'output' && convertedCode && (
+            {activeMaximize === 'output' && currentConvertedCode && (
               <Button
                 variant="outline"
                 size="sm"
@@ -507,10 +403,10 @@ export function ConverterPanel({
           <div className="flex-1 min-h-0 w-full relative border border-border rounded-lg overflow-hidden bg-background">
             {activeMaximize === 'input' ? (
               <CodeEditor
-                value={code}
+                value={currentCode}
                 onChange={setCode}
-                language={fromLang}
-                placeholder={`Paste your ${LANGUAGE_DISPLAY[fromLang as typeof LANGUAGES[number]] || fromLang} code here...`}
+                language={currentFrom}
+                placeholder={`Paste your ${LANGUAGE_DISPLAY[currentFrom as typeof LANGUAGES[number]] || currentFrom} code here...`}
               />
             ) : (
               <div className="w-full h-full flex flex-col overflow-hidden bg-muted/20 dark:bg-muted/5">
@@ -522,10 +418,10 @@ export function ConverterPanel({
                     <Skeleton className="h-4 w-3/4 bg-muted" />
                     <Skeleton className="h-4 w-full bg-muted" />
                   </div>
-                ) : highlightedHtml ? (
+                ) : currentHighlightedHtml ? (
                   <div 
                     className="output-highlight w-full flex-1 font-mono text-sm overflow-auto text-left p-6 min-h-0 no-scrollbar"
-                    dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+                    dangerouslySetInnerHTML={{ __html: currentHighlightedHtml }}
                   />
                 ) : (
                   <div className="text-center space-y-2 py-24 p-6 w-full my-auto">
