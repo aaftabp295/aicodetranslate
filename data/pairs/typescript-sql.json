@@ -1,0 +1,62 @@
+{
+  "intro": "Translating TypeScript application code into SQL moves computational operations out of middle-tier servers and directly into a relational database engine. Developers make this refactoring choice to run intensive data sorting, filtering, and aggregation actions directly adjacent to stored records, eliminating network latency and processing overhead. This requires shifting from step-by-step imperative collection loops to declarative, relational set transformations.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically verified structural models with extensive generic abstractions, completely erased before execution.",
+      "to": "Static nominal schemas explicitly enforced on write operations at individual column boundaries."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style procedural formulation tracking continuous functions, variable declarations, and object definitions.",
+      "to": "Declarative relational sentences defining desired result parameters rather than the step-by-step execution path."
+    },
+    {
+      "category": "Memory",
+      "from": "Application server heap allocations tracking variables and active instances across long-lived scopes.",
+      "to": "Database server cache, page buffers, and transient tables optimized for disk storage systems."
+    },
+    {
+      "category": "Async",
+      "from": "Non-blocking single-threaded execution loop scheduling long-running operations via Promise layers.",
+      "to": "Synchronous database transactions isolated using locks, isolation bounds, and write-ahead logs."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Basic language utilities relying on external npm managers for database and network connections.",
+      "to": "Built-in relational operations focused on joining datasets, applying math calculations, and grouping elements."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Aggregating Filtered List Records",
+      "description": "Summing active financial balances grouped by category filters.",
+      "fromCode": "interface Account { active: boolean; group: string; amount: number }\nconst total = accounts\n  .filter(a => a.active)\n  .reduce((sum, a) => sum + a.amount, 0);",
+      "toCode": "SELECT SUM(amount) AS total_amount\nFROM accounts\nWHERE active = true;"
+    },
+    {
+      "title": "Combining Relational Objects",
+      "description": "Merging related models across explicit connection IDs safely.",
+      "fromCode": "interface User { id: number; name: string }\ninterface Post { userId: number; title: string }\nconst combined = posts.map(p => ({\n  ...p,\n  user: users.find(u => u.id === p.userId)\n}));",
+      "toCode": "SELECT p.title, u.name\nFROM posts p\nINNER JOIN users u ON p.user_id = u.id;"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Think in Data Sets Over Loops",
+      "body": "Avoid running cursors or database loops to mimic TypeScript array iterations. SQL engines achieve peak execution performance when handling tables concurrently using unified clauses like `WHERE` and `JOIN`."
+    },
+    {
+      "title": "Enforce Schema Type Sizing Checks",
+      "body": "TypeScript allows variables to contain arbitrary string values fluidly. SQL strictly requires text and data structures to fit within explicit table allocations (e.g., `VARCHAR(255)`), or transactions fail."
+    },
+    {
+      "title": "Delegate Sorting Tasks to the Database Engine",
+      "body": "Do not pull unsorted database data into memory to perform high-overhead client-side sorting transformations. Apply SQL's native `ORDER BY` keywords, which utilize indexing layouts for fast execution."
+    },
+    {
+      "title": "Verify Join Columns are Indexed",
+      "body": "Array scanning using methods like `.find()` scales linearly ($O(N)$) in application logic. Ensure that database tables use proper indexes on foreign keys to drop lookup complexities down to $O(log N)$."
+    }
+  ]
+}

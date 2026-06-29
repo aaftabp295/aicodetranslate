@@ -1,0 +1,62 @@
+{
+  "intro": "Porting TypeScript logic into Go shifts a system from web infrastructure to a highly concurrent, compiled systems language optimized for high-performance microservices. Developers adopt Go to eliminate high memory footprints and achieve rapid cold-start capabilities across distributed system architectures. This transition trades complex type hierarchies and inheritance abstractions for structural interfaces and minimalist procedural logic.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Complex compile-time structural patterns supporting intersection traits, unions, and extensive type mapping engines.",
+      "to": "Static nominal primitives complemented by structural interfaces that are satisfied implicitly without formal declarations."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style formulation incorporating variable keyword definitions, class boundaries, and arrow handlers.",
+      "to": "Minimalist keyword set omitting assertions, avoiding brackets for loops, and enforcing explicit error returns."
+    },
+    {
+      "category": "Memory",
+      "from": "Automated system engines executing continuous generational collection sweeps over standard script objects.",
+      "to": "Highly optimized concurrent garbage collector focusing on ultra-low latency targets by maximizing stack allocations."
+    },
+    {
+      "category": "Async",
+      "from": "Single-thread loop scheduling asynchronous executions across single event pipelines.",
+      "to": "Native CSP concurrency architecture using lightweight goroutines and thread-safe channels."
+    },
+    {
+      "category": "Standard Library",
+      "from": "EcmaScript core components relying heavily on npm packages for basic operational extensions.",
+      "to": "Comprehensive, production-ready standard toolkit supporting enterprise web networks and format parsing tools directly."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Implicit Interface Conformance",
+      "description": "Declaring structural interface conditions without explicit inheritance tags.",
+      "fromCode": "interface Reader {\n  read(): string;\n}\nclass FileSource implements Reader {\n  read() { return \"content\"; }\n}",
+      "toCode": "type Reader interface {\n    Read() string\n}\n\ntype FileSource struct{}\n\nfunc (fs FileSource) Read() string {\n    return \"content\"\n}"
+    },
+    {
+      "title": "Explicit Multi-Value Error Returns",
+      "description": "Returning operational failures clearly alongside method response payloads.",
+      "fromCode": "function divide(a: number, b: number): number {\n  if (b === 0) throw new Error(\"div by zero\");\n  return a / b;\n}",
+      "toCode": "import \"errors\"\n\nfunc divide(a, b float64) (float64, error) {\n    if b == 0 {\n        return 0, errors.New(\"div by zero\")\n    }\n    return a / b, nil\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Handle System Errors Explicitly",
+      "body": "Go does not use try/catch exception structures. Functions that can fail return an `error` instance as their trailing parameter value, which the calling routine must inspect immediately using conditional blocks."
+    },
+    {
+      "title": "Replace Promises with Goroutines",
+      "body": "Instead of generating Promise chains or orchestrating async queues, prepend the `go` keyword to a function call to spin up a concurrent goroutine that executes independently on an optimized thread pool."
+    },
+    {
+      "title": "Differentiate Value and Pointer Semantics",
+      "body": "Go allows you to pass parameters by value or by pointer. Passing a struct via a pointer (`*MyStruct`) allows you to modify the original struct's data inside the target function without copying the data structure."
+    },
+    {
+      "title": "Utilize Built-in Tooling Chains",
+      "body": "Go replaces complex ecosystem build chains with native sub-commands. Drop configurations like prettier, jest, or webpack in favor of standard commands like `go fmt`, `go test`, and `go build`."
+    }
+  ]
+}

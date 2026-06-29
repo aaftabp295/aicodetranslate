@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating from TypeScript to R shifts focus from structured application architecture to vectorized data analysis and statistical visualization. Developers make this transition to gain access to R's specialized scientific ecosystem, complex matrix manipulation tools, and data science frameworks. This requires abandoning object-oriented application design in favor of functional data transformations and array-based calculations.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static structural type verification checking object properties, erased prior to compilation output.",
+      "to": "Dynamic type tracking organized around vectorized primitives, lists, and named data frame configurations."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style structural block layout utilizing curly braces, semicolons, and explicit functional parameters.",
+      "to": "Functional scripting syntax using arrow assignment operators (`<-`), 1-based data index references, and implicit returns."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed engine allocations handling live objects and scope states dynamically.",
+      "to": "RAM-bound system execution models utilizing pass-by-value copies for operations unless modified using specialized tools."
+    },
+    {
+      "category": "Async",
+      "from": "Asynchronous engine loops running automated non-blocking macro-task queue lookups.",
+      "to": "Synchronous single-threaded calculation loops requiring explicit background processing libraries for parallel runs."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Basic type abstractions relying on npm module additions for extended system interactions.",
+      "to": "Deeply focused mathematical libraries offering built-in data distribution, regression modeling, and statistical graphics."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Vectorized Attribute Calculations",
+      "description": "Modifying numeric list entries directly without utilizing manual loop wrappers.",
+      "fromCode": "const readings: number[] = [10, 20, 30];\nconst adjusted: number[] = readings.map(r => r + 5);",
+      "toCode": "readings <- c(10, 20, 30)\nadjusted <- readings + 5"
+    },
+    {
+      "title": "Structured Data Frame Generation",
+      "description": "Creating multi-column data structures for analysis.",
+      "fromCode": "interface Row { name: string; age: number }\nconst table: Row[] = [{ name: \"A\", age: 25 }, { name: \"B\", age: 30 }];",
+      "toCode": "table <- data.frame(\n  name = c(\"A\", \"B\"),\n  age = c(25, 30)\n)"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Think in Vector Elements Directly",
+      "body": "Avoid running loops or `.forEach()` maps over collections as you would in TypeScript. R operations apply to entire vectors automatically, yielding highly optimized native execution speeds."
+    },
+    {
+      "title": "Adjust to 1-Based Collection Indices",
+      "body": "TypeScript indexes list records starting at 0, while R references track the initial vector item starting at 1. Querying an index with a 0 value returns an empty vector structure of the item's primary type."
+    },
+    {
+      "title": "Employ the Proper Assignment Operator",
+      "body": "While equal signs (`=`) can store values inside variables, the R community expects the arrow syntax assignment operator (`<-`). Reserve the equal sign for configuring parameters within function boundaries."
+    },
+    {
+      "title": "Differentiate NA and NULL States",
+      "body": "TypeScript represents empty states via null or undefined tags. R tracks missing data fields within vector cells using `NA` (Not Available), while reserving `NULL` for entirely unassigned variable names."
+    }
+  ]
+}

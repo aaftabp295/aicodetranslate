@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from TypeScript to Rust upgrades an application to a compiled systems language that guarantees memory safety without a garbage collector. Developers make this change to eliminate runtime overhead, optimize CPU-bound tasks, and prevent memory leaks in critical microservices. The migration requires swapping high-level runtime flexibility for a strict compile-time borrow checker and explicit variable ownership contracts.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Compile-time structural type matching that supports complex unions and mapped types, erased during build passes.",
+      "to": "Strict nominal static typing with comprehensive generic traits, algebraic data types (enums), and compile-time lifetime annotations."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style syntax featuring explicit class components, arrow parameters, and structural object configurations.",
+      "to": "Expression-oriented block syntax leveraging pattern matching rules, macros, and explicit error propagation operators."
+    },
+    {
+      "category": "Memory",
+      "from": "Automated engine heap tracking utilizing runtime generational garbage collection passes.",
+      "to": "Compile-time ownership semantics where resources are automatically reclaimed the moment their tracking variable scope ends."
+    },
+    {
+      "category": "Async",
+      "from": "Single-threaded execution loop coordinating micro-tasks, Promise objects, and async/await blocks.",
+      "to": "Zero-overhead pull-based Future state machines requiring an external executor runtime like Tokio for multi-threaded polling."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Basic language definitions requiring external npm packages for core filesystem or system operations.",
+      "to": "Lean system library delivering high-performance primitive wrappers, collections, and explicit I/O traits."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Algebraic Types and Comprehensive Matching",
+      "description": "Modeling data structures using tagged enums with pattern validation matches.",
+      "fromCode": "type Status = \"Loading\" | \"Success\";\nfunction handle(s: Status) {\n  if (s === \"Loading\") return 0;\n  return 1;\n}",
+      "toCode": "enum Status {\n    Loading,\n    Success,\n}\n\nfn handle(s: Status) -> i32 {\n    match s {\n        Status::Loading => 0,\n        Status::Success => 1,\n    }\n}"
+    },
+    {
+      "title": "Safe Result Compilation Wrappers",
+      "description": "Orchestrating robust data pipelines without throw statements.",
+      "fromCode": "function parse(val: string): number {\n  const num = Number(val);\n  if (isNaN(num)) throw new Error(\"NaN\");\n  return num;\n}",
+      "toCode": "fn parse(val: &str) -> Result<i32, std::num::ParseIntError> {\n    val.parse::<i32>()\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Internalize Ownership and Borrowing Rules",
+      "body": "Rust allows only one active owner per data resource. When passing variables into functions, the resource is 'moved' unless you pass a reference using an ampersand (`&` for read-only, `&mut` for mutable access)."
+    },
+    {
+      "title": "Replace Null States with Options",
+      "body": "Rust has no null or undefined references. Missing data or partial operations must be modeled explicitly using the `Option<T>` enum, forcing you to handle both `Some(val)` and `None` branches at compile time."
+    },
+    {
+      "title": "Propagate Errors with the Question Mark Operator",
+      "body": "Instead of throwing exceptions that must be caught with try/catch blocks, return a `Result<T, E>` from functions and append the `?` operator to operations to cleanly propagate errors up the call stack."
+    },
+    {
+      "title": "Opt for Iterators Over Standard Loops",
+      "body": "Rust collections expose high-performance iterators via `.iter()`. Use functional combinators like `.filter()` and `.map()` directly; the compiler optimizes these into zero-cost loops that perform as fast as manual index updates."
+    }
+  ]
+}

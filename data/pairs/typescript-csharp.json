@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating from TypeScript to C# translates frontend web skills into Microsoft's enterprise-ready, component-based backend language. Developers frequently transition to C# to build secure enterprise cloud services, game backends with Unity, or large-scale web services within the .NET ecosystem. The shift moves developers from structural type matching rules into a rigid, fully integrated nominal runtime framework.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Compile-time structural mechanics that erase interface footprints during execution.",
+      "to": "Strict nominal static typing verified at compile time and preserved at runtime via Reflection and Generics metadata."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style presentation allowing loose structural models, implicit arrow constructs, and module configurations.",
+      "to": "Formal object-oriented layout utilizing explicit type definitions, properties, and strict namespace grouping frameworks."
+    },
+    {
+      "category": "Memory",
+      "from": "V8 engine automatic reference handling and generation scanning scripts.",
+      "to": "Common Language Runtime (CLR) multi-generational garbage collector optimized for enterprise server configurations."
+    },
+    {
+      "category": "Async",
+      "from": "Single-thread event loop processing micro-tasks, Promise blocks, and async patterns.",
+      "to": "Task-based Asynchronous Pattern (TAP) using thread-pool schedulers alongside native async/await keywords."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Basic operations primitives; depends on npm additions for file system structures or web utilities.",
+      "to": "Massive, high-performance base class framework (.NET BCL) covering data access, cryptography, and network sockets."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Strong Properties and Model Configurations",
+      "description": "Creating read-only property bindings on models.",
+      "fromCode": "class Account {\n  constructor(public readonly id: string) {}\n}",
+      "toCode": "public class Account\n{\n    public string Id { get; }\n    public Account(string id) => Id = id;\n}"
+    },
+    {
+      "title": "Asynchronous Task Implementations",
+      "description": "Fetching remote data streams using non-blocking asynchronous calls.",
+      "fromCode": "async function getData(url: string): Promise<string> {\n  const res = await fetch(url);\n  return res.text();\n}",
+      "toCode": "using System.Net.Http;\nusing System.Threading.Tasks;\n\npublic async Task<string> GetDataAsync(string url)\n{\n    using HttpClient client = new HttpClient();\n    return await client.GetStringAsync(url);\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Map LINQ over Array Iteration Paths",
+      "body": "Replace continuous TypeScript array methods like `.filter()` or `.map()` with C#'s Language Integrated Query (LINQ) extensions, using `.Where()` and `.Select()` inside the `System.Linq` namespace."
+    },
+    {
+      "title": "Enforce Value Type vs Reference Type Rules",
+      "body": "Understand that C# makes distinct structural distinctions between value models (`struct`) and standard heap references (`class`). Structs are copied completely during assignment actions, whereas classes pass reference handles."
+    },
+    {
+      "title": "Utilize Tasks for Parallel Computations",
+      "body": "C# async execution tasks run on top of background thread-pool infrastructure. Unlike single-threaded TypeScript async execution loops, concurrent tasks in C# can execute simultaneously across multiple hardware processors."
+    },
+    {
+      "title": "Leverage Capitalization and Formatting Rules",
+      "body": "Adhere to Microsoft naming standards. Method declarations, property references, and class definitions use PascalCase (e.g., `CalculateTotal`), whereas internal variable pointers use standard camelCase format bindings."
+    }
+  ]
+}

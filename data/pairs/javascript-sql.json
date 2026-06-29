@@ -1,0 +1,62 @@
+{
+  "intro": "Rewriting JavaScript logic into SQL migrates programmatic procedural flows directly into relational database engines. Developers execute this refactoring to perform data filtering, aggregations, and transformations at the persistence layer, minimizing network payloads and speeding up throughput. This shifts the computational model from imperative, row-by-row iteration to declarative set-based operations.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Dynamic runtime typing with weak equality coercions and mutable object shapes.",
+      "to": "Static, schema-driven data types strictly enforced at the column level on write operations."
+    },
+    {
+      "category": "Syntax",
+      "from": "Imperative and functional constructs tracking sequential commands, conditionals, and loops.",
+      "to": "Declarative statements focused on specifying the desired result set properties rather than step-by-step instructions."
+    },
+    {
+      "category": "Memory",
+      "from": "V8 managed application memory tracking long-lived script instances and state trees.",
+      "to": "Database server cache, page buffers, and transient tables optimized for disk I/O operations."
+    },
+    {
+      "category": "Async",
+      "from": "Non-blocking event loop managing network roundtrips and user interactions.",
+      "to": "Synchronous transactions managing parallel connection pools via locks, isolation levels, and WAL logs."
+    },
+    {
+      "category": "Standard Library",
+      "from": "General-purpose language components covering string utils, array features, and JSON parsing.",
+      "to": "Data-centric built-ins targeting relation joins, mathematical groupings, and date-time filtering."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Filtering and Grouped Summaries",
+      "description": "Summing order values by customer for active users.",
+      "fromCode": "const orders = [{ customerId: 1, amount: 50, active: true }, { customerId: 1, amount: 30, active: true }];\nconst totals = orders\n  .filter(o => o.active)\n  .reduce((acc, o) => {\n    acc[o.customerId] = (acc[o.customerId] || 0) + o.amount;\n    return acc;\n  }, {});",
+      "toCode": "SELECT customer_id, SUM(amount) AS total_amount\nFROM orders\nWHERE active = true\nGROUP BY customer_id;"
+    },
+    {
+      "title": "Conditional Classification",
+      "description": "Mapping numerical scores to distinct categorical tags.",
+      "fromCode": "const items = [{ id: 1, score: 95 }];\nconst graded = items.map(item => ({\n  ...item,\n  grade: item.score >= 90 ? 'A' : 'B'\n}));",
+      "toCode": "SELECT id, score,\n  CASE \n    WHEN score >= 90 THEN 'A'\n    ELSE 'B'\n  END AS grade\nFROM items;"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Think in Sets, Not Loops",
+      "body": "Avoid using loops or cursors in SQL to mimic JavaScript `forEach` blocks. SQL engine performance relies on evaluating entire tables as sets using structured clauses like `WHERE` and `JOIN` simultaneously."
+    },
+    {
+      "title": "Enforce Strict Type Compatibility",
+      "body": "JavaScript implicitly converts strings to numbers when applying loose operations. SQL will fail or reject queries outright if you attempt to compare mismatched schemas without explicit `CAST` expressions."
+    },
+    {
+      "title": "Delegate Sorting to the Engine",
+      "body": "Do not pull unsorted data into JavaScript arrays to run `.sort()`. Use SQL's native `ORDER BY` clause, which leverages indexes and query execution plans to perform optimal disk and memory sort passes."
+    },
+    {
+      "title": "Leverage Indexes for Lookups",
+      "body": "Array searching via `.find()` or `.includes()` scales linearly ($O(N)$) in JavaScript. Ensure your queried SQL columns are appropriately indexed to shift lookup complexities down to $O(\\log N)$."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating from JavaScript to Scala transitions a codebase from a dynamically typed, single-threaded event loop environment to a statically typed, multi-paradigm language running on the JVM. Developers make this shift to leverage Scala's powerful type system, functional programming primitives, and robust concurrency models for high-throughput backend services. This move eliminates runtime type errors common in JavaScript while introducing advanced features like pattern matching and implicits.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Dynamically typed with implicit type coercion and runtime resolution.",
+      "to": "Statically typed with advanced type inference, structural typing, and generalized type constraints."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style syntax heavily reliant on functions, object literals, and prototype chains.",
+      "to": "Expression-oriented syntax blending object-oriented classes with functional constructs like traits and case classes."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed by host environment engine (V8, JavaScriptCore) using a generational garbage collector.",
+      "to": "Managed by the Java Virtual Machine (JVM) using highly configurable collectors like G1GC or ZGC."
+    },
+    {
+      "category": "Async",
+      "from": "Single-threaded event loop utilizing Promises, async/await keyword pairs, and callbacks.",
+      "to": "Multi-threaded concurrency managed via Futures, ExecutionContexts, and functional effect systems like Cats Effect or ZIO."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimal core focusing on prototype primitives, arrays, and basic math; heavily relies on npm.",
+      "to": "Extensive core standard library with powerful collections, functional combinators, and native multi-threading primitives."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Data Transformation",
+      "description": "Filtering and mapping a list of user objects based on attributes.",
+      "fromCode": "const users = [{ name: 'Alice', active: true }, { name: 'Bob', active: false }];\nconst activeNames = users.filter(u => u.active).map(u => u.name);",
+      "toCode": "case class User(name: String, active: Boolean)\nval users = List(User(\"Alice\", true), User(\"Bob\", false))\nval activeNames: List[String] = users.filter(_.active).map(_.name)"
+    },
+    {
+      "title": "Asynchronous Computation Chain",
+      "description": "Fetching a resource and transforming the result asynchronously.",
+      "fromCode": "async function processData(id) {\n  const raw = await fetchUser(id);\n  return { ...raw, processed: true };\n}",
+      "toCode": "import scala.concurrent.Future\nimport scala.concurrent.ExecutionContext.Implicits.global\n\ndef processData(id: String): Future[User] = {\n  fetchUser(id).map(raw => raw.copy(processed = true))\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Embrace Expression-Oriented Design",
+      "body": "In Scala, almost every construct (including if-else blocks and try-catch) returns a value. Avoid defining mutable variable placeholders and reassigning them; instead, assign the outcome of the conditional or loop directly to an immutable val."
+    },
+    {
+      "title": "Replace Prototypes with Traits",
+      "body": "JavaScript's prototype-based inheritance does not exist in Scala. Use traits to define shared interfaces and modular behavior that can be mixed into classes and objects at compile time."
+    },
+    {
+      "title": "Isolate Side Effects via Options",
+      "body": "Instead of returning null or undefined for missing data, wrap results in Scala's Option (Some/None) monad. This forces compile-time handling of empty states and eliminates NullPointerExceptions."
+    },
+    {
+      "title": "Understand ExecutionContexts",
+      "body": "Unlike JavaScript's automatic global event loop, Scala requires an explicit ExecutionContext to execute Futures. Ensure you scope your implicits correctly to avoid leaking thread pools across application boundaries."
+    }
+  ]
+}

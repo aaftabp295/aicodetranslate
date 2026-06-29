@@ -1,0 +1,62 @@
+{
+  "intro": "Converting TypeScript to C++ transitions an application from a managed web language into an ultra-high-performance system language that features deterministic resource management. Developers make this structural pivot when building complex graphics systems, game engines, or low-latency computational tools requiring zero-cost abstractions. This requires migrating from garbage-collected reference safety to strict ownership controls and explicit object lifecycles.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Structural type definitions containing flexible union interfaces and compile-time type extraction helpers.",
+      "to": "Static, nominal type layout supporting generic template metaprogramming, multiple inheritance models, and type deduction via auto."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style block syntax integrating arrow parameters, modular imports, and structured object declarations.",
+      "to": "Extensive object-oriented design featuring manual operator overloads, namespaces, and template symbols."
+    },
+    {
+      "category": "Memory",
+      "from": "Engine-driven automatic memory collection; objects are tracked dynamically on a managed heap.",
+      "to": "Deterministic resource management leveraging RAII patterns, stack allocations, and explicit smart pointers (unique_ptr, shared_ptr)."
+    },
+    {
+      "category": "Async",
+      "from": "Built-in engine event loops processing background micro-tasks and task queues asynchronously.",
+      "to": "Multi-threaded capabilities leveraging system primitives like `std::async`, standard thread objects, and low-level condition variables."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Web and platform execution hooks heavily augmented via external open-source module managers.",
+      "to": "Rich Standard Template Library (STL) delivering highly optimized vectors, hash maps, algorithms, and file stream tooling."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Class Definitions with Resource Management",
+      "description": "Creating standard class configurations utilizing proper separation constructs.",
+      "fromCode": "class Vector2D {\n  constructor(public x: number, public y: number) {}\n}",
+      "toCode": "class Vector2D {\npublic:\n    double x;\n    double y;\n    Vector2D(double x, double y) : x(x), y(y) {}\n};"
+    },
+    {
+      "title": "Dynamic Hash Storage Operations",
+      "description": "Storing key-value pairings within high-performance lookup engines.",
+      "fromCode": "const map = new Map<string, number>();\nmap.set(\"age\", 30);",
+      "toCode": "#include <unordered_map>\n#include <string>\n\nstd::unordered_map<std::string, int> map;\nmap[\"age\"] = 30;"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Leverage RAII and Smart Pointers",
+      "body": "Avoid using raw pointers with manual `new` and `delete` invocations. Use `std::unique_ptr` and `std::shared_ptr` to ensure that heap-allocated resources are automatically freed when their managing object goes out of scope."
+    },
+    {
+      "title": "Prefer Stack Allocations Natively",
+      "body": "In TypeScript, all objects are implicitly placed on the heap. In C++, instantiating an object without keywords places it directly on the stack, which guarantees high execution speeds and immediate cleanup."
+    },
+    {
+      "title": "Understand Passing Boundaries",
+      "body": "TypeScript passes objects by reference. C++ copies parameters by value by default unless specified otherwise; use const references (e.g., `const std::string& text`) to pass large structures efficiently without copying overhead."
+    },
+    {
+      "title": "Replace Array Methods with STL Algorithms",
+      "body": "Instead of using chained array actions like `.map()`, import the `<algorithm>` header and use utilities like `std::transform` alongside anonymous lambda expressions to modify your underlying data sequences."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Converting JavaScript tasks to Bash moves code from an application runtime environment straight to the operating system shell interface. Developers port to Bash to remove dependencies like Node.js for low-overhead deployment scripts, systems automation, and direct pipeline manipulations of command-line tools. This eliminates heavy node_modules folders in favor of lean, process-centric automation.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Dynamic types supporting strings, numbers, booleans, and nested complex object trees.",
+      "to": "Untyped string-centric architecture where variables are treated as strings unless evaluated in arithmetic contexts."
+    },
+    {
+      "category": "Syntax",
+      "from": "Structured C-style code with blocks demarcated by curly braces and keyword statements.",
+      "to": "Command-line syntax where whitespace determines argument parsing and conditionals end with reversed keywords (e.g., fi, esac)."
+    },
+    {
+      "category": "Memory",
+      "from": "V8 heap managed by a garbage collector with closures maintaining scope state.",
+      "to": "No centralized heap; uses process isolation and short-lived subshells that clean up on exit."
+    },
+    {
+      "category": "Async",
+      "from": "Asynchronous engine processing macro-tasks and micro-tasks via an event loop.",
+      "to": "Synchronous by default, utilizing background workers via the `&` operator and process pipelines."
+    },
+    {
+      "category": "Standard Library",
+      "from": "EcmaScript APIs supplemented by Node.js or browser modules for external system interaction.",
+      "to": "Relies entirely on binary executables found in the system PATH (sed, awk, grep, curl) and streams."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Conditional Directory Check",
+      "description": "Checking if a directory exists before executing an operation.",
+      "fromCode": "const fs = require('fs');\nif (!fs.existsSync('./configs')) {\n  fs.mkdirSync('./configs');\n}",
+      "toCode": "if [ ! -d \"./configs\" ]; then\n  mkdir -p \"./configs\"\nfi"
+    },
+    {
+      "title": "Looping Through Command Output",
+      "description": "Iterating over text records separated by lines.",
+      "fromCode": "const files = ['app.js', 'index.js'];\nfiles.forEach(file => {\n  console.log(`Processing: ${file}`);\n});",
+      "toCode": "files=(\"app.js\" \"index.js\")\nfor file in \"${files[@]}\"; do\n  echo \"Processing: ${file}\"\ndone"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Quote Your Variables Judiciously",
+      "body": "Unlike JavaScript string variables, referencing a Bash variable without double quotes (e.g., `$var`) will trigger word splitting and glob expansion if the content contains spaces. Always wrap references in quotes: `\"$var\"`."
+    },
+    {
+      "title": "Check Command Return Values",
+      "body": "Bash does not throw exceptions. Error handling requires inspecting the exit status code of the preceding command using `$?`; a non-zero value indicates an error state."
+    },
+    {
+      "title": "Mind the Whitespace in Conditionals",
+      "body": "In Bash, brackets inside `if [ \"$a\" == \"$b\" ]` are actual commands, not merely syntax boundaries. Missing spaces between the brackets and arguments will cause fatal parser syntax errors."
+    },
+    {
+      "title": "Enable Strict Mode via Flags",
+      "body": "Emulate JavaScript's 'use strict' by adding `set -euo pipefail` at the start of your Bash scripts. This instructs the shell to exit immediately if any command fails or if an uninitialized variable is used."
+    }
+  ]
+}

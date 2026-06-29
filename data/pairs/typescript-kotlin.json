@@ -1,0 +1,62 @@
+{
+  "intro": "Converting TypeScript to Kotlin transitions an application from a web platform runtime to a modern, statically typed language targeting the JVM, Android, or Native configurations. Developers switch to Kotlin to build scalable enterprise microservices or mobile apps while maintaining a modern, concise developer experience. This change replaces structural type matching with explicit nominal types while retaining highly valued features like null safety and functional primitives.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Compile-time structural mechanics featuring flexible utility shapes and intersection markers, erased at build.",
+      "to": "Strict static nominal typing with compile-time null safety validation and generic variance parameters."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style scripting syntax utilizing explicit variable keywords and arrow configuration scopes.",
+      "to": "Concise, expression-oriented layout omitting semicolons and providing trailing closures and smart type casts."
+    },
+    {
+      "category": "Memory",
+      "from": "Generational engine-level garbage collection optimized for web scripts running on a single heap.",
+      "to": "Managed JVM heap operations leveraging production collectors optimized for long-running processes."
+    },
+    {
+      "category": "Async",
+      "from": "Single-threaded execution loop managing non-blocking tasks via Promise queues.",
+      "to": "Sequential coroutines framework providing lightweight structured concurrency across multiple underlying threads."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Basic type definitions requiring open-source extensions for extended OS interaction tasks.",
+      "to": "Rich collection extensions, functional processing combinators, and native Java interop capabilities."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Data Carrying Data Classes",
+      "description": "Declaring structural entities with automatic equality checks.",
+      "fromCode": "type User = { id: number; email: string };\nconst user: User = { id: 1, email: \"a@b.com\" };",
+      "toCode": "data class User(val id: Int, val email: String)\n\n// Instantiation\nval user = User(1, \"a@b.com\")"
+    },
+    {
+      "title": "Safe Null Casting Blocks",
+      "description": "Executing code conditionally depending on the presence of values.",
+      "fromCode": "function display(text: string | null) {\n  if (text) console.log(text.toUpperCase());\n}",
+      "toCode": "fun display(text: String?) {\n    text?.let { println(it.uppercase()) }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Utilize Built-in Smart Casting",
+      "body": "Once you check a variable's type via Kotlin's `is` keyword, the compiler automatically smart-casts the reference for the remainder of that block. You don't need to write explicit, repetitive type casting operations."
+    },
+    {
+      "title": "Embrace Structured Coroutines",
+      "body": "Replace continuous Promise chains with Kotlin's coroutine wrappers. Prefixing async operations with `suspend` allows you to write non-blocking asynchronous routines sequentially without callback nesting."
+    },
+    {
+      "title": "Migrate Interfaces to Data Classes",
+      "body": "When translating standard TypeScript object interfaces used purely as data payloads, declare them as Kotlin `data class` structures to automatically obtain built-in structural copying methods."
+    },
+    {
+      "title": "Distinguish Read-Only Variable Declarations",
+      "body": "Kotlin enforces immutability at the variable layer using two separate keywords. Use `val` for read-only references (similar to TypeScript's `const`) and use `var` only when you need to reassign values."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Converting from TypeScript to PHP swaps a client/server runtime layer for a server-side scripting engine explicitly tailored for rapid web request lifecycles. Developers make this shift when deploying to standardized web hosting environments or when building content-heavy MVC applications on frameworks like Laravel. This changes the execution pipeline from an ongoing event loop to a stateless request-response execution cycle that tears down all resources on every page load.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Strict compile-time structural checking with advanced types, erased at runtime.",
+      "to": "Gradual typing with nominal type declarations enforced at runtime, supporting union types in modern versions."
+    },
+    {
+      "category": "Syntax",
+      "from": "Modern JavaScript-based layout utilizing explicit variable keywords and arrow constructs.",
+      "to": "C-style scripting syntax requiring sigil character markers (`$`) on variables and arrow operators (`->`) for property access."
+    },
+    {
+      "category": "Memory",
+      "from": "Long-lived application heap processes managed via engine garbage collectors.",
+      "to": "Stateless request-scoped memory architecture that automatically flushes all allocations once the active page script finishes executing."
+    },
+    {
+      "category": "Async",
+      "from": "Built-in non-blocking asynchronous event loop processing task queues natively.",
+      "to": "Synchronous, thread-per-request execution model requiring external tools like Swoole or RoadRunner for asynchronous behaviors."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Basic utility packages requiring external module integration for extended filesystem and database access.",
+      "to": "Massive native function set providing direct database drivers, string filters, and web request utilities natively."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Class and Type Definitions",
+      "description": "Declaring standard typed properties inside class constructors.",
+      "fromCode": "class Product {\n  constructor(public name: string, public price: number) {}\n}",
+      "toCode": "class Product {\n    public function __construct(\n        public string $name,\n        public float $price\n    ) {}\n}"
+    },
+    {
+      "title": "Key-Value Array Mappings",
+      "description": "Configuring associative dictionary records.",
+      "fromCode": "const config: Record<string, string> = {\n  \"env\": \"production\",\n  \"port\": \"8080\"\n};",
+      "toCode": "$config = [\n    \"env\" => \"production\",\n    \"port\" => \"8080\"\n];"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Remember the Variable Sigil Mark",
+      "body": "Every variable declaration and reference in PHP must begin with a dollar sign symbol (`$`). Forgetting this character is a frequent source of parsing errors for developers transitioning from TypeScript."
+    },
+    {
+      "title": "Distinguish Arrays and Maps",
+      "body": "TypeScript keeps arrays and object dictionary maps separated. PHP combines both use cases into a single unified type: associative arrays, which use the `=>` arrow syntax to assign key-value pairs."
+    },
+    {
+      "title": "Account for Stateless Execution",
+      "body": "PHP reboots the entire application state on every incoming web request. Global variables or in-memory caches do not persist between page reloads; use external stores like Redis or databases to maintain state."
+    },
+    {
+      "title": "Use Modern Strict Types",
+      "body": "Add the declaration line `declare(strict_types=1);` to the absolute top of your PHP files. This prevents implicit type coercions and forces the runtime to reject invalid argument types with fatal errors."
+    }
+  ]
+}

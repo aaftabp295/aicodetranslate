@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from TypeScript to Swift elevates code from a web environment to a highly compiled, type-safe system language tailored for Apple platforms and modern cloud architectures. Developers execute this migration to build high-performance, native applications with zero runtime engine overhead. The change introduces developers to strict nominal types, explicit value immutability patterns, and advanced compiler guarantees.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Static structural checking with structural duck-typing rules, completely stripped prior to runtime.",
+      "to": "Strict nominal static type safety featuring generic protocol extensions, associated types, and strict type safety controls."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style syntax using explicit variable markers, class structures, and arrow declarations.",
+      "to": "Modern, streamlined syntax with parameter labels, explicit switch cases, and trailing closure configurations."
+    },
+    {
+      "category": "Memory",
+      "from": "Automated runtime generational garbage collection managing an application heap dynamically.",
+      "to": "Deterministic Automatic Reference Counting (ARC) tracking and deallocating object instances at runtime without stop-the-world sweeps."
+    },
+    {
+      "category": "Async",
+      "from": "Single-thread runtime event loop executing micro-task scheduling queues asynchronously.",
+      "to": "Structured concurrency framework natively utilizing async/await keyword pairs, Task queues, and state-isolating Actors."
+    },
+    {
+      "category": "Standard Library",
+      "from": "EcmaScript core types heavily supplemented via external open-source module ecosystems.",
+      "to": "Comprehensive core toolkit covering cryptographic functions, string unicode engines, and highly optimized collection structures."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Struct Definitions and Optional States",
+      "description": "Modeling data entities with explicit optional type tracking safely.",
+      "fromCode": "interface Employee {\n  id: string;\n  role?: string;\n}\nconst emp: Employee = { id: \"E1\" };",
+      "toCode": "struct Employee {\n    let id: String\n    var role: String?\n}\n\nlet emp = Employee(id: \"E1\", role: nil)"
+    },
+    {
+      "title": "Safe Pattern Guard Controls",
+      "description": "Unwrapping conditional states early to prevent cascading code indentation.",
+      "fromCode": "function process(msg: string | null) {\n  if (!msg) return;\n  console.log(msg);\n}",
+      "toCode": "fn process(msg: Option<&str>) {\n    let Some(m) = msg else { return };\n    println!(\"{}\", m);\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Understand Structs and Classes",
+      "body": "Swift prefers value types over reference types. Declare data models as `struct` rather than `class` to gain automatic thread safety and avoid reference-counting overhead; structs are copied on assignment."
+    },
+    {
+      "title": "Master Argument Parameter Labels",
+      "body": "Swift functions use external argument labels for parameters (e.g., `func greet(to name: String)`). When invoking the method, you must explicitly include the label tag name in the argument parameters: `greet(to: \"Alice\")`."
+    },
+    {
+      "title": "Prevent Retain Cycles in Closures",
+      "body": "Because Swift tracks objects via ARC reference counters, passing long-lived classes into closures can cause cyclical leaks. Prevent this by defining explicit capture lists like `[weak self]` at the start of the block."
+    },
+    {
+      "title": "Use guard for Early Return Paths",
+      "body": "Replace traditional nested `if` statements with Swift's `guard` statement. This structure forces an early return block, keeping your primary code paths flat, clean, and highly readable."
+    }
+  ]
+}

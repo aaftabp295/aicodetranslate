@@ -1,0 +1,62 @@
+{
+  "intro": "Rewriting TypeScript code into C drops software from a high-level managed environment directly down to a procedural, close-to-hardware language. Developers execute this optimization step to write resource-constrained firmware, microkernels, or performance-critical application engines where runtime garbage collection cycles cannot be tolerated. The conversion replaces high-level abstractions with precise manual memory layouts and pointer mechanics.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically verified compile-time structural patterns featuring complex utility typings and type guards.",
+      "to": "Static, weakly enforced nominal type mappings centered around machine words, structs, and implicit pointer coercions."
+    },
+    {
+      "category": "Syntax",
+      "from": "Modern C-based language layout featuring block scoping, module export keys, and arrow definitions.",
+      "to": "Minimalist procedural syntax emphasizing function steps, pointer dereferences, and macro configurations."
+    },
+    {
+      "category": "Memory",
+      "from": "Automated memory scanning through high-level engine garbage collection abstractions.",
+      "to": "Manual allocation and tracking managed entirely by the engineer utilizing explicit `malloc` and `free` operations."
+    },
+    {
+      "category": "Async",
+      "from": "Native asynchronous architecture backed by a built-in event queue mechanism.",
+      "to": "Purely synchronous procedural logic relying on operating system low-level primitives (pthreads) for parallelism."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Context-rich environments for web applications, JSON processing parsing, and dynamic array expansions.",
+      "to": "Minimal headers (libc) delivering primitive string manipulators, basic file system access, and raw memory tools."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Struct Mapping and Initialization",
+      "description": "Defining a structured block of memory representing an item.",
+      "fromCode": "interface Point {\n  x: number;\n  y: number;\n}\nconst pt: Point = { x: 10, y: 20 };",
+      "toCode": "struct Point {\n    int x;\n    int y;\n};\n\n// Allocation/Initialization\nstruct Point pt = { .x = 10, .y = 20 };"
+    },
+    {
+      "title": "Array Iteration via Pointer Steps",
+      "description": "Iterating through continuous numeric fields using fixed sizing boundaries.",
+      "fromCode": "const scores: number[] = [80, 90, 95];\nfor (let i = 0; i < scores.length; i++) {\n  process(scores[i]);\n}",
+      "toCode": "#include <stddef.h>\n\nint scores[] = {80, 90, 95};\nsize_t count = sizeof(scores) / sizeof(scores[0]);\nfor (size_t i = 0; i < count; i++) {\n    process(scores[i]);\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Track Allocated Allocation Blocks",
+      "body": "C will not automatically clean up variables allocated via heap tools. Every single instance of `malloc`, `calloc`, or `realloc` must match an explicit, strategically positioned `free` block to prevent terminal memory leaks."
+    },
+    {
+      "title": "Guard Array Bounds Manually",
+      "body": "TypeScript arrays expand dynamically and throw safe errors or return undefined on out-of-bound requests. C arrays are fixed-size segments of raw memory; writing past boundaries corrupts adjacent data blocks or crashes with a segmentation fault."
+    },
+    {
+      "title": "Re-engineer String Architectures",
+      "body": "C does not have a native string object. Strings are raw arrays of characters ending with a null terminator character (`\\0`); manipulations require careful buffer sizing using `strncpy` or `snprintf` to avoid buffer overflows."
+    },
+    {
+      "title": "Avoid Returning Local Pointers",
+      "body": "Never return a pointer referencing an internal function stack variable from a C function. Once the execution scope closes, the stack frame is reclaimed, leaving you with a dangerous dangling pointer that leads to undefined behavior."
+    }
+  ]
+}

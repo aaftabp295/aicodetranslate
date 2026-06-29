@@ -1,0 +1,62 @@
+{
+  "intro": "Porting TypeScript to Ruby transitions a codebase into a highly expressive, purely object-oriented dynamic scripting language optimized for developer happiness and rapid application prototyping. Developers make this switch when adopting frameworks like Ruby on Rails to build robust, database-driven web applications with minimal boilerplate. This shift requires moving from explicit compile-time type verification to dynamic runtime method evaluation and duck-typing mechanics.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Strict structural static type layer verified during compilation and erased before execution.",
+      "to": "Strongly typed dynamic system centered around duck-typing, where object capabilities are verified at runtime when methods are called."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style block structures requiring curly braces, semicolons, and explicit return markers.",
+      "to": "Clean, human-readable layout omitting curly braces and semicolons, utilizing trailing blocks and implicit expression returns."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed automatically via engine generational garbage collection sweeps on a persistent application heap.",
+      "to": "Automated object slot reference tracking combined with a generational mark-and-sweep garbage collector."
+    },
+    {
+      "category": "Async",
+      "from": "Single-threaded event loop architecture executing non-blocking Promise queues natively.",
+      "to": "Synchronous by default, utilizing Fiber objects, concurrent thread abstractions, or Guild isolation patterns for parallel logic."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimal core focusing on JavaScript foundations, relying heavily on npm packages for expanded features.",
+      "to": "Extensive standard library offering powerful string manipulators, file handling utilities, and native system scripting tools."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Class and Initialization Blocks",
+      "description": "Declaring regular classes with instance variable setters.",
+      "fromCode": "class Customer {\n  constructor(private name: string) {}\n  getName() { return this.name; }\n}",
+      "toCode": "class Customer\n  def initialize(name)\n    @name = name\n  end\n\n  def name\n    @name\n  end\nend"
+    },
+    {
+      "title": "Block-Based Collection Transformations",
+      "description": "Filtering list datasets using closures.",
+      "fromCode": "const inputs: number[] = [1, 2, 3, 4];\nconst odds: number[] = inputs.filter(x => x % 2 !== 0);",
+      "toCode": "inputs = [1, 2, 3, 4]\nodds = inputs.select { |x| x.odd? }"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Leverage Implicit Return Values",
+      "body": "Ruby functions automatically return the value of the last evaluated expression inside their block scope. You can safely omit the `return` keyword unless you need to exit a function early based on a conditional check."
+    },
+    {
+      "title": "Understand Everything is an Object",
+      "body": "Unlike TypeScript, Ruby contains no primitive values or standalone functions. Every entity—including numbers, nil states, and class definitions—is a true object that inherits from the base Object class."
+    },
+    {
+      "title": "Replace Callbacks with Blocks",
+      "body": "Instead of passing anonymous arrow functions as callbacks, use Ruby's native blocks passed via curly braces or `do...end` markers, which are received using the internal `yield` keyword."
+    },
+    {
+      "title": "Verify Interface Contracts via RBS",
+      "body": "If you miss TypeScript's compile-time validation, adopt Ruby's modern typing companion files (`.rbs`) alongside static analysis engines like Steep to check parameter constraints before execution."
+    }
+  ]
+}

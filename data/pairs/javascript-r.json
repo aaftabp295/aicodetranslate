@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from JavaScript to R shifts focus from general-purpose web application development to specialized statistical computing and data analysis. Developers execute this switch when they need to leverage R's massive ecosystem of data science packages, matrix operations, and native plotting capabilities. The migration requires shifting mental models from event-driven asynchronous execution to vectorized data manipulation.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Dynamically typed with primitive types, objects, and prototype-based arrays.",
+      "to": "Dynamically typed centered around vector types (logical, numeric, character) and explicit data frames."
+    },
+    {
+      "category": "Syntax",
+      "from": "C-style syntax with curly braces, explicit return statements, and zero-based indexing.",
+      "to": "Algol-like syntax using the `<-` assignment operator, 1-based indexing, and implicit returns of the last evaluated expression."
+    },
+    {
+      "category": "Memory",
+      "from": "Engine-managed garbage collection optimized for short-lived UI objects and long-running event states.",
+      "to": "RAM-bound, pass-by-value semantics where large operations often duplicate objects unless modified in-place via specific packages."
+    },
+    {
+      "category": "Async",
+      "from": "Asynchronous by default via an event loop, non-blocking I/O operations, and event listeners.",
+      "to": "Synchronous, single-threaded execution focused on batch scripts, needing packages like future or promises for parallel processing."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Focused on DOM interaction, basic data structures, and web-centric utilities.",
+      "to": "Deeply integrated with statistical models, mathematical functions, distribution suites, and matrix algebra."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Vectorized Math Operation",
+      "description": "Multiplying all numbers in an array by a scalar factor.",
+      "fromCode": "const matrix = [1, 2, 3, 4];\nconst scaled = matrix.map(x => x * 2);",
+      "toCode": "matrix <- c(1, 2, 3, 4)\nscaled <- matrix * 2"
+    },
+    {
+      "title": "Filtering Table Records",
+      "description": "Filtering records based on an attribute and selecting a specific field.",
+      "fromCode": "const df = [{id: 1, val: 10}, {id: 2, val: 20}];\nconst filtered = df.filter(r => r.val > 15).map(r => r.id);",
+      "toCode": "# Using base R data frames\ndf <- data.frame(id = c(1, 2), val = c(10, 20))\nfiltered <- df$id[df$val > 15]"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Shift to Vectorized Thinking",
+      "body": "Avoid writing `for` loops to iterate through elements of a collection as you would in JavaScript. R operates on entire vectors simultaneously; using vectorized functions is significantly faster and more idiomatic."
+    },
+    {
+      "title": "Adjust to 1-Based Indexing",
+      "body": "JavaScript indices start at 0, but R indices start at 1. Accessing the first item of an array or vector requires passing `1` inside the square brackets; passing `0` yields an empty vector of the base type."
+    },
+    {
+      "title": "Master the Assignment Operators",
+      "body": "While `=` works for assignment in R, the community standard is `<-`. Reserve `=` exclusively for setting named arguments inside function invocations to match R ecosystem conventions."
+    },
+    {
+      "title": "Differentiate NULL and NA",
+      "body": "JavaScript relies on `null` and `undefined`. R distinguishes between `NULL` (the empty object or missing variable) and `NA` (Not Available, representing missing data within a specific vector or data frame cell)."
+    }
+  ]
+}
