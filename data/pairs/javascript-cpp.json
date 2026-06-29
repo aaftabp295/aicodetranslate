@@ -1,0 +1,62 @@
+{
+  "intro": "JavaScript provides a highly dynamic, garbage-collected runtime optimized for user interactions and web web services. Moving to C++ upgrades the software stack to compiled high-performance execution, zero-overhead abstractions, and precise object lifecycle control. This transition is common when building graphics engines, high-frequency trading platforms, or resource-constrained applications.",
+  "diffs": [
+    {
+      "category": "Type Management",
+      "from": "Dynamic, loose runtime checking.",
+      "to": "Static, strong, explicit compile-time verification."
+    },
+    {
+      "category": "Memory Layout",
+      "from": "Garbage collected heap control.",
+      "to": "Manual allocation or automated RAII/smart pointer tracking."
+    },
+    {
+      "category": "Execution Layer",
+      "from": "JIT compilation inside web browsers or Node.js containers.",
+      "to": "Direct AOT compiled machine binary output."
+    },
+    {
+      "category": "Asynchronous Work",
+      "from": "Promises and native microtask queue loops.",
+      "to": "Multi-threading via std::thread, futures, or async worker channels."
+    },
+    {
+      "category": "Object Semantics",
+      "from": "Prototype-based inheritance paths.",
+      "to": "Class-based value/reference polymorphic structures."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Class Blueprint Declarations",
+      "description": "Building custom data types containing encapsulated properties and methods.",
+      "fromCode": "class Device {\n    constructor(id) { this.id = id; }\n    getId() { return this.id; }\n}",
+      "toCode": "#include <iostream>\n\nclass Device {\nprivate:\n    int id;\npublic:\n    Device(int deviceId) : id(deviceId) {}\n    int getId() const { return id; }\n};\n\nint main() {\n    Device dev(101);\n    std::cout << dev.getId() << std::endl;\n}"
+    },
+    {
+      "title": "Vector Sequence Manipulation",
+      "description": "Adding elements dynamically into tracked arrays.",
+      "fromCode": "const data = [];\ndata.push(5);\ndata.push(10);",
+      "toCode": "#include <vector>\n\nint main() {\n    std::vector<int> data;\n    data.push_back(5);\n    data.push_back(10);\n    return 0;\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Utilize Smart Pointers",
+      "body": "Avoid bare \"new\" or \"delete\" operators by managing dynamic allocations with std::unique_ptr and std::shared_ptr."
+    },
+    {
+      "title": "Leverage RAII Design",
+      "body": "Bind resource allocation and release to object lifecycles so resources clear automatically when leaving scope."
+    },
+    {
+      "title": "Pass Parameters by Reference",
+      "body": "Use const references (const std::string& arg) to avoid expensive data copying overhead during function execution."
+    },
+    {
+      "title": "Leverage the STL Container Suite",
+      "body": "Replace dynamic JavaScript arrays with specialized standard library containers like std::vector or std::map."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Java's JVM-based, class-centric object model is architecturally different from JavaScript's prototype chain and event-loop runtime. Converting Java to JavaScript means replacing interfaces with duck typing or TypeScript interfaces, mapping Java's threading model to JavaScript's async/await, and replacing Java's `ArrayList`/`HashMap` with native arrays and objects. Java's checked exceptions translate to try/catch with untyped errors.",
+  "diffs": [
+    {
+      "category": "Runtime",
+      "from": "JVM — cross-platform bytecode interpreted by the Java Virtual Machine.",
+      "to": "V8 / SpiderMonkey in browsers; Node.js or Deno on the server."
+    },
+    {
+      "category": "OOP model",
+      "from": "Nominal typing. Classes must explicitly implement or extend.",
+      "to": "Prototype chain. Duck typing — no implements keyword."
+    },
+    {
+      "category": "Collections",
+      "from": "ArrayList, HashMap, HashSet from java.util. Generics enforced.",
+      "to": "Native Array, Object, Map, Set. No generics at runtime."
+    },
+    {
+      "category": "Async",
+      "from": "CompletableFuture, ExecutorService, synchronized blocks.",
+      "to": "Promises, async/await, single-threaded event loop."
+    },
+    {
+      "category": "Null safety",
+      "from": "NullPointerException is the most common runtime crash in Java.",
+      "to": "null and undefined. Optional chaining (?.) reduces NPE-equivalent bugs."
+    }
+  ],
+  "examples": [
+    {
+      "title": "HashMap operations → plain object",
+      "description": "Java HashMap with generics translates to a JavaScript plain object or Map.",
+      "fromCode": "Map<String, Integer> scores = new HashMap<>();\nscores.put(\"Alice\", 95);\nscores.put(\"Bob\",   88);\n\nfor (Map.Entry<String, Integer> e : scores.entrySet()) {\n    System.out.println(e.getKey() + \": \" + e.getValue());\n}",
+      "toCode": "const scores = { Alice: 95, Bob: 88 };\n\nfor (const [name, score] of Object.entries(scores)) {\n  console.log(name + ': ' + score);\n}"
+    },
+    {
+      "title": "Interface + implementation → duck typing",
+      "description": "Java interfaces become implicit structural contracts in JavaScript.",
+      "fromCode": "interface Shape {\n    double area();\n    double perimeter();\n}\n\nclass Circle implements Shape {\n    private double radius;\n    Circle(double r) { this.radius = r; }\n    public double area()      { return Math.PI * radius * radius; }\n    public double perimeter() { return 2 * Math.PI * radius; }\n}",
+      "toCode": "class Circle {\n  constructor(radius) {\n    this.radius = radius;\n  }\n  area()      { return Math.PI * this.radius ** 2; }\n  perimeter() { return 2 * Math.PI * this.radius; }\n}\n// Any object with area() + perimeter() satisfies the \"Shape\" contract"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Remove generic declarations",
+      "body": "Java List<String> and Map<String,Integer> generics have no JS equivalent. Remove them — JavaScript arrays and objects are untyped at runtime."
+    },
+    {
+      "title": "Replace checked exceptions",
+      "body": "Java's throws declarations and checked exceptions become plain try/catch. No need to declare what errors a function might throw."
+    },
+    {
+      "title": "CompletableFuture → Promise",
+      "body": "Java's CompletableFuture.thenApply maps to .then(). exceptionally maps to .catch(). For parallel tasks, use Promise.all() instead of CompletableFuture.allOf()."
+    },
+    {
+      "title": "static methods → module functions",
+      "body": "Java static utility methods in a class (StringUtils.trim()) become plain exported functions in a JS module. No class wrapper needed."
+    }
+  ]
+}

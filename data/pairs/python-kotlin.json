@@ -1,0 +1,62 @@
+{
+  "intro": "Python's loose constraints allow quick prototyping but can lead to maintenance overhead in large applications. Moving to Kotlin introduces static safety, structural type inference, and access to the enterprise-grade Java Virtual Machine (JVM) ecosystem. Developers port codebases to Kotlin to improve compile-time correctness, streamline Android application development, or enhance concurrent throughput.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Dynamic, strongly typed.",
+      "to": "Static, strongly typed with advanced type inference."
+    },
+    {
+      "category": "Null Safety",
+      "from": "None values can trigger runtime AttributeError / TypeError.",
+      "to": "Type system explicitly separates nullable and non-nullable types."
+    },
+    {
+      "category": "Concurrency Model",
+      "from": "Multiprocessing or single-threaded cooperative asyncio.",
+      "to": "Lightweight sequential threads via structured Coroutines."
+    },
+    {
+      "category": "Target Platform",
+      "from": "Cross-platform Python Virtual Machine interpreter.",
+      "to": "Java Virtual Machine (JVM) bytecode, Native binary, or JavaScript."
+    },
+    {
+      "category": "Data Containment",
+      "from": "Standard classes, dicts, or generic python dataclasses.",
+      "to": "Optimized compiler-generated \"data class\" definitions."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Null Safe Operations",
+      "description": "Handling values that may be null without raising errors.",
+      "fromCode": "def get_length(val: str | None) -> int:\n    return len(val) if val is not None else 0",
+      "toCode": "func getLength(val: String?): Int {\n    return val?.length ?: 0\n}"
+    },
+    {
+      "title": "Data Object Class",
+      "description": "Defining simple object schemas holding properties.",
+      "fromCode": "from dataclasses import dataclass\n\n@dataclass\nclass Customer:\n    id: int\n    email: str",
+      "toCode": "data class Customer(\n    val id: Int,\n    val email: String\n)"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Enforce Null Contracts",
+      "body": "Differentiate between String and String? types to handle missing parameters during compilation."
+    },
+    {
+      "title": "Utilize Coroutines",
+      "body": "Replace asyncio event loops with Kotlin Coroutines for scalable asynchronous background tasks."
+    },
+    {
+      "title": "Leverage Extensions",
+      "body": "Extend third-party library classes using Kotlin extension functions instead of wrapping or subclassing."
+    },
+    {
+      "title": "Prefer val Over var",
+      "body": "Declare all variable identifiers with \"val\" to ensure immutability unless variable reassignment is required."
+    }
+  ]
+}

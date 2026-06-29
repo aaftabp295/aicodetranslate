@@ -1,0 +1,62 @@
+{
+  "intro": "Stripping TypeScript to JavaScript means removing type annotations, interface declarations, generics, and enum definitions while preserving all runtime logic unchanged. The resulting JavaScript runs anywhere without a build step, which is useful for lightweight scripts, serverless functions with cold-start constraints, or open-source libraries targeting the broadest possible audience.",
+  "diffs": [
+    {
+      "category": "Build step",
+      "from": "Requires tsc, esbuild, SWC, or a bundler before code can run.",
+      "to": "Runs directly in Node.js, Deno, or the browser. Zero build step."
+    },
+    {
+      "category": "Type safety",
+      "from": "Compile-time type checking catches bugs before runtime.",
+      "to": "All type errors become runtime errors. Defensive checks must be manual."
+    },
+    {
+      "category": "Syntax",
+      "from": "Type annotations, interfaces, generics, and enums extend JS syntax.",
+      "to": "Pure ECMAScript. No annotations; only language features supported by the runtime."
+    },
+    {
+      "category": "Refactoring",
+      "from": "IDE can safely rename across the codebase using the type graph.",
+      "to": "Renames rely on text search. Cross-file safety not guaranteed."
+    },
+    {
+      "category": "Distribution",
+      "from": "Ship .d.ts declaration files so consumers get type safety.",
+      "to": "Ship plain .js. Add JSDoc comments for lightweight IDE support."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Stripping types from a typed function",
+      "description": "Remove all annotations, interfaces, and generic parameters — the runtime logic is unchanged.",
+      "fromCode": "interface User { id: number; name: string }\n\nfunction findUser(\n  users: User[],\n  id: number\n): User | undefined {\n  return users.find(u => u.id === id);\n}",
+      "toCode": "// No interface, no type annotations\nfunction findUser(users, id) {\n  return users.find(u => u.id === id);\n}"
+    },
+    {
+      "title": "Removing an enum",
+      "description": "TypeScript enums have no JavaScript equivalent — replace with const objects or plain string literals.",
+      "fromCode": "enum Direction {\n  Up    = 'UP',\n  Down  = 'DOWN',\n  Left  = 'LEFT',\n  Right = 'RIGHT',\n}\n\nfunction move(dir: Direction): void {\n  console.log('Moving:', dir);\n}",
+      "toCode": "// Const object replaces enum at zero runtime cost\nconst Direction = /** @type {const} */ ({\n  Up:    'UP',\n  Down:  'DOWN',\n  Left:  'LEFT',\n  Right: 'RIGHT',\n});\n\nfunction move(dir) {\n  console.log('Moving:', dir);\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Remove annotations systematically",
+      "body": "Strip type annotations (: Type) from function params, return types, and variable declarations. Then remove interface, type, and enum declarations."
+    },
+    {
+      "title": "Replace enums with const objects",
+      "body": "TypeScript enums compile to IIFEs. In JS, a plain const object with Object.freeze() gives the same semantics with no overhead."
+    },
+    {
+      "title": "Add JSDoc for IDE hints",
+      "body": "If consumers need IDE support, add @param and @returns JSDoc comments. VS Code reads them for autocompletion without requiring TypeScript."
+    },
+    {
+      "title": "Add runtime null guards",
+      "body": "TypeScript's strictNullChecks were catching nulls at compile time. In JS, add explicit if (value == null) guards wherever the TS compiler was protecting you."
+    }
+  ]
+}

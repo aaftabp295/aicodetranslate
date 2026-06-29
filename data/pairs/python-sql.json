@@ -1,0 +1,62 @@
+{
+  "intro": "Python manipulates collections sequentially using procedural logic or object-relational mapping patterns. SQL is a declarative query language designed to extract, transform, and manage relational database records. Developers rewrite data logic from Python into SQL to run queries directly inside the database engine, eliminating network latency and maximizing query performance.",
+  "diffs": [
+    {
+      "category": "Execution Paradigm",
+      "from": "Imperative/procedural; you write the explicit steps to process data.",
+      "to": "Declarative; you specify the desired output criteria, and the engine optimizes execution."
+    },
+    {
+      "category": "Data Model",
+      "from": "In-memory object graphs, dynamic structures, and arrays.",
+      "to": "Relational tables structured into strict schemas of rows and columns."
+    },
+    {
+      "category": "Iteration Mechanism",
+      "from": "Explicit loops (for, while) or functional collection comprehensions.",
+      "to": "Set-based relational algebra operations (JOIN, WHERE, GROUP BY)."
+    },
+    {
+      "category": "State Continuity",
+      "from": "Transient in-memory execution states that reset when the script ends.",
+      "to": "Persistent ACID-compliant transaction states written directly to storage disks."
+    },
+    {
+      "category": "Optimization Control",
+      "from": "Developer-optimized loops, reference tracking, and algorithmic choices.",
+      "to": "Query planner evaluations using internal indices and structural analytics."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Filter and Aggregate Data",
+      "description": "Filtering data entries and calculating a sum based on a grouping key.",
+      "fromCode": "users = [\n    {\"role\": \"admin\", \"active\": True, \"login_count\": 10},\n    {\"role\": \"user\", \"active\": True, \"login_count\": 5}\n]\ntotal = sum(u[\"login_count\"] for u in users if u[\"active\"] and u[\"role\"] == \"admin\")",
+      "toCode": "SELECT SUM(login_count) AS total_logins\nFROM users\nWHERE active = true AND role = 'admin';"
+    },
+    {
+      "title": "Join Datasets",
+      "description": "Combining records from two distinct sources based on a shared tracking key.",
+      "fromCode": "users = {1: \"Alice\", 2: \"Bob\"}\norders = [{\"id\": 10, \"user_id\": 1, \"total\": 50.0}]\n\njoined = [\n    {\"name\": users[o[\"user_id\"]], \"total\": o[\"total\"]}\n    for o in orders if o[\"user_id\"] in users\n]",
+      "toCode": "SELECT u.name, o.total\nFROM orders o\nJOIN users u ON o.user_id = u.id;"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Think in Sets",
+      "body": "Avoid processing rows with procedural loops; use set-based filters and relational joins instead."
+    },
+    {
+      "title": "Utilize Database Indexes",
+      "body": "Ensure columns used frequently in WHERE and JOIN clauses are indexed to avoid full table scans."
+    },
+    {
+      "title": "Leverage Aggregate Functions",
+      "body": "Offload calculations like SUM, AVG, and COUNT to the database engine instead of computing them in application memory."
+    },
+    {
+      "title": "Use Prepared Statements",
+      "body": "Always parameterize dynamic inputs to protect database systems against SQL injection attacks."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Python and TypeScript share a commitment to developer productivity, but their type systems differ fundamentally — Python's type hints are optional and runtime-ignored, while TypeScript enforces structural typing at compile time. When converting, Python's `dict`, `list`, and `Optional` type hints map to TypeScript interfaces, generics, and union types. Python dataclasses translate naturally to TypeScript interfaces or classes with typed properties.",
+  "diffs": [
+    {
+      "category": "Type enforcement",
+      "from": "Type hints (PEP 484) are optional and ignored at runtime.",
+      "to": "Types are enforced at compile time by tsc. Violations are build errors."
+    },
+    {
+      "category": "Interface model",
+      "from": "Protocols define structural interfaces (PEP 544). Abstract base classes too.",
+      "to": "interface and type alias define structural contracts enforced by the compiler."
+    },
+    {
+      "category": "Null handling",
+      "from": "Optional[X] = Union[X, None]. None is a valid value of any type by default.",
+      "to": "X | null or X | undefined. Strict mode requires explicit null narrowing."
+    },
+    {
+      "category": "Generics",
+      "from": "TypeVar and Generic[T] for parameterised classes. Runtime erasure.",
+      "to": "Generic syntax <T> on functions, classes, and interfaces. Compile-time only."
+    },
+    {
+      "category": "Compilation",
+      "from": "Interpreted directly by CPython. No build step.",
+      "to": "Transpiled to JavaScript by tsc or bundlers like esbuild/Vite/SWC."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Typed function with Optional argument",
+      "description": "Python Optional[str] maps to TypeScript string | null. Default values and return types translate directly.",
+      "fromCode": "from typing import Optional\n\ndef greet(name: str, prefix: Optional[str] = None) -> str:\n    if prefix is None:\n        return \"Hello, \" + name\n    return prefix + \" \" + name\n\nprint(greet(\"Alice\"))          # Hello, Alice\nprint(greet(\"Bob\", \"Dr.\"))     # Dr. Bob",
+      "toCode": "function greet(name: string, prefix: string | null = null): string {\n  if (prefix === null) {\n    return \"Hello, \" + name;\n  }\n  return prefix + \" \" + name;\n}\n\nconsole.log(greet(\"Alice\"));        // Hello, Alice\nconsole.log(greet(\"Bob\", \"Dr.\"));   // Dr. Bob"
+    },
+    {
+      "title": "Typed dataclass → TypeScript interface + class",
+      "description": "Python dataclasses map cleanly to TypeScript interfaces for the shape and classes for behaviour.",
+      "fromCode": "from dataclasses import dataclass\n\n@dataclass\nclass Product:\n    id: int\n    name: str\n    price: float\n    in_stock: bool = True\n\n    def discounted(self, pct: float) -> float:\n        return self.price * (1 - pct / 100)",
+      "toCode": "interface Product {\n  id: number;\n  name: string;\n  price: number;\n  inStock: boolean;\n}\n\nclass ProductModel implements Product {\n  inStock = true;\n  constructor(\n    public id: number,\n    public name: string,\n    public price: number,\n  ) {}\n\n  discounted(pct: number): number {\n    return this.price * (1 - pct / 100);\n  }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Optional[X] → X | null",
+      "body": "Python Optional[X] means X | None. In TypeScript strict mode write X | null. Enable strictNullChecks to get compile-time null safety equivalent to Python mypy."
+    },
+    {
+      "title": "dict → interface or Record<K,V>",
+      "body": "Python dict[str, int] maps to Record<string, number>. If keys are known, define a TypeScript interface instead for better IDE autocompletion."
+    },
+    {
+      "title": "List[X] → X[] or Array<X>",
+      "body": "Python List[int] becomes number[] or Array<number>. Tuple[int, str] becomes [number, string] — a tuple type in TypeScript."
+    },
+    {
+      "title": "Dataclass → interface + class",
+      "body": "Simple dataclasses with only data become TypeScript interfaces. Add a class wrapper only if you need methods or a constructor with default logic."
+    }
+  ]
+}

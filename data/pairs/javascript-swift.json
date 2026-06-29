@@ -1,0 +1,62 @@
+{
+  "intro": "JavaScript's flexible execution engine works well for broad web scripting but lacks strict runtime guarantees. Moving to Swift transitions applications to a compiled, type-safe ecosystem engineered for performance on Apple platforms and optimized backend environments. This shift helps development teams eliminate runtime errors, use advanced value types, and maximize hardware utilization.",
+  "diffs": [
+    {
+      "category": "Type Validation",
+      "from": "Dynamic, loose tracking.",
+      "to": "Static, strong compile-time validation with type inference."
+    },
+    {
+      "category": "Memory Layout",
+      "from": "Automated garbage collection cycles.",
+      "to": "Automatic Reference Counting (ARC) tracking instances at compile time."
+    },
+    {
+      "category": "Null Protection",
+      "from": "Variables can be null or undefined, risking runtime errors.",
+      "to": "Compile-time Optional types that prevent unexpected null access."
+    },
+    {
+      "category": "Execution Model",
+      "from": "JIT-compiled bytecode executed inside a dedicated engine loop.",
+      "to": "Ahead-of-time compiled directly into native machine code."
+    },
+    {
+      "category": "Data Structures",
+      "from": "Dynamic object structures and flexible array sequences.",
+      "to": "Explicit value types (structs, enums) and reference types (classes)."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Safe Value Unwrapping",
+      "description": "Accessing optional fields securely without causing app crashes.",
+      "fromCode": "function greeting(user) {\n    if (user) console.log(`Hi ${user}`);\n}",
+      "toCode": "func greeting(user: String?) {\n    if let name = user {\n        print(\"Hi \\(name)\")\n    }\n}"
+    },
+    {
+      "title": "Value Type Structs",
+      "description": "Defining lightweight, thread-safe models using structural configurations.",
+      "fromCode": "const coordinate = { x: 10, y: 20 };",
+      "toCode": "struct Coordinate {\n    let x: Double\n    let y: Double\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Break Reference Cycles",
+      "body": "Mark closure references and delegates as weak or unowned to prevent memory leaks under ARC."
+    },
+    {
+      "title": "Prefer Structs by Default",
+      "body": "Use structs for data models instead of classes to take advantage of value semantics and thread safety."
+    },
+    {
+      "title": "Unwrap Optionals Safely",
+      "body": "Use if-let or guard-let patterns to unwrap optional values cleanly without risking runtime crashes."
+    },
+    {
+      "title": "Declare Constants with let",
+      "body": "Enforce data immutability by using \"let\" for all stable values and \"var\" only when values must change."
+    }
+  ]
+}

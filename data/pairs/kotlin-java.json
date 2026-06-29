@@ -1,0 +1,62 @@
+{
+  "intro": "Kotlin compiles to the same JVM bytecode as Java and is fully interoperable with it, so the conversion is largely syntactic. Kotlin's data classes become Java POJOs with getters/setters/equals/hashCode, `val`/`var` declarations become typed Java fields, extension functions become static utility methods, and Kotlin's null safety (`?` types) maps to Java's `Optional` or `@Nullable` annotations. Kotlin coroutines translate to `CompletableFuture` or `ExecutorService`.",
+  "diffs": [
+    {
+      "category": "Null safety",
+      "from": "Type system distinguishes nullable (T?) from non-null (T) at compile time.",
+      "to": "All references nullable by default. NPE is a runtime risk. Use Optional<T> or @Nullable."
+    },
+    {
+      "category": "Data classes",
+      "from": "data class generates equals, hashCode, copy, toString automatically.",
+      "to": "Record (Java 16+) gives similar benefits; POJO requires manual implementation."
+    },
+    {
+      "category": "Coroutines",
+      "from": "kotlinx.coroutines: suspend fun, launch, async, flow.",
+      "to": "CompletableFuture, ExecutorService, Project Reactor, or Virtual Threads (Java 21+)."
+    },
+    {
+      "category": "Extension fns",
+      "from": "Extension functions add methods to existing types without subclassing.",
+      "to": "No extension functions. Use static utility methods or wrapper classes."
+    },
+    {
+      "category": "Verbosity",
+      "from": "val/var, smart casts, when expression, string templates reduce boilerplate.",
+      "to": "More verbose. switch vs when, explicit casts, String.format() for interpolation."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Data class → Java record",
+      "description": "Kotlin data class with copy() maps to a Java record for immutable value objects.",
+      "fromCode": "data class User(\n    val id: Int,\n    val name: String,\n    val email: String,\n    val active: Boolean = true,\n)\n\nval alice = User(1, \"Alice\", \"alice@example.com\")\nval updated = alice.copy(active = false)",
+      "toCode": "// Java 16+ record\npublic record User(\n    int id,\n    String name,\n    String email,\n    boolean active\n) {\n    // No copy() — create new record manually\n    User withActive(boolean active) {\n        return new User(id, name, email, active);\n    }\n}"
+    },
+    {
+      "title": "when expression → switch expression",
+      "description": "Kotlin's when is an expression; Java's switch expression (Java 14+) covers the same cases.",
+      "fromCode": "fun describe(n: Int): String = when {\n    n < 0  -> \"negative\"\n    n == 0 -> \"zero\"\n    n < 10 -> \"small positive\"\n    else   -> \"large positive\"\n}",
+      "toCode": "String describe(int n) {\n    return switch (Integer.signum(n)) {\n        case -1 -> \"negative\";\n        case  0 -> \"zero\";\n        default -> n < 10 ? \"small positive\" : \"large positive\";\n    };\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Null-safe (?.) → Optional or null check",
+      "body": "Kotlin's user?.name becomes Optional.ofNullable(user).map(u -> u.name()).orElse(null) or an explicit if (user != null) guard in Java."
+    },
+    {
+      "title": "suspend fun → CompletableFuture",
+      "body": "Kotlin suspend functions map to Java CompletableFuture<T>. Kotlin's launch {} becomes CompletableFuture.runAsync(). Flow<T> maps to Reactive Streams or java.util.concurrent.Flow."
+    },
+    {
+      "title": "Extension functions → static utils",
+      "body": "Kotlin String.truncate() extensions become Java static methods: StringUtils.truncate(String s). Place them in a utility class."
+    },
+    {
+      "title": "data class copy() → record constructor",
+      "body": "Java records are immutable and have no copy(). Replace alice.copy(active=false) with new User(alice.id(), alice.name(), alice.email(), false)."
+    }
+  ]
+}

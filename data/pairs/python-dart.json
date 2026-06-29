@@ -1,0 +1,62 @@
+{
+  "intro": "Python's dynamic environment helps developers build fast scripts but can complicate client-side runtime predictability. Moving to Dart introduces a type-safe, ahead-of-time (AOT) compiled language optimized for responsive user interface rendering across platforms via Flutter. This transition is typically made to deploy fast, cross-platform client applications from a single codebase.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Dynamic, strongly typed.",
+      "to": "Static, soundly typed with type inference support."
+    },
+    {
+      "category": "Execution Flow",
+      "from": "Interpreted bytecode executing inside a synchronous single-lock runner.",
+      "to": "JIT-compiled during development, AOT-compiled to native code for production."
+    },
+    {
+      "category": "Concurrency Design",
+      "from": "asyncio event task loops or isolated multiprocessing structures.",
+      "to": "Isolate-based memory architectures running event loop systems."
+    },
+    {
+      "category": "Memory Layout",
+      "from": "Standard reference allocation tracked via runtime garbage disposal.",
+      "to": "Fast generational garbage collection optimized for short-lived UI widgets."
+    },
+    {
+      "category": "Null Governance",
+      "from": "None validation evaluated entirely during script execution steps.",
+      "to": "Sound compile-time null safety validation."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Asynchronous Sequence Fetching",
+      "description": "Waiting for network endpoint payloads without locking execution processes.",
+      "fromCode": "import asyncio\n\nasync def get_data():\n    await asyncio.sleep(1)\n    return \"payload\"",
+      "toCode": "Future<String> getData() async {\n  await Future.delayed(Duration(seconds: 1));\n  return \"payload\";\n}"
+    },
+    {
+      "title": "Class Properties and Methods",
+      "description": "Structuring named objects carrying private attributes and constructor methods.",
+      "fromCode": "class Profile:\n    def __init__(self, username: str):\n        self._username = username\n        \n    def show(self):\n        print(self._username)",
+      "toCode": "class Profile {\n  final String _username;\n\n  Profile(this._username);\n\n  void show() {\n    print(_username);\n  }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Enforce Sound Null Safety",
+      "body": "Use the ? modifier to explicitly mark fields as nullable, allowing the compiler to prevent null pointer exceptions."
+    },
+    {
+      "title": "Master Constructor Initialization",
+      "body": "Use Dart's initializing formals(this.field) directly within parameter lists to assign class fields cleanly."
+    },
+    {
+      "title": "Isolate Compute Workloads",
+      "body": "Spawn an Isolate instead of using async functions for CPU-heavy tasks to prevent UI thread stuttering."
+    },
+    {
+      "title": "Configure Production AOT Builds",
+      "body": "Use JIT mode for rapid iterative debugging and compile to AOT for optimized production binary releases."
+    }
+  ]
+}

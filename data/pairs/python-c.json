@@ -1,0 +1,62 @@
+{
+  "intro": "Python abstracts away memory management and system architecture to optimize for developer velocity and rapid prototyping. Transitioning to C shifts the focus to bare-metal performance, hardware access, and manual memory control, which is essential for systems programming or embedded applications. Developers typically make this leap when Python's runtime overhead and global interpreter lock (GIL) become unacceptable bottlenecks for computational tasks.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Dynamic, duck-typed, strongly typed.",
+      "to": "Static, weakly typed, manifest typing."
+    },
+    {
+      "category": "Memory Management",
+      "from": "Automatic reference counting and cyclic garbage collection.",
+      "to": "Manual explicit memory allocation and deallocation (malloc/free)."
+    },
+    {
+      "category": "Execution Model",
+      "from": "Interpreted bytecode executed via a runtime VM (e.g., CPython).",
+      "to": "Ahead-of-time (AOT) compiled directly to native machine code."
+    },
+    {
+      "category": "Concurrency",
+      "from": "Cooperative/preemptive threading constrained by the Global Interpreter Lock (GIL).",
+      "to": "Native OS threads (pthreads) or hardware-level parallel execution."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Batteries-included with high-level data structures and modules.",
+      "to": "Minimalist ISO standard library focused on low-level I/O and string operations."
+    }
+  ],
+  "examples": [
+    {
+      "title": "File Reading",
+      "description": "Reading a text file line-by-line and handling potential errors safely.",
+      "fromCode": "try:\n    with open(\"data.txt\", \"r\") as f:\n        for line in f:\n            print(line.strip())\nexcept FileNotFoundError:\n    print(\"File missing\")",
+      "toCode": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    FILE *f = fopen(\"data.txt\", \"r\");\n    if (!f) {\n        printf(\"File missing\\n\");\n        return 1;\n    }\n    char buffer[256];\n    while (fgets(buffer, sizeof(buffer), f)) {\n        printf(\"%s\", buffer);\n    }\n    fclose(f);\n    return 0;\n}"
+    },
+    {
+      "title": "List / Array Squaring",
+      "description": "Iterating over a collection, transforming elements, and populating a new sequence.",
+      "fromCode": "numbers = [1, 2, 3, 4, 5]\nsquared = [x ** 2 for x in numbers]",
+      "toCode": "#include <stdio.h>\n\nint main() {\n    int numbers[] = {1, 2, 3, 4, 5};\n    int size = sizeof(numbers) / sizeof(numbers[0]);\n    int squared[5];\n    \n    for (int i = 0; i < size; i++) {\n        squared[i] = numbers[i] * numbers[i];\n    }\n    return 0;\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Manage Allocations Manually",
+      "body": "Always match every malloc or calloc invocation with a corresponding free to prevent memory leaks."
+    },
+    {
+      "title": "Enforce Array Boundaries",
+      "body": "C does not perform runtime bounds checking; you must track array lengths manually to avoid buffer overflows."
+    },
+    {
+      "title": "Replace Objects with Structs",
+      "body": "Convert Python classes into C structs and implement functions that accept pointers to these structs as instances."
+    },
+    {
+      "title": "Handle String Null Terminators",
+      "body": "Remember that strings in C are character arrays terminated by a null byte (\\0), requiring an extra byte of space."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "PHP's web-centric execution model and dynamic typing share similarities with Python, but the idioms diverge significantly. PHP's `$` variable prefix and array functions (`array_map`, `array_filter`) translate to Python's plain variables and built-in `list` methods. PHP's mixed-type arrays become Python lists or dicts, `echo` statements become `print`, and PHP's `require`/`include` becomes Python's `import` system.",
+  "diffs": [
+    {
+      "category": "Variable prefix",
+      "from": "All variables prefixed with $. $name, $count, $user.",
+      "to": "No prefix. Plain names: name, count, user."
+    },
+    {
+      "category": "Type system",
+      "from": "Weakly typed; automatic coercion between strings and numbers.",
+      "to": "Dynamically typed; explicit conversion required (int(\"5\") not \"5\" + 1)."
+    },
+    {
+      "category": "Array model",
+      "from": "Single array type covers indexed lists, associative maps, and mixes.",
+      "to": "list for sequences, dict for key-value maps, set for unique values."
+    },
+    {
+      "category": "Web focus",
+      "from": "Runs natively inside web servers (Apache/nginx). echo outputs HTML.",
+      "to": "General-purpose. Use Flask/Django/FastAPI for web. print() to stdout."
+    },
+    {
+      "category": "Error handling",
+      "from": "Older code uses error codes/warnings; modern PHP uses try/catch.",
+      "to": "Pure exception-based. Every error is an exception."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Array functions → list operations",
+      "description": "PHP's array_map/array_filter become Python list comprehensions or built-in functions.",
+      "fromCode": "$numbers = [1, 2, 3, 4, 5, 6, 7, 8];\n\n$evens  = array_filter($numbers, fn($n) => $n % 2 === 0);\n$squared = array_map(fn($n) => $n ** 2, $evens);\n\necho implode(', ', $squared); // 4, 16, 36, 64",
+      "toCode": "numbers = [1, 2, 3, 4, 5, 6, 7, 8]\n\nsquared = [n ** 2 for n in numbers if n % 2 == 0]\n\nprint(', '.join(str(n) for n in squared))  # 4, 16, 36, 64"
+    },
+    {
+      "title": "PHP class → Python class",
+      "description": "PHP visibility modifiers and type hints map cleanly to Python. The $ prefix and -> arrow disappear.",
+      "fromCode": "class User {\n    private string $name;\n    private int $age;\n\n    public function __construct(string $name, int $age) {\n        $this->name = $name;\n        $this->age  = $age;\n    }\n\n    public function greet(): string {\n        return \"Hello, \" . $this->name;\n    }\n}",
+      "toCode": "class User:\n    def __init__(self, name: str, age: int):\n        self._name = name\n        self._age  = age\n\n    def greet(self) -> str:\n        return \"Hello, \" + self._name"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Strip the $ prefix from every variable",
+      "body": "PHP's $variable syntax is purely syntactic. Remove the $ from every identifier. $userList becomes user_list; $totalCount becomes total_count."
+    },
+    {
+      "title": "Split PHP arrays into list or dict",
+      "body": "If PHP array uses sequential integer keys, use Python list. If it uses string keys (associative), use dict. Mixed arrays should be refactored."
+    },
+    {
+      "title": "array_* functions → comprehensions",
+      "body": "array_map($fn, $arr) → [fn(x) for x in arr]. array_filter($arr, $fn) → [x for x in arr if fn(x)]. array_reduce → functools.reduce."
+    },
+    {
+      "title": "echo / print → print()",
+      "body": "PHP echo and print statements become Python's print() function. String concatenation with . becomes + or f-strings."
+    }
+  ]
+}

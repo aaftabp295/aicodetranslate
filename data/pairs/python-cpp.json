@@ -1,0 +1,62 @@
+{
+  "intro": "Python's dynamic, garbage-collected runtime is replaced by C++'s manual memory model and compile-time type system when porting in this direction. Python lists become `std::vector<T>`, dicts become `std::unordered_map<K, V>`, and Python exceptions map to C++ exception classes or error codes. Developers gain deterministic performance and direct hardware access at the cost of significantly more verbose and complex code.",
+  "diffs": [
+    {
+      "category": "Memory",
+      "from": "GC handles allocation/deallocation. No pointers.",
+      "to": "Manual management or smart pointers (unique_ptr, shared_ptr). RAII idiom."
+    },
+    {
+      "category": "Typing",
+      "from": "Dynamic; types resolved at runtime.",
+      "to": "Static; every variable needs a type at declaration. Compilation fails otherwise."
+    },
+    {
+      "category": "Build",
+      "from": "python script.py — no build step.",
+      "to": "Compile: g++/clang++ with include paths, link flags. cmake for large projects."
+    },
+    {
+      "category": "Collections",
+      "from": "list, dict, set — built-in, zero-overhead to use.",
+      "to": "std::vector, std::map/unordered_map, std::set from STL headers."
+    },
+    {
+      "category": "Strings",
+      "from": "str is a built-in, immutable Unicode sequence.",
+      "to": "std::string (mutable, UTF-8 bytes). Literals are const char*."
+    }
+  ],
+  "examples": [
+    {
+      "title": "List → std::vector",
+      "description": "Python list operations translate to STL vector with explicit types and iterators.",
+      "fromCode": "def process(numbers: list[int]) -> list[int]:\n    return [n * n for n in numbers if n % 2 == 0]\n\nresult = process([1, 2, 3, 4, 5, 6])\nprint(result)  # [4, 16, 36]",
+      "toCode": "#include <vector>\n#include <algorithm>\n\nstd::vector<int> process(const std::vector<int>& numbers) {\n    std::vector<int> result;\n    for (int n : numbers)\n        if (n % 2 == 0) result.push_back(n * n);\n    return result;\n}\n// C++20: std::ranges::copy_if + std::transform also works"
+    },
+    {
+      "title": "Python class → C++ class",
+      "description": "Python's dynamic class maps to a C++ class with typed fields and explicit constructor/destructor.",
+      "fromCode": "class Stack:\n    def __init__(self):\n        self._items: list = []\n\n    def push(self, item) -> None:\n        self._items.append(item)\n\n    def pop(self):\n        if not self._items:\n            raise IndexError(\"pop from empty stack\")\n        return self._items.pop()",
+      "toCode": "#include <vector>\n#include <stdexcept>\n\ntemplate<typename T>\nclass Stack {\n    std::vector<T> items;\npublic:\n    void push(T item) { items.push_back(std::move(item)); }\n\n    T pop() {\n        if (items.empty()) throw std::underflow_error(\"pop from empty stack\");\n        T top = std::move(items.back());\n        items.pop_back();\n        return top;\n    }\n};"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Declare types for all variables",
+      "body": "Every Python variable becomes a typed C++ declaration. int x = 5; std::string s = \"hello\"; Use auto where the type is obvious from the right-hand side."
+    },
+    {
+      "title": "list → std::vector<T>",
+      "body": "Python list translates to std::vector<T>. append→push_back, len→.size(), pop→pop_back. For fixed-size collections consider std::array<T,N>."
+    },
+    {
+      "title": "dict → std::unordered_map<K,V>",
+      "body": "Python dict{} → std::unordered_map<K,V>. For ordered access use std::map<K,V>. Both require #include <unordered_map> or <map>."
+    },
+    {
+      "title": "Exceptions carry over",
+      "body": "Python exceptions translate well to C++ throws. Map ValueError → std::invalid_argument, IndexError → std::out_of_range, RuntimeError → std::runtime_error."
+    }
+  ]
+}

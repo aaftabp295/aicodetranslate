@@ -1,0 +1,62 @@
+{
+  "intro": "Python operates as a general-purpose programming tool equipped with highly efficient scientific data tracking extensions. R is built specifically as a statistical processing environment and vector-based analysis language for data scientists. This migration path is relevant when porting workflows directly to environments specialized for mathematical plotting, complex linear models, and academic statistics.",
+  "diffs": [
+    {
+      "category": "Core Concept",
+      "from": "General-purpose programming with external mathematical tooling.",
+      "to": "Statistical computation, analytics, and built-in vectorization."
+    },
+    {
+      "category": "Array Indexing",
+      "from": "Zero-based offset indexing (0, 1, 2...).",
+      "to": "One-based index array references (1, 2, 3...)."
+    },
+    {
+      "category": "Data Operations",
+      "from": "Explicit iteration loops or external NumPy vectorized methods.",
+      "to": "Implicit column-wide vector operations natively across vectors."
+    },
+    {
+      "category": "Data Structures",
+      "from": "Native lists, dictionaries, tuples, sets.",
+      "to": "Vectors, Factors, Matrices, Lists, and Data Frames."
+    },
+    {
+      "category": "Assignment Operator",
+      "from": "Equals sign assignment (=).",
+      "to": "Arrow pointer symbol notation (<-)."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Vector Transformations",
+      "description": "Applying numeric adjustments across an array of values natively.",
+      "fromCode": "items = [1, 2, 3, 4, 5]\nadjusted = [x + 10 for x in items]",
+      "toCode": "items <- c(1, 2, 3, 4, 5)\nadjusted <- items + 10"
+    },
+    {
+      "title": "Data Frame Lookup",
+      "description": "Creating a tabular layout and querying rows based on conditions.",
+      "fromCode": "import pandas as pd\ndf = pd.DataFrame({\"id\": [1, 2], \"val\": [10, 20]})\nsubset = df[df[\"val\"] > 12]",
+      "toCode": "df <- data.frame(id = c(1, 2), val = c(10, 20))\nsubset <- df[df$val > 12, ]"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Shift to Base-1 Indexing",
+      "body": "Adjust all array traversal coordinates to start at 1 instead of 0 to avoid offset errors."
+    },
+    {
+      "title": "Use Arrow Assignments",
+      "body": "Adopt the arrow operator (<-) for identifier allocation to follow standard R developer idioms."
+    },
+    {
+      "title": "Avoid Iterative Loops",
+      "body": "Replace explicit loops with native vector operations or apply functions to optimize script processing speeds."
+    },
+    {
+      "title": "Utilize Built-in Data Frames",
+      "body": "Use R's native data.frame and factor types without requiring third- party libraries like Pandas."
+    }
+  ]
+}

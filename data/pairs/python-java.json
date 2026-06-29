@@ -1,0 +1,62 @@
+{
+  "intro": "Python's concise, script-friendly syntax expands dramatically when converted to Java's enterprise-grade structure. Python functions become Java class methods, Python's `list` and `dict` map to `ArrayList` and `HashMap`, optional type hints become mandatory type declarations, and Python's `try/except` becomes Java's checked-exception `try/catch` blocks. A single Python file often becomes multiple Java files organized by class hierarchy.",
+  "diffs": [
+    {
+      "category": "Verbosity",
+      "from": "Functions are first-class. No class wrapper needed for utilities.",
+      "to": "All code must live in a class. Static methods for utilities."
+    },
+    {
+      "category": "Type system",
+      "from": "Dynamic. Hints optional.",
+      "to": "Static, nominal. Every parameter and return type required."
+    },
+    {
+      "category": "Collections",
+      "from": "list, dict, set are built-in; no import needed.",
+      "to": "ArrayList, HashMap, HashSet from java.util. Generics required."
+    },
+    {
+      "category": "Exceptions",
+      "from": "All exceptions unchecked. No throws declaration.",
+      "to": "Checked exceptions require throws or catch. Runtime exceptions are unchecked."
+    },
+    {
+      "category": "Boilerplate",
+      "from": "Dataclass or plain class. __init__ for initialization.",
+      "to": "Full POJO: private fields, constructor, getters, setters, equals, hashCode."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Module-level function → static method in a class",
+      "description": "Python top-level functions must be wrapped in a Java class as static methods.",
+      "fromCode": "def is_palindrome(s: str) -> bool:\n    cleaned = s.lower().replace(\" \", \"\")\n    return cleaned == cleaned[::-1]\n\nprint(is_palindrome(\"A man a plan a canal Panama\"))",
+      "toCode": "public class StringUtils {\n    public static boolean isPalindrome(String s) {\n        String cleaned = s.toLowerCase().replace(\" \", \"\");\n        String reversed = new StringBuilder(cleaned).reverse().toString();\n        return cleaned.equals(reversed);\n    }\n\n    public static void main(String[] args) {\n        System.out.println(isPalindrome(\"A man a plan a canal Panama\"));\n    }\n}"
+    },
+    {
+      "title": "Python list operations → ArrayList",
+      "description": "Python's built-in list methods have direct ArrayList equivalents.",
+      "fromCode": "items = [\"apple\", \"banana\", \"cherry\"]\nitems.append(\"date\")\nitems.remove(\"banana\")\nfiltered = [x for x in items if len(x) > 5]\nprint(filtered)  # ['banana' removed, so: ['cherry', 'date']... ]",
+      "toCode": "import java.util.*;\nimport java.util.stream.*;\n\nList<String> items = new ArrayList<>(\n    Arrays.asList(\"apple\", \"banana\", \"cherry\"));\nitems.add(\"date\");\nitems.remove(\"banana\");\nList<String> filtered = items.stream()\n    .filter(x -> x.length() > 5)\n    .collect(Collectors.toList());\nSystem.out.println(filtered);"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Every function needs a class",
+      "body": "Java has no module-level functions. Wrap utilities in a class with static methods, or create proper object-oriented classes with instance methods."
+    },
+    {
+      "title": "list → ArrayList, dict → HashMap",
+      "body": "Python list becomes ArrayList<T>. Python dict[K]V becomes HashMap<K,V>. All collection operations need java.util imports and generic type parameters."
+    },
+    {
+      "title": "Optional hints → required types",
+      "body": "Python type hints become mandatory Java declarations. Every method parameter needs a type. Return void explicitly when there is no return value."
+    },
+    {
+      "title": "Dataclass → Java record (Java 16+)",
+      "body": "Python dataclasses map cleanly to Java records: record Person(String name, int age) {} generates constructor, getters, equals, hashCode automatically."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "JavaScript's dynamic, single-threaded runtime gives way to Java's strongly typed, multithreaded JVM when converting in this direction. Every variable and return type needs an explicit type declaration, `Promise`-based async patterns become Java's `CompletableFuture` or synchronous blocking calls, and JavaScript's objects become Java classes with defined fields and constructors. Java's verbosity is offset by compile-time correctness guarantees.",
+  "diffs": [
+    {
+      "category": "Typing",
+      "from": "Dynamic. Types resolved at runtime. No compile step.",
+      "to": "Static, nominal typing. Every variable and method needs a declared type."
+    },
+    {
+      "category": "Async",
+      "from": "Single-threaded event loop. Promises and async/await are idiomatic.",
+      "to": "Multi-threaded. CompletableFuture for async; ExecutorService for thread pools."
+    },
+    {
+      "category": "OOP model",
+      "from": "Prototype chain. Functions are objects. No interface keyword.",
+      "to": "Nominal class hierarchy. interface, abstract class, extends, implements."
+    },
+    {
+      "category": "Module system",
+      "from": "ES Modules (import/export) or CommonJS (require/module.exports).",
+      "to": "Packages and imports. Build with Maven or Gradle. No native bundler."
+    },
+    {
+      "category": "Null handling",
+      "from": "null + undefined, optional chaining (?.), nullish coalescing (??).",
+      "to": "null only. NullPointerException. Use Optional<T> for explicit absence."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Async function → CompletableFuture",
+      "description": "JS Promises translate to Java CompletableFuture with method chaining.",
+      "fromCode": "async function fetchUser(id) {\n  const res  = await fetch('/api/users/' + id);\n  const user = await res.json();\n  return user.name.toUpperCase();\n}\n\nfetchUser(1).then(name => console.log(name));",
+      "toCode": "import java.net.http.*;\nimport java.util.concurrent.CompletableFuture;\n\nCompletableFuture<String> fetchUser(int id) {\n    HttpRequest req = HttpRequest.newBuilder()\n        .uri(URI.create(\"/api/users/\" + id)).build();\n    return client.sendAsync(req, BodyHandlers.ofString())\n        .thenApply(HttpResponse::body)\n        .thenApply(body -> parseJson(body).get(\"name\").toUpperCase());\n}"
+    },
+    {
+      "title": "Plain object → Java class",
+      "description": "A JavaScript object literal with methods becomes a fully typed Java class.",
+      "fromCode": "function createUser(name, age) {\n  return {\n    name,\n    age,\n    isAdult() { return this.age >= 18; },\n    toString() { return this.name + ' (' + this.age + ')'; },\n  };\n}",
+      "toCode": "public class User {\n    private final String name;\n    private final int age;\n\n    public User(String name, int age) {\n        this.name = name;\n        this.age = age;\n    }\n\n    public boolean isAdult() { return age >= 18; }\n\n    @Override\n    public String toString() {\n        return name + \" (\" + age + \")\";\n    }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Add type declarations everywhere",
+      "body": "Every variable, parameter, and return type needs a type. Start by inferring types from usage, then declare String, int, boolean, List<T>, etc."
+    },
+    {
+      "title": "Promise → CompletableFuture",
+      "body": "async functions return CompletableFuture<T>. .then() maps to .thenApply(). .catch() maps to .exceptionally(). Promise.all becomes CompletableFuture.allOf()."
+    },
+    {
+      "title": "Wrap optionals in Optional<T>",
+      "body": "JS functions returning null/undefined should return Optional<T> in Java. Callers then explicitly call .orElse() or .orElseThrow() rather than null-checking."
+    },
+    {
+      "title": "Object literals become classes",
+      "body": "Every { key: value } object needs a corresponding class or record in Java. Records (Java 16+) are the most concise: record User(String name, int age) {}."
+    }
+  ]
+}

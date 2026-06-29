@@ -1,0 +1,62 @@
+{
+  "intro": "Kotlin dramatically reduces Java boilerplate while remaining fully JVM-compatible. Java's verbose getter/setter POJOs collapse into Kotlin `data class` declarations, `Optional<T>` is replaced by Kotlin's built-in null-safety operators (`?.`, `?:`, `!!`), anonymous inner classes become lambdas, and Java's checked exceptions simply disappear. The same logic that takes 50 lines of Java often fits in 15 lines of idiomatic Kotlin.",
+  "diffs": [
+    {
+      "category": "Verbosity",
+      "from": "Full class/field/getter/setter boilerplate for every model.",
+      "to": "data class gives equals/hashCode/copy/toString in one line."
+    },
+    {
+      "category": "Null safety",
+      "from": "All references nullable. NullPointerException at runtime.",
+      "to": "T vs T? enforced by compiler. Safe-call (?.) and Elvis (?:) operators."
+    },
+    {
+      "category": "Coroutines",
+      "from": "CompletableFuture, thread pools, synchronized.",
+      "to": "Coroutines: suspend, launch, async, flow — lightweight and composable."
+    },
+    {
+      "category": "Functional",
+      "from": "Streams API (verbose). Anonymous inner classes for lambdas (pre-8).",
+      "to": "Collection extensions (filter, map, flatMap) directly on any Iterable."
+    },
+    {
+      "category": "String templates",
+      "from": "String.format() or + concatenation.",
+      "to": "String templates: \"Hello, $name\" or \"Sum: ${a + b}\"."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Java POJO → Kotlin data class",
+      "description": "25 lines of Java boilerplate collapses to a single Kotlin data class declaration.",
+      "fromCode": "public class Product {\n    private final String name;\n    private final double price;\n    private final boolean available;\n\n    public Product(String name, double price, boolean available) {\n        this.name = name; this.price = price; this.available = available;\n    }\n    public String getName()      { return name; }\n    public double getPrice()     { return price; }\n    public boolean isAvailable() { return available; }\n    // + equals, hashCode, toString...\n}",
+      "toCode": "data class Product(\n    val name: String,\n    val price: Double,\n    val isAvailable: Boolean,\n)\n// equals, hashCode, copy, toString all generated"
+    },
+    {
+      "title": "Stream chain → Kotlin collection extensions",
+      "description": "Java's Stream API becomes Kotlin's built-in collection functions — no collect() needed.",
+      "fromCode": "List<String> names = products.stream()\n    .filter(p -> p.isAvailable())\n    .sorted(Comparator.comparing(Product::getPrice))\n    .map(Product::getName)\n    .collect(Collectors.toList());",
+      "toCode": "val names = products\n    .filter { it.isAvailable }\n    .sortedBy { it.price }\n    .map { it.name }"
+    }
+  ],
+  "tips": [
+    {
+      "title": "POJO → data class",
+      "body": "Every Java POJO (fields + getters + equals/hashCode) becomes a Kotlin data class. Remove all getters — Kotlin properties are accessed directly: product.name, not product.getName()."
+    },
+    {
+      "title": "Optional<T> → nullable T?",
+      "body": "Replace Optional<T> with T?. Replace .orElse(default) with ?: default (Elvis operator). Replace .ifPresent{} with ?.let{}."
+    },
+    {
+      "title": "CompletableFuture → coroutines",
+      "body": "Add kotlinx.coroutines. Mark async methods suspend fun. Replace thenApply with direct sequential code inside a coroutine scope. Launch with viewModelScope.launch or runBlocking."
+    },
+    {
+      "title": "Switch → when",
+      "body": "Java switch becomes Kotlin when. It's an expression: val label = when (code) { 1 -> \"one\" 2 -> \"two\" else -> \"other\" }. No fall-through."
+    }
+  ]
+}

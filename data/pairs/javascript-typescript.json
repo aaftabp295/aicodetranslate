@@ -1,0 +1,62 @@
+{
+  "intro": "TypeScript is a strict superset of JavaScript, so most JavaScript code is valid TypeScript — but the value comes from adding type annotations. Converting JavaScript to TypeScript means introducing interface and type declarations, annotating function parameters and return types, replacing `any`-typed patterns with proper generics, and enabling strict null checks. The result catches entire classes of runtime bugs at compile time.",
+  "diffs": [
+    {
+      "category": "Type safety",
+      "from": "No types. Errors appear at runtime when values have unexpected shapes.",
+      "to": "Static type checking catches shape mismatches at compile time."
+    },
+    {
+      "category": "Tooling",
+      "from": "IDE hints rely on JSDoc comments or type inference from assignment.",
+      "to": "Rich autocomplete, refactoring, and error highlighting from the type graph."
+    },
+    {
+      "category": "Interfaces",
+      "from": "Objects are plain. Duck typing is implicit and unchecked.",
+      "to": "interface and type alias define explicit structural contracts."
+    },
+    {
+      "category": "Null handling",
+      "from": "Null/undefined errors are the most common runtime crash source.",
+      "to": "strictNullChecks forces you to handle null before using a value."
+    },
+    {
+      "category": "Generics",
+      "from": "Functions work on any type. No way to express parameterised behaviour.",
+      "to": "Generics <T> let you write type-safe reusable utilities like Array<T>."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Adding types to a function",
+      "description": "TypeScript parameter and return type annotations catch argument mismatches at build time.",
+      "fromCode": "// JavaScript - no type safety\nfunction calculateTotal(items, taxRate) {\n  const subtotal = items.reduce(\n    (sum, item) => sum + item.price * item.qty,\n    0\n  );\n  return subtotal + subtotal * taxRate;\n}",
+      "toCode": "// TypeScript - compile-time checked\ninterface LineItem {\n  price: number;\n  qty: number;\n}\n\nfunction calculateTotal(\n  items: LineItem[],\n  taxRate: number\n): number {\n  const subtotal = items.reduce(\n    (sum, item) => sum + item.price * item.qty,\n    0\n  );\n  return subtotal + subtotal * taxRate;\n}"
+    },
+    {
+      "title": "Extracting an interface from an API response",
+      "description": "Untyped fetch results gain compile-time shape guarantees through a response interface.",
+      "fromCode": "// JavaScript\nasync function getUser(id) {\n  const res = await fetch('/api/users/' + id);\n  const user = await res.json();\n  return user.name.toUpperCase(); // crashes if name missing\n}",
+      "toCode": "// TypeScript\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n}\n\nasync function getUser(id: number): Promise<string> {\n  const res = await fetch('/api/users/' + id);\n  const user: User = await res.json();\n  return user.name.toUpperCase(); // safe — name is required\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Start with noImplicitAny",
+      "body": "Enable noImplicitAny in tsconfig first. This forces you to annotate any intentionally. From there, add strictNullChecks once nulls are handled."
+    },
+    {
+      "title": "Replace any with unknown",
+      "body": "When you truly don't know a type, prefer unknown over any. unknown forces you to narrow the type before using it, preventing silent bugs."
+    },
+    {
+      "title": "Extract interfaces from usage",
+      "body": "For every object shape passed to multiple functions, extract an interface. This is the highest-ROI refactor when migrating a JavaScript codebase."
+    },
+    {
+      "title": "Use satisfies for literal objects",
+      "body": "The satisfies operator validates an object against a type without widening it. Ideal for config objects where you want both type safety and inferred literal types."
+    }
+  ]
+}

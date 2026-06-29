@@ -1,0 +1,62 @@
+{
+  "intro": "Ruby and Python share a philosophy of developer happiness and readable syntax, making this one of the more natural conversions. Ruby's blocks and `yield` map closely to Python's first-class functions and decorators, Ruby's `Enumerable` methods (`map`, `select`, `reduce`) have direct Python equivalents, and Ruby's `nil` becomes Python's `None`. Ruby's `snake_case` convention is shared, though Ruby uses `end` keywords where Python uses indentation.",
+  "diffs": [
+    {
+      "category": "Blocks",
+      "from": "Blocks (do..end or {}) are anonymous closures passed to methods implicitly.",
+      "to": "No blocks. Use lambda, closures via def, or comprehensions."
+    },
+    {
+      "category": "Syntax",
+      "from": "end keyword closes blocks, methods, classes. No braces.",
+      "to": "Indentation defines blocks. No end keyword."
+    },
+    {
+      "category": "Symbol type",
+      "from": ":symbol literals are interned strings. Used for hash keys and method refs.",
+      "to": "No symbol type. Use plain str for hash keys. Strings are interned by Python automatically."
+    },
+    {
+      "category": "Iteration",
+      "from": "Enumerable mixin: .map, .select, .reduce, .each on any collection.",
+      "to": "Built-in list methods + list/dict/set comprehensions. functools for fold."
+    },
+    {
+      "category": "Module system",
+      "from": "require/require_relative for loading. Gems via Bundler + Gemfile.",
+      "to": "import. Packages via pip + pyproject.toml."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Ruby block → Python lambda / comprehension",
+      "description": "Ruby's block-based Enumerable methods map to Python comprehensions and built-ins.",
+      "fromCode": "numbers = [1, 2, 3, 4, 5, 6, 7, 8]\n\nevens   = numbers.select { |n| n.even? }\nsquared = evens.map      { |n| n ** 2  }\ntotal   = squared.reduce(0) { |sum, n| sum + n }\n\nputs total  # 4 + 16 + 36 + 64 = 120",
+      "toCode": "numbers = [1, 2, 3, 4, 5, 6, 7, 8]\n\nsquared = [n ** 2 for n in numbers if n % 2 == 0]\ntotal   = sum(squared)\n\nprint(total)  # 120"
+    },
+    {
+      "title": "Ruby class → Python class",
+      "description": "Ruby's attr_accessor maps to plain Python properties. end keyword disappears entirely.",
+      "fromCode": "class BankAccount\n  attr_reader :owner, :balance\n\n  def initialize(owner, balance = 0)\n    @owner   = owner\n    @balance = balance\n  end\n\n  def deposit(amount)\n    @balance += amount\n    self\n  end\n\n  def to_s\n    \"#{@owner}: $#{@balance}\"\n  end\nend",
+      "toCode": "class BankAccount:\n    def __init__(self, owner: str, balance: float = 0):\n        self.owner   = owner\n        self.balance = balance\n\n    def deposit(self, amount: float) -> \"BankAccount\":\n        self.balance += amount\n        return self\n\n    def __str__(self) -> str:\n        return f\"{self.owner}: ${self.balance}\""
+    }
+  ],
+  "tips": [
+    {
+      "title": "Blocks → lambdas or def functions",
+      "body": "Ruby blocks { |x| x * 2 } become Python lambdas: lambda x: x * 2. Multi-line blocks with logic become named def functions passed as arguments."
+    },
+    {
+      "title": "attr_accessor → plain attributes",
+      "body": "Ruby's attr_accessor :name generates getter/setter. Python uses self.name directly — no accessor macro needed. Use @property only for validation."
+    },
+    {
+      "title": "Symbol keys → string keys",
+      "body": ":symbol hash keys become plain string keys in Python dicts: { name: \"Alice\" } → {\"name\": \"Alice\"}. The behavior is identical since Python interns short strings."
+    },
+    {
+      "title": "Enumerable → comprehensions + builtins",
+      "body": ".select → list comprehension with if. .map → list comprehension or map(). .reduce → functools.reduce() or sum(). .each → for loop."
+    }
+  ]
+}

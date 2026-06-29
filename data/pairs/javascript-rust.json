@@ -1,0 +1,62 @@
+{
+  "intro": "JavaScript maximizes developer flexibility through a dynamic runtime and managed garbage collection. Moving to Rust introduces strict compile-time guarantees, zero-cost abstractions, and memory safety without a garbage collector via an explicit ownership model. This migration is vital when building highly optimized engines, WebAssembly targets, or reliability-critical infrastructure services.",
+  "diffs": [
+    {
+      "category": "Type Architecture",
+      "from": "Dynamic, weak type rules.",
+      "to": "Static, strong type rules with affine type ownership validation."
+    },
+    {
+      "category": "Memory Integrity",
+      "from": "Automated background engine garbage collection.",
+      "to": "Compile-time ownership analysis checking borrow lifespans."
+    },
+    {
+      "category": "Execution Flow",
+      "from": "V8 JIT compilation executing inside an asynchronous loop.",
+      "to": "AOT optimized compilation powered by LLVM architectures."
+    },
+    {
+      "category": "Error Management",
+      "from": "Runtime dynamic runtime exceptions (throw/catch).",
+      "to": "Monadic Result<T, E> and Option<T> type evaluations."
+    },
+    {
+      "category": "Concurrency Rules",
+      "from": "Single thread event execution looping macro tasks.",
+      "to": "Data-race-free concurrent threading guaranteed by type bounds."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Safe Option Parsing",
+      "description": "Validating missing data elements without risking runtime errors.",
+      "fromCode": "function display(msg) {\n    if (msg === null || msg === undefined) {\n        console.log(\"Empty\");\n    } else {\n        console.log(msg);\n    }\n}",
+      "toCode": "fn display(msg: Option<&str>) {\n    match msg {\n        Some(text) => println!(\"{}\", text),\n        None => println!(\"Empty\"),\n    }\n}"
+    },
+    {
+      "title": "Error Bound Transformations",
+      "description": "Validating operations using type-safe structures.",
+      "fromCode": "function divide(a, b) {\n    if (b === 0) throw new Error(\"Zero division\");\n    return a / b;\n}",
+      "toCode": "fn divide(a: f64, b: f64) -> Result<f64, &'static str> {\n    if b == 0.0 {\n        Err(\"Zero division\")\n    } else {\n        Ok(a / b)\n    }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Master Ownership Tracking",
+      "body": "Understand Rust's core concepts of ownership, moves, borrows, and lifespans to work effectively with the borrow checker."
+    },
+    {
+      "title": "Avoid Explicit Nil Allocations",
+      "body": "Replace null variables with explicit Option enums to intercept missing data during compilation."
+    },
+    {
+      "title": "Propagate Errors with Operators",
+      "body": "Use the question mark operator (?) to return errors early and simplify nested Result pipelines."
+    },
+    {
+      "title": "Leverage Pattern Matching",
+      "body": "Deconstruct structures using match or if let statements to ensure all code execution branches are accounted for."
+    }
+  ]
+}

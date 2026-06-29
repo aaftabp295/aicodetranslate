@@ -1,0 +1,62 @@
+{
+  "intro": "Python acts as a general-purpose language with applications spanning machine learning, automation, and backend engineering. PHP is purposely engineered and optimized specifically for web development and server-side request rendering. Migration frequently occurs when shifting a system to standard web-hosting environments or integrating into legacy CMS infrastructures optimized for immediate HTTP response cycles.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Dynamic, strongly typed.",
+      "to": "Dynamic, weakly typed (supports gradual static typing with strict_types)."
+    },
+    {
+      "category": "Runtime Lifecycle",
+      "from": "Persistent application process running an event loop or WSGI server.",
+      "to": "Shared-nothing architecture; process boots, executes, and dies per request."
+    },
+    {
+      "category": "Package Management",
+      "from": "pip with PyPI ecosystem.",
+      "to": "Composer with Packagist ecosystem."
+    },
+    {
+      "category": "Variables/Syntax",
+      "from": "Bare identifier name binding.",
+      "to": "Sigil-prefixed identifiers (e.g., $variable)."
+    },
+    {
+      "category": "Array Structures",
+      "from": "Distinct sequence lists and key-value dictionaries.",
+      "to": "Unified associative arrays used for both lists and dictionaries."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Associative Data Mapping",
+      "description": "Creating a dictionary/associative array and looking up values.",
+      "fromCode": "user = {\"name\": \"Alice\", \"role\": \"admin\"}\nprint(user[\"name\"])",
+      "toCode": "<?php\n$user = [\"name\" => \"Alice\", \"role\" => \"admin\"];\necho $user['name'];"
+    },
+    {
+      "title": "JSON Decoding",
+      "description": "Parsing a JSON string into an accessible object or array structure.",
+      "fromCode": "import json\ndata = json.loads('{\"id\": 101, \"status\": \"ok\"}')\nprint(data[\"status\"])",
+      "toCode": "<?php\n$data = json_decode('{\"id\": 101, \"status\": \"ok\"}', true);\necho $data['status'];"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Enable Strict Types",
+      "body": "Declare strict_types=1 at the top of PHP files to enforce parameter and return type declarations."
+    },
+    {
+      "title": "Use Unified Arrays",
+      "body": "Combine Python lists and dicts into PHP's native array structure, keeping track of sequential vs string keys."
+    },
+    {
+      "title": "Mind the Request Lifecycle",
+      "body": "Remember that state does not persist in memory between HTTP requests in PHP like it does in a Python web server."
+    },
+    {
+      "title": "Prefix Variables with Sigils",
+      "body": "Prepend all variable allocations and references with a dollar sign ($), unlike Python's bare tokens."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Python manages structural automation logic and application backends via explicit object validation. Bash functions directly within the operating system shell to orchestrate commands, file system streams, and lightweight process lifecycles. System administrators move code from Python to Bash to eliminate package dependencies and create fast, direct deployment automation.",
+  "diffs": [
+    {
+      "category": "Primary Focus",
+      "from": "General-purpose high-level programming and scripting abstractions.",
+      "to": "Command-line execution, stream redirection, and process control."
+    },
+    {
+      "category": "Data Type Modeling",
+      "from": "Rich types (ints, strings, objects, lists).",
+      "to": "String-based variables; untyped data evaluated contextually."
+    },
+    {
+      "category": "Output Handling",
+      "from": "Explicit return values or typed programmatic exceptions.",
+      "to": "Process exit status codes (0 for success, non-zero for errors)."
+    },
+    {
+      "category": "Syntax Boundary",
+      "from": "Indentation levels define structural program flow blocks.",
+      "to": "Command termination delimiters, keywords (fi, done), and semi-colons."
+    },
+    {
+      "category": "External Actions",
+      "from": "Requires subprocess module imports to execute shell commands.",
+      "to": "Executes operating system binary tools directly as native commands."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Check File Existence",
+      "description": "Checking for the presence of a file before initiating operations.",
+      "fromCode": "import os\n\nif os.path.exists(\"app.log\"):\n    print(\"Found\")\nelse:\n    print(\"Missing\")",
+      "toCode": "if [ -f \"app.log\" ]; then\n    echo \"Found\"\nelse\n    echo \"Missing\"\nfi"
+    },
+    {
+      "title": "Loop Through Arguments",
+      "description": "Iterating over command-line arguments passed into the execution runtime.",
+      "fromCode": "import sys\n\nfor arg in sys.argv[1:]:\n    print(f\"Arg: {arg}\")",
+      "toCode": "for arg in \"\\$@\"; do\n    echo \"Arg: $arg\"\ndone"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Quote Variable References",
+      "body": "Wrap all variable expansions in double quotes (e.g., \"\\$var\") to preserve spaces and avoid globbing issues."
+    },
+    {
+      "title": "Monitor Exit Status Codes",
+      "body": "Evaluate the \\$? parameter immediately after executing a command to catch and handle system failures."
+    },
+    {
+      "title": "Set Safe Execution Modes",
+      "body": "Include \"set -euo pipefail\" at the start of scripts to terminate execution early when commands fail."
+    },
+    {
+      "title": "Treat Types as Strings",
+      "body": "Remember that Bash stores all variable values as strings; use arithmetic expansion ((x++)) for calculations."
+    }
+  ]
+}

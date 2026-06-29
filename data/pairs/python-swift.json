@@ -1,0 +1,62 @@
+{
+  "intro": "Python provides cross-platform agility through structural dynamic typing and runtime flexibility. Transitioning to Swift delivers compiled performance, static guarantees, and native optimization targeting Apple platforms and performance-critical server backends. This migration path is selected when developers need to eliminate runtime errors, build native consumer applications, or optimize compute efficiency.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Dynamic, strongly typed with type hinting capabilities.",
+      "to": "Static, strongly typed with rigorous type inference."
+    },
+    {
+      "category": "Memory Management",
+      "from": "Tracing Garbage Collection and reference counting.",
+      "to": "Deterministic Automatic Reference Counting (ARC) enforced at compile time."
+    },
+    {
+      "category": "Null Safety",
+      "from": "None checking handled entirely at runtime.",
+      "to": "Compile-time Optional types preventing unexpected null references."
+    },
+    {
+      "category": "Value vs Reference",
+      "from": "Objects are reference-passed; simple primitives behave like values.",
+      "to": "Explicit Value types (structs, enums) vs Reference types (classes)."
+    },
+    {
+      "category": "Execution Performance",
+      "from": "Interpreted bytecode with significant runtime overhead.",
+      "to": "Compiled directly to LLVM machine instructions for raw performance."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Optional Handling",
+      "description": "Safely unwrapping a variable that may containing a value or null.",
+      "fromCode": "def process(name: str | None):\n    if name is not None:\n        print(f\"Hello, {name}\")\n    else:\n        print(\"Anonymous\")",
+      "toCode": "func process(name: String?) {\n    if let unwrappedName = name {\n        print(\"Hello, \\(unwrappedName)\")\n    } else {\n        print(\"Anonymous\")\n    }\n}"
+    },
+    {
+      "title": "Struct Definitions",
+      "description": "Creating lightweight, immutable data structures with methods.",
+      "fromCode": "from dataclasses import dataclass\n\n@dataclass(frozen=True)\ndef Point:\n    x: float\n    y: float",
+      "toCode": "struct Point {\n    let x: Double\n    let y: Double\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Break Reference Cycles",
+      "body": "Declare delegate or block references as \"weak\" or \"unowned\" to prevent memory leaks in Swift's ARC engine."
+    },
+    {
+      "title": "Default to Structs",
+      "body": "Prefer structs over classes by default to capitalize on value semantics and thread-safe data copying."
+    },
+    {
+      "title": "Embrace Guard Statements",
+      "body": "Use early exits with \"guard let\" to unwrap optionals cleanly and minimize nested logic structures."
+    },
+    {
+      "title": "Specify Mutability explicitly",
+      "body": "Use \"let\" for all immutable constant values and \"var\" only when values must actively change."
+    }
+  ]
+}

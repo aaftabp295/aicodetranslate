@@ -1,0 +1,62 @@
+{
+  "intro": "Python relies heavily on procedural code or explicit runtime objects for data processing pipeline development. Moving to Scala shifts development toward a powerful hybrid functional/object-oriented paradigm backed by a highly sophisticated static type system. This switch is typically made for low-latency streaming applications, complex data processing engineering, or within large-scale Apache Spark architectures.",
+  "diffs": [
+    {
+      "category": "Paradigm Focus",
+      "from": "Multi-paradigm (procedural, object-oriented, basic functional).",
+      "to": "Deep integration of object-oriented and purely functional programming."
+    },
+    {
+      "category": "Type Evaluation",
+      "from": "Dynamic; type annotations are purely optional metadata hints.",
+      "to": "Static, highly complex type inference system with dependent types."
+    },
+    {
+      "category": "Collection Types",
+      "from": "Mutable by default; explicit creation of immutable copies.",
+      "to": "Immutable collections by default, optimizing safe parallel execution."
+    },
+    {
+      "category": "Concurrency",
+      "from": "Process separation or threading bounded by the GIL.",
+      "to": "Actor models, Futures, and functional effect systems (e.g., ZIO)."
+    },
+    {
+      "category": "Pattern Matching",
+      "from": "Structural matching introduced in 3.10 (match/case).",
+      "to": "First-class pattern matching on case classes and type patterns."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Pattern Matching",
+      "description": "Evaluating data structures structurally based on type or values.",
+      "fromCode": "def process(payload):\n    match payload:\n        case {\"status\": \"success\", \"code\": c}:\n            return f\"Ok: {c}\"\n        case _:\n            return \"Error\"",
+      "toCode": "def process(payload: Any): String = payload match {\n  case Map(\"status\" -> \"success\", \"code\" -> c) => s\"Ok: $c\"\n  case _ => \"Error\"\n}"
+    },
+    {
+      "title": "Immutable Transformation",
+      "description": "Applying stateless sequence mapping across data collections.",
+      "fromCode": "items = [1, 2, 3, 4]\nresult = [x * 10 for x in items]",
+      "toCode": "val items = List(1, 2, 3, 4)\nval result = items.map(_ * 10)"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Favor Immutability",
+      "body": "Construct processing steps using immutable collections and \"val\" references to eliminate side effects."
+    },
+    {
+      "title": "Master Implicit Parameters",
+      "body": "Understand Scala implicit parameters (or context parameters in Scala 3) for handling configurations."
+    },
+    {
+      "title": "Return Expressions",
+      "body": "Omit explicit return statements; the final evaluated block expression is automatically returned in Scala."
+    },
+    {
+      "title": "Handle Missing Values via Option",
+      "body": "Represent optional values using Option (Some/None) instead of passing or checking for null."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "JavaScript relies on explicit callback loops, promises, and dynamic prototypes to drive web applications. Transitioning to Ruby introduces a highly expressive, pure object-oriented environment where every data element is an object and developer flexibility is paramount. Developers move to Ruby to use the opinionated Ruby on Rails framework, simplify business logic, and eliminate asynchronous boilerplate.",
+  "diffs": [
+    {
+      "category": "Paradigm Design",
+      "from": "Multi-paradigm engine utilizing functional patterns and prototype chains.",
+      "to": "Pure object-oriented architecture; all values are instances of a class."
+    },
+    {
+      "category": "Method Execution",
+      "from": "Parentheses required for calls; values are passed as references.",
+      "to": "Optional execution parentheses; high support for custom DSL building."
+    },
+    {
+      "category": "Asynchronous Work",
+      "from": "Asynchronous non-blocking architecture driven by default.",
+      "to": "Synchronous execution blocks; multi-threading managed via OS or fiber pools."
+    },
+    {
+      "category": "Boolean Metrics",
+      "from": "Falsy parameters include 0, empty strings, undefined, null.",
+      "to": "Only false and nil evaluate to falsy values; 0 and empty strings are truthy."
+    },
+    {
+      "category": "Object Mutation",
+      "from": "Object properties are modified directly or extended at runtime.",
+      "to": "Encapsulated variables modified via explicit accessor methods or metaprogramming."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Dynamic Array Processing",
+      "description": "Filtering values out of sequences using functional block calls.",
+      "fromCode": "const scores = [45, 80, 95];\nconst high = scores.filter(s => s > 75);",
+      "toCode": "scores = [45, 80, 95]\nhigh = scores.select { |s| s > 75 }"
+    },
+    {
+      "title": "Class State Definition",
+      "description": "Creating objects that manage instance state through encapsulated properties.",
+      "fromCode": "class Account {\n    constructor(holder) { this.holder = holder; }\n}",
+      "toCode": "class Account\n  attr_accessor :holder\n  def initialize(holder)\n    @holder = holder\n  end\nend"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Check Boolean Truthiness",
+      "body": "Re-evaluate conditional statements, because 0, empty strings, and empty arrays evaluate to true in Ruby."
+    },
+    {
+      "title": "Omit Execution Parentheses",
+      "body": "Clean up function calls by omitting optional parentheses when calling idiomatic Ruby methods."
+    },
+    {
+      "title": "Use Attribute Synthesizers",
+      "body": "Avoid writing manual getter and setter methods by using attr_accessor, attr_reader, or attr_writer declarations."
+    },
+    {
+      "title": "Pass Logic with Blocks",
+      "body": "Replace JavaScript callback parameters with native Ruby blocks and yield instructions."
+    }
+  ]
+}

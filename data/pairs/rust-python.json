@@ -1,0 +1,62 @@
+{
+  "intro": "Rewriting Rust in Python prioritises developer ergonomics and iteration speed over Rust's zero-cost abstractions and memory-safety guarantees. Rust's ownership and lifetimes disappear — Python's garbage collector handles memory automatically. Rust's `Result` and `Option` types map to Python's exception handling and `None`. The tradeoff is reduced performance and no compile-time memory safety, but significantly faster development and a much shorter codebase.",
+  "diffs": [
+    {
+      "category": "Memory model",
+      "from": "Ownership + borrow checker. No GC. Compile-time lifetime enforcement.",
+      "to": "Garbage collected (reference counting). No manual memory management."
+    },
+    {
+      "category": "Error handling",
+      "from": "Result<T,E> and Option<T> as return values. ? operator for propagation.",
+      "to": "Exceptions. try/except at boundaries. No checked errors."
+    },
+    {
+      "category": "Performance",
+      "from": "Native code, zero-cost abstractions. Predictable low latency.",
+      "to": "Interpreted; CPython GIL limits CPU parallelism. ~10–100x slower."
+    },
+    {
+      "category": "Verbosity",
+      "from": "Explicit ownership annotations, lifetimes, and trait bounds.",
+      "to": "Terse. Variables are dynamic. No lifetime annotations."
+    },
+    {
+      "category": "Concurrency",
+      "from": "Fearless concurrency: send/sync traits prevent data races at compile time.",
+      "to": "GIL prevents true thread parallelism. Use multiprocessing for CPU parallelism."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Result → exception",
+      "description": "Rust's match on Result translates to Python's try/except with the same branching logic.",
+      "fromCode": "fn read_number(s: &str) -> Result<i32, String> {\n    s.parse::<i32>().map_err(|e| e.to_string())\n}\n\nmatch read_number(\"42\") {\n    Ok(n)  => println!(\"Got: {}\", n),\n    Err(e) => eprintln!(\"Error: {}\", e),\n}",
+      "toCode": "def read_number(s: str) -> int:\n    try:\n        return int(s)\n    except ValueError as e:\n        raise ValueError(str(e)) from e\n\ntry:\n    n = read_number(\"42\")\n    print(f\"Got: {n}\")\nexcept ValueError as e:\n    print(f\"Error: {e}\", file=sys.stderr)"
+    },
+    {
+      "title": "Struct + impl → class",
+      "description": "Rust structs with impl blocks map directly to Python classes. Drop ownership annotations entirely.",
+      "fromCode": "struct Counter {\n    count: u32,\n    max: u32,\n}\n\nimpl Counter {\n    fn new(max: u32) -> Self {\n        Counter { count: 0, max }\n    }\n    fn increment(&mut self) -> Option<u32> {\n        if self.count < self.max {\n            self.count += 1;\n            Some(self.count)\n        } else { None }\n    }\n}",
+      "toCode": "class Counter:\n    def __init__(self, max_val: int):\n        self.count = 0\n        self.max = max_val\n\n    def increment(self) -> int | None:\n        if self.count < self.max:\n            self.count += 1\n            return self.count\n        return None"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Drop ownership annotations",
+      "body": "Remove all lifetime annotations, &, &mut, and ownership transfers. Python's GC handles all of that. Variables are freely sharable without borrow constraints."
+    },
+    {
+      "title": "Result/Option → exceptions/None",
+      "body": "Replace Ok(val)/Err(e) returns with plain returns and raise. Replace Option<T> with returning None directly. Match on Result becomes try/except."
+    },
+    {
+      "title": "Vec → list, HashMap → dict",
+      "body": "vec![1,2,3] becomes [1,2,3]. HashMap::new() becomes {}. push/insert become .append()/{} assignment. iter().filter().collect() becomes list comprehensions."
+    },
+    {
+      "title": "Traits → duck typing or Protocol",
+      "body": "Rust trait bounds (T: Display + Clone) become Python duck typing — just call the method. For explicit contracts, use typing.Protocol."
+    }
+  ]
+}
