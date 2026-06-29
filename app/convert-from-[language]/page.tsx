@@ -32,6 +32,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     alternates: {
       canonical,
     },
+    other: {
+      'last-modified': new Date().toUTCString(),
+    },
     openGraph: {
       title,
       description,

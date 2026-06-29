@@ -3,7 +3,9 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Home, ChevronRight } from 'lucide-react'
 import { getPairFromSlug, getPageTitle, getPageDescription, getLangDisplayName, getPopularTargetsFor, PAIRS } from '@/lib/languages'
+import { getPairIntro } from '@/lib/pairIntros'
 import { ConverterPanel } from '@/components/converter/ConverterPanel'
+import { PairPageContent } from '@/components/converter/PairPageContent'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 
@@ -32,6 +34,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description,
     alternates: {
       canonical,
+    },
+    other: {
+      'last-modified': new Date().toUTCString(),
     },
     openGraph: {
       title,
@@ -63,6 +68,9 @@ export default async function ConvertPage({ params }: PageProps) {
   const toDisplay = getLangDisplayName(to)
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'
 
+  const introParagraph =
+    getPairIntro(from, to) ??
+    `While ${fromDisplay} excels in its specific runtime environment and syntax style, ${toDisplay} offers unique language primitives, optimizations, and standard idioms. This converter bridges the gap by translating your ${fromDisplay} code to idiomatic ${toDisplay} — handling library mappings, type system differences, and structural patterns automatically.`
   const seoTitle = `Convert ${fromDisplay} to ${toDisplay} Online`
   const metaDescription = getPageDescription(from, to)
 
@@ -142,15 +150,22 @@ export default async function ConvertPage({ params }: PageProps) {
         <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-foreground">
           {seoTitle}
         </h1>
-        <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-          Welcome to the easiest {from} to {to} converter built for developers. While {fromDisplay} excels in its specific runtime environment and syntax style, {toDisplay} offers unique language primitives, optimizations, and standard idioms. This tool bridges the gap by translating your codebases and structures between them in milliseconds.
-        </p>
       </div>
 
       {/* Converter Component */}
       <div>
         <ConverterPanel defaultFrom={from} defaultTo={to} />
       </div>
+
+      {/* Intro Paragraph (Moved below converter for better UX/First Paint) */}
+      <div className="max-w-3xl mx-auto px-4 text-center">
+        <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+          {introParagraph}
+        </p>
+      </div>
+
+      {/* Per-Pair SEO Content: diffs, code examples, migration tips */}
+      <PairPageContent from={from} to={to} fromDisplay={fromDisplay} toDisplay={toDisplay} />
 
       {/* FAQ Accordion Section */}
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
