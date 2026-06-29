@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating from TypeScript to Dart shifts developers from a structural, erasure-based type system built on top of JavaScript to a nominal, sound type system engineered for native compilation. Dart eliminates runtime surprises caused by JavaScript's dynamic underpinnings through strict null safety and ahead-of-time compilation. Teams typically make this transition when moving from web-centric ecosystems to cross-platform mobile development with Flutter.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Structural typing where shapes match regardless of declarations, and types are completely erased at runtime.",
+      "to": "Nominal typing where class lineage matters, backed by sound null safety enforced at both compile time and runtime."
+    },
+    {
+      "category": "Syntax",
+      "from": "Uses JavaScript-derived syntax with keywords like 'let', 'const', interfaces, and flexible object literals.",
+      "to": "Uses C-style class-based syntax with 'var', 'final', 'const', and replaces interfaces with implicit class interfaces or mixins."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed by the host JavaScript engine's garbage collector, which is optimized for web page lifecycles.",
+      "to": "Managed by Dart's generational garbage collector, specifically optimized for high-velocity UI allocation and rendering."
+    },
+    {
+      "category": "Async",
+      "from": "Event loop model utilizing Promises, async/await keywords, and RxJS for stream management.",
+      "to": "Single-threaded event loop utilizing Futures and native, built-in Stream classes with async* generators."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimal standard library heavily reliant on the npm ecosystem for basic utilities, collections, and math.",
+      "to": "Comprehensive, battery-included core library (dart:core, dart:collection, dart:async, dart:convert) built into the SDK."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Data Transfer Object with Methods",
+      "description": "Converting a structural TypeScript interface and class implementation to a nominal Dart class with an implicit interface.",
+      "fromCode": "interface User {\n  id: number;\n  name: string;\n  greet(): string;\n}\n\nclass WebUser implements User {\n  constructor(public id: number, public name: string) {}\n  greet(): string {\n    return `Hello, ${this.name}`;\n  }\n}",
+      "toCode": "class User {\n  final int id;\n  final String name;\n  User(this.id, this.name);\n  String greet() => 'Hello, $name';\n}\n\nclass AppUser implements User {\n  @override\n  final int id;\n  @override\n  final String name;\n  AppUser(this.id, this.name);\n  @override\n  String greet() => 'Hi, $name';\n}"
+    },
+    {
+      "title": "Asynchronous Data Fetching",
+      "description": "Porting an async fetch operation handling JSON deserialization.",
+      "fromCode": "async function fetchUser(url: string): Promise<{ id: string }> {\n  const res = await fetch(url);\n  const data = await res.json();\n  return { id: data.id };\n}",
+      "toCode": "import 'dart:convert';\nimport 'package:http/http.dart' as http;\n\nFuture<Map<String, dynamic>> fetchUser(String url) async {\n  final res = await http.get(Uri.parse(url));\n  final data = jsonDecode(res.body);\n  return {'id': data['id']};\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Ditch Structural Literals",
+      "body": "Stop declaring inline anonymous object shapes; use strongly typed Dart classes or explicit Map<K, V> types instead."
+    },
+    {
+      "title": "Understand Implicit Interfaces",
+      "body": "Dart does not have an 'interface' keyword. Every class implicitly defines an interface containing all its instance fields and methods, allowing any class to be implemented."
+    },
+    {
+      "title": "Leverage Factory Constructors",
+      "body": "Use Dart's 'factory' keyword to implement constructors that do not always create new instances, ideal for caching or initializing subclasses."
+    },
+    {
+      "title": "Enforce Strict Null Safety",
+      "body": "Dart types are non-nullable by default. Append a question mark (e.g., String?) only when a value can explicitly be null, and avoid using the '!' bang operator blindly."
+    }
+  ]
+}

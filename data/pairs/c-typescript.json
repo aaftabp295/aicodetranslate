@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating from C to TypeScript bridges low-level procedural systems programming with modern, safe, type-annotated application development. Developers gain structural typing boundaries and compile-time linting safety, shielding codebases from the unpredictable runtime surprises common in plain JavaScript. This transition is typical when upgrading embedded command tooling or system configuration utilities to cross-platform cloud and enterprise node architectures.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, low-level architecture with no runtime bounds checking, permitting arbitrary pointer type casting.",
+      "to": "Statically typed via structural shapes at compile time, which are entirely erased when compiled to runtime JavaScript."
+    },
+    {
+      "category": "Syntax",
+      "from": "Procedural syntax demanding separate system header mappings, explicit structs, and explicit numeric boundaries.",
+      "to": "Modern application layout syntax supporting interfaces, types, explicit classes, decorators, and modular import statements."
+    },
+    {
+      "category": "Memory",
+      "from": "Manually handled via explicit stack placement or precise dynamic heap allocation and deallocation code.",
+      "to": "Automatically managed by the host runtime engine's tracking garbage collector, freeing developers from memory operations."
+    },
+    {
+      "category": "Async",
+      "from": "Dependent entirely on underlying native OS threading configurations and low-level pipeline blocks.",
+      "to": "Single-threaded non-blocking execution runtime driven by Promises, microtask tracking, and async/await syntax structures."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimalist library managing platform math, raw string calculations, files, and core memory streams.",
+      "to": "Extensive platform ecosystem providing runtime utility objects, collection operations, web interfaces, and ecosystem modules."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Structural Contract Layouts",
+      "description": "Refactoring rigid C structure maps into scalable compile-time TypeScript type definitions and interfaces.",
+      "fromCode": "typedef struct {\n    int position_x;\n    int position_y;\n} Vector2D;\n\nvoid update_vector(Vector2D* v, int x, int y) {\n    v->position_x = x;\n    v->position_y = y;\n}",
+      "toCode": "interface Vector2D {\n  position_x: number;\n  position_y: number;\n}\n\nfunction updateVector(v: Vector2D, x: number, y: number): void {\n  v.position_x = x;\n  v.position_y = y;\n}"
+    },
+    {
+      "title": "Array Filtering and Transformations",
+      "description": "Converting manual C element loop transformations into concise, safe TypeScript functional array operations.",
+      "fromCode": "#include <stddef.h>\n\nvoid filter_positives(const int* src, int* dest, size_t len, size_t* out_len) {\n    size_t count = 0;\n    for (size_t i = 0; i < len; i++) {\n        if (src[i] > 0) { dest[count++] = src[i]; }\n    }\n    *out_len = count;\n}",
+      "toCode": "function filterPositives(src: number[]): number[] {\n  return src.filter(n => n > 0);\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Lean on Structural Matching",
+      "body": "TypeScript verifies objects by their shape rather than explicitly registered names; objects matching an interface layout pass validations automatically."
+    },
+    {
+      "title": "Configure Strict Compilation Rules",
+      "body": "Ensure 'strict': true is active in your tsconfig file to catch dangerous null or missing property states during development."
+    },
+    {
+      "title": "Ditch Header Declarations",
+      "body": "Organize your application logic using modern ES modules (import/export statements) instead of dragging in file fragments using header includes."
+    },
+    {
+      "title": "Avoid Arbitrary Any Annotations",
+      "body": "Do not bypass type checking using the 'any' keyword. Use 'unknown' or explicit union configurations when data inputs are volatile."
+    }
+  ]
+}

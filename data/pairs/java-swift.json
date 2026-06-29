@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from Java to Swift shifts a developer from the cross-platform JVM ecosystem into Apple's highly optimized, native compiled systems language. Swift combines the structural safety of rigid compile-time data typing with a highly concise, modern syntax that eliminates legacy object boilerplate. This migration is standard when building high-performance, low-latency client applications across iOS, macOS, and companion Apple device platforms.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Nominal class structures backed by runtime type checks and generic type erasure operations.",
+      "to": "Strictly static system featuring reified generics, type inference, algebraic enum data types, and value-type structures."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose, class-centric structure requiring semicolons, explicit getters/setters, and boilerplate try-catch blocks.",
+      "to": "Modern, lightweight, expressive layout utilizing type inference, closures, guard statements, and native property accessors."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed completely by asynchronous JVM generational garbage collectors tracing heap references in the background.",
+      "to": "Deterministic resource management handled via compile-time Automatic Reference Counting (ARC), requiring explicit handling of weak links."
+    },
+    {
+      "category": "Async",
+      "from": "Thread pools, synchronizers, CompletableFuture frameworks, and lightweight virtual threading processes.",
+      "to": "Modern structured concurrency model utilizing language-level async/await primitives, Tasks, and safety-isolated Actors."
+    },
+    {
+      "category": "Standard Library",
+      "from": "A massive enterprise toolkit covering everything from cross-platform server systems to database integrations.",
+      "to": "A highly focused core framework tightly integrated with foundational layout capabilities and device operating system frameworks."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Value Type Structs vs Reference Classes",
+      "description": "Converting an instantiable, heap-allocated Java data entity into an immutable, thread-safe Swift stack value structure.",
+      "fromCode": "public class Member {\n    private final String name;\n    public Member(String name) { this.name = name; }\n    public String getName() { return name; }\n}",
+      "toCode": "struct Member {\n    let name: String\n}"
+    },
+    {
+      "title": "Safe Optional Binding Operations",
+      "description": "Refactoring Java null checks or Optional containers into elegant, native Swift guard statement unwrap operations.",
+      "fromCode": "public class Process {\n    public static void display(String payload) {\n        if (payload != null) {\n            System.out.println(payload.trim());\n        }\n    }\n}",
+      "toCode": "struct Process {\n    static func display(_ payload: String?) {\n        guard let actualPayload = payload else { return }\n        print(actualPayload.trimmingCharacters(in: .whitespaces))\n    }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Prefer Structs Over Classes",
+      "body": "Build data models using 'struct' instead of 'class' by default to leverage stack allocation and automatic thread-safe copying."
+    },
+    {
+      "title": "Prevent ARC Memory Leaks",
+      "body": "Break reference cycles between long-lived object instances by marking parent-child reference properties with 'weak' modifiers."
+    },
+    {
+      "title": "Embrace Protocol Programming",
+      "body": "Replace deeply nested class inheritance patterns with flexible, decoupled protocol composition and default trait extensions."
+    },
+    {
+      "title": "Leverage Guard for Guardrails",
+      "body": "Use 'guard' statements early within your method bodies to quickly handle error conditions and keep main logic code clean."
+    }
+  ]
+}

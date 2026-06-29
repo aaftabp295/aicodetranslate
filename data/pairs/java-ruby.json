@@ -1,0 +1,62 @@
+{
+  "intro": "Moving from Java to Ruby trades rigid, compiler-enforced architectural structures for an elegant, highly expressive language that prioritizes developer happiness and rapid prototyping. Ruby makes everything an object and exposes metadata dynamically, enabling powerful metaprogramming patterns that drastically reduce boilerplate code. This transition is common when moving from legacy enterprise backends to agile, convention-over-configuration web frameworks like Ruby on Rails.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Strictly nominal, manifest, and validated by static compiler compilation blocks.",
+      "to": "Completely dynamic, relying entirely on duck typing where object behaviors matter more than specific inheritance lineages."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose, class-bound code blocks relying on semi-colons, curly braces, and mandatory variable declarations.",
+      "to": "Highly concise, human-readable expression syntax that omits parenthesis, semicolons, and return statements by default."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed via complex, highly tunable JVM background collectors optimizing long-lived heap object references.",
+      "to": "Managed by the YARV runtime utilizing a generational mark-and-sweep garbage collector built for quick application turns."
+    },
+    {
+      "category": "Async",
+      "from": "Native OS multi-threading concurrent task pipelines and modern high-throughput virtual threads.",
+      "to": "Constrained by a Global Interpreter Lock (GIL) in YARV, relying on Fibers, Ractors, or multi-process architectures for concurrency."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Monolithic, enterprise-grade class libraries designed to ensure backward compatibility across decades.",
+      "to": "Flexible, developer-focused core library specializing in advanced string processing, collection manipulation, and system scripting."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Collection Transformation via Blocks",
+      "description": "Refactoring a Java stream mapping pipeline into an elegant Ruby block transformation loop.",
+      "fromCode": "import java.util.List;\nimport java.util.stream.Collectors;\n\npublic class Transform {\n    public List<String> upper(List<String> words) {\n        return words.stream()\n                    .map(String::toUpperCase)\n                    .collect(Collectors.toList());\n    }\n}",
+      "toCode": "class Transform\n  def upper(words)\n    words.map(&:upcase)\n  end\nend"
+    },
+    {
+      "title": "Dynamic Method Execution",
+      "description": "Contrasting verbose Java reflection boilerplate with Ruby's clean dynamic method invocation utilities.",
+      "fromCode": "import java.lang.reflect.Method;\n\npublic class Dispatch {\n    public void run(Object obj, String method) throws Exception {\n        Method m = obj.getClass().getMethod(method);\n        m.invoke(obj);\n    }\n}",
+      "toCode": "class Dispatch\n  def run(obj, method_name)\n    obj.send(method_name)\n  end\nend"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Trust Duck Typing Behavior",
+      "body": "Stop checking object types before invoking actions; verify capability boundaries instead by utilizing responses to respond_to? calls."
+    },
+    {
+      "title": "Omit Optional Syntactic Elements",
+      "body": "Clean up your source code appearance by removing unnecessary return statements and method-call parentheses wherever readability allows."
+    },
+    {
+      "title": "Leverage Blocks and Yields",
+      "body": "Master passing anonymous code snippets directly into methods using yield blocks to handle resource wraps and structural iterations cleanly."
+    },
+    {
+      "title": "Embrace Convention Over Configuration",
+      "body": "Avoid configuring systems via XML or annotation frameworks. Let Ruby's standard naming patterns infer class connections automatically."
+    }
+  ]
+}

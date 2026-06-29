@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from Java to C# is an ergonomic leap across similar enterprise-grade managed runtimes, moving from the JVM to Microsoft's .NET platform. While both maintain object-oriented foundations and automated garbage collection, C# provides significantly richer syntactic features like properties, async/await, and value types. Developers make this move to leverage modern framework innovations, deep Windows integrations, or game development platforms like Unity.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Nominal class system where reference types are passed by address, and generics are subject to type erasure.",
+      "to": "Nominal system supporting both true reified generics and explicit unified value types (structs) alongside references."
+    },
+    {
+      "category": "Syntax",
+      "from": "Traditional class-bound structure requiring explicit getters/setters, verbose anonymous classes, and lack of native properties.",
+      "to": "Modern expression-dense syntax utilizing properties, pattern matching, records, LINQ, and clean lambda functions."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed by the JVM garbage collector, which lacks explicit stack-allocated value-type structural custom primitives.",
+      "to": "Managed by the .NET GC, featuring special optimization for unboxed stack structures and allocation-free Span<T> slices."
+    },
+    {
+      "category": "Async",
+      "from": "Relying on CompletableFuture execution pipelines, explicit synchronized scopes, or modern virtual threads.",
+      "to": "Deeply integrated language-level async/await primitives backed by the Task Parallel Library (TPL) compiler state-machines."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The platform-agnostic JDK ecosystem specializing in highly backward-compatible enterprise APIs.",
+      "to": "The unified .NET Base Class Library (BCL), known for unified LINQ processing pipelines and highly optimized modern Web I/O APIs."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Property and Data Declaration",
+      "description": "Refactoring a standard Java class boilerplate containing properties into a clean C# property layout.",
+      "fromCode": "public class Account {\n    private String holder;\n    public String getHolder() { return holder; }\n    public void setHolder(String holder) { this.holder = holder; }\n}",
+      "toCode": "public class Account {\n    public string Holder { get; set; }\n}"
+    },
+    {
+      "title": "Stream Pipelines vs LINQ",
+      "description": "Migrating a sequential data filter-and-transform collection pipeline from Java Streams to C# LINQ syntax.",
+      "fromCode": "import java.util.List;\nimport java.util.stream.Collectors;\n\npublic class Query {\n    public List<String> process(List<Integer> numbers) {\n        return numbers.stream()\n                      .filter(n -> n > 10)\n                      .map(Object::toString)\n                      .collect(Collectors.toList());\n    }\n}",
+      "toCode": "using System.Collections.Generic;\nusing System.Linq;\n\npublic class Query {\n    public List<string> Process(List<int> numbers) {\n        return numbers.Where(n => n > 10)\n                      .Select(n => n.ToString())\n                      .ToList();\n    }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Capitalize Method Names",
+      "body": "Align with .NET conventions by using PascalCase for all class methods, public properties, and event handlers."
+    },
+    {
+      "title": "Swap Generics Strategies",
+      "body": "Do not verify type states via casting. C# retains full generic types at runtime, allowing operations like typeof(T) directly within methods."
+    },
+    {
+      "title": "Utilize Structs for Small Data",
+      "body": "Use the 'struct' keyword instead of 'class' when building small, immutable, identity-less structures to reduce GC heap pressure."
+    },
+    {
+      "title": "Replace try-with-resources with using",
+      "body": "Convert Java resource-cleanup blocks into declarative C# 'using' blocks or statements to invoke IDisposable targets cleanly."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating from C to C# moves a developer from low-level procedural hardware tracking into Microsoft's modern, safe, and highly optimized .NET application runtime ecosystem. This transition replaces dangerous pointer operations and manual memory cleanup routines with object-oriented encapsulation, comprehensive framework libraries, and a reliable garbage collector. Developers adopt C# to build secure cloud APIs, backend microservices, or complex enterprise business logic tools rapidly.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, weakly checked procedural primitives with no safety boundaries protecting memory boundaries.",
+      "to": "Statically typed, nominal system featuring reified generics, unified object hierarchies, and true value-type structures."
+    },
+    {
+      "category": "Syntax",
+      "from": "Procedural code layouts organized inside separate file headers, manual structures, and function sequences.",
+      "to": "Modern, expression-dense syntax utilizing properties, rich pattern matching, classes, and native string interpolation patterns."
+    },
+    {
+      "category": "Memory",
+      "from": "Manually handled via explicit stack placement or precise dynamic heap allocation and deallocation code.",
+      "to": "Fully managed runtime allocation environment relying on automatic garbage collection, optimized with low-overhead stack structs."
+    },
+    {
+      "category": "Async",
+      "from": "No built-in language abstractions, relying entirely on platform-specific thread configurations (like pthreads).",
+      "to": "Language-level async/await primitives backed by the Task Parallel Library (TPL) compiler state-machines."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimalist library managing platform math, raw string calculations, files, and core memory streams.",
+      "to": "The unified .NET Base Class Library (BCL), known for unified LINQ processing pipelines and highly optimized modern Web I/O APIs."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Safe Data Properties",
+      "description": "Refactoring manual C structs into clean, type-safe C# classes utilizing automatic public property accessors.",
+      "fromCode": "typedef struct {\n    int identifier;\n    double score;\n} Record;\n\nRecord create_record(int id, double s) {\n    Record r = {id, s};\n    return r;\n}",
+      "toCode": "public class Record {\n    public int Identifier { get; set; }\n    public double Score { get; set; }\n}"
+    },
+    {
+      "title": "Safe Memory Buffer Reading",
+      "description": "Converting unsafe C pointer array scans into safe, modern C# managed collection parsing pipelines.",
+      "fromCode": "#include <stdbool.h>\n#include <stddef.h>\n\nbool contains_value(const int* buffer, size_t size, int target) {\n    for (size_t i = 0; i < size; i++) {\n        if (buffer[i] == target) return true;\n    }\n    return false;\n}",
+      "toCode": "using System.Linq;\n\npublic class BufferScanner {\n    public bool ContainsValue(int[] buffer, int target) {\n        return buffer.Contains(target);\n    }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Stop Using Raw Pointers",
+      "body": "Pointers are unnecessary in C#. Pass object references directly and let the garbage collector manage memory cleanup paths safely."
+    },
+    {
+      "title": "Leverage Public Properties",
+      "body": "Avoid building explicit getter and setter methods. Use C#'s concise public property fields { get; set; } to manage data exposure cleanly."
+    },
+    {
+      "title": "Handle Errors via Exceptions",
+      "body": "Stop passing back integer success codes. Use structured try-catch blocks and throw explicit exceptions when operations fail."
+    },
+    {
+      "title": "Use LINQ for Processing",
+      "body": "Replace custom data searching and filtering loops with clean, declaration-based LINQ queries to parse collections concisely."
+    }
+  ]
+}

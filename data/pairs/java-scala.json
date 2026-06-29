@@ -1,0 +1,62 @@
+{
+  "intro": "Moving from Java to Scala elevates a developer's capabilities on the JVM by blending object-oriented paradigms with powerful functional programming primitives. Scala eliminates structural boilerplate through comprehensive type inference, advanced pattern matching, and an expressive type system that enforces correctness at compile time. This shift is common when developing high-throughput data processing systems, reactive microservices, or complex concurrent backends.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Nominal class inheritance using erased generics and lacking built-in algebraic sum data types.",
+      "to": "Advanced static type system featuring reified traits, structural variance, type classes, and implicit configurations."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose statement-driven structure requiring explicit class boundaries, type declarations, and return commands.",
+      "to": "Expression-oriented syntax that treats all blocks as return values, minimizing boilerplate with concise lambdas."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed by the standard JVM garbage collector, predominantly allocating mutable, long-lived reference classes.",
+      "to": "Shares the same underlying JVM GC engine, but shifts allocation patterns toward short-lived immutable data containers."
+    },
+    {
+      "category": "Async",
+      "from": "Thread-pool execution structures, CompletableFuture pipelines, and runtime-managed virtual processes.",
+      "to": "Functional async orchestration driven by composable Futures, ExecutionContexts, and functional fiber ecosystems like Cats Effect."
+    },
+    {
+      "category": "Standard Library",
+      "from": "The standard JDK utility platform, heavily optimized for backward compatibility and mutable collection modifications.",
+      "to": "A specialized collection library focused on immutable structures, functional transformations, and Monadic wrappers."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Pattern Matching Data Structures",
+      "description": "Converting Java switch blocks into powerful, type-safe Scala pattern matching statements over sealed case class hierarchies.",
+      "fromCode": "public abstract class Status {}\npublic class Active extends Status {}\npublic class Suspended extends Status {}\n// Processing\npublic String check(Status s) {\n    if (s instanceof Active) return \"Go\";\n    if (s instanceof Suspended) return \"Stop\";\n    throw new IllegalArgumentException();\n}",
+      "toCode": "sealed trait Status\ncase class Active() extends Status\ncase class Suspended() extends Status\n// Processing\ndef check(s: Status): String = s match {\n  case Active()    => \"Go\"\n  case Suspended() => \"Stop\"\n}"
+    },
+    {
+      "title": "Immutable Collection Mapping",
+      "description": "Transforming data streams from standard Java stream frameworks into concise Scala functional collections mutations.",
+      "fromCode": "import java.util.List;\nimport java.util.stream.Collectors;\n\npublic class Filter {\n    public List<Integer> scale(List<Integer> nums) {\n        return nums.stream()\n                   .map(n -> n * 2)\n                   .collect(Collectors.toList());\n    }\n}",
+      "toCode": "class Filter {\n  def scale(nums: List[Int]): List[Int] = \n    nums.map(_ * 2)\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Default to Immutability",
+      "body": "Always favor using 'val' declarations and immutable collections over mutable variables ('var') to minimize unintended side effects."
+    },
+    {
+      "title": "Replace Null with Option",
+      "body": "Eliminate raw null returns completely from your application logic; wrap optional values in clean Some or None Monadic containers."
+    },
+    {
+      "title": "Leverage Case Classes",
+      "body": "Use 'case class' declarations to automatically generate structural value-equality methods, string definitions, and extractor patterns."
+    },
+    {
+      "title": "Master Placeholder Syntax",
+      "body": "Simplify short inline lambda functions by replacing verbose arrow declarations with clean underscore (_) positional operators."
+    }
+  ]
+}

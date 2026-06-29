@@ -1,0 +1,62 @@
+{
+  "intro": "Moving from Java to C requires shifting from an abstract, garbage-collected virtual machine down to bare-metal hardware execution. Developers trade platform independence, rich standard libraries, and automatic safety for absolute memory control, microsecond performance, and low-level system access. This transition typically happens when writing operating systems, embedded software, or highly optimized native extensions.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Strictly object-oriented, nominal, and statically checked with strong runtime safety boundaries.",
+      "to": "Procedural, weakly typed statically, with no runtime safety checks, allowing arbitrary pointer casting."
+    },
+    {
+      "category": "Syntax",
+      "from": "Purely object-oriented requiring classes, modifiers, and structured exception handling constructs.",
+      "to": "Procedural syntax organized entirely around functions, structures (structs), and explicit pointer arithmetic primitives."
+    },
+    {
+      "category": "Memory",
+      "from": "Automatically managed by the JVM via background garbage collection, eliminating manual deallocations.",
+      "to": "Manually managed by the developer using explicit heap allocation (malloc/calloc) and manual freeing (free)."
+    },
+    {
+      "category": "Async",
+      "from": "Rich, high-level threading abstractions, CompletableFuture API, and managed Virtual Threads.",
+      "to": "No built-in async primitives; relies entirely on platform-specific OS libraries like POSIX threads (pthreads)."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Vast enterprise-grade API containing cross-platform networking, cryptography, UI, and rich collections.",
+      "to": "Minimalist POSIX standard library focused entirely on low-level system strings, math, file I/O, and raw memory."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Data Structuring and Allocation",
+      "description": "Converting an instantiable Java data class into a stack- or heap-allocated C struct.",
+      "fromCode": "public class Point {\n    public int x;\n    public int y;\n    public Point(int x, int y) {\n        this.x = x;\n        this.y = y;\n    }\n}",
+      "toCode": "#include <stdlib.h>\n\ntypedef struct {\n    int x;\n    int y;\n} Point;\n\nPoint* create_point(int x, int y) {\n    Point* p = malloc(sizeof(Point));\n    if (p) { p->x = x; p->y = y; }\n    return p;\n}"
+    },
+    {
+      "title": "Array Processing and Traversal",
+      "description": "Iterating over an array, demonstrating Java's safe checked bounds versus C's pointer iteration.",
+      "fromCode": "public class ArraySum {\n    public static int sum(int[] arr) {\n        int total = 0;\n        for (int val : arr) { total += val; }\n        return total;\n    }\n}",
+      "toCode": "#include <stddef.h>\n\nint sum(const int* arr, size_with_t len) {\n    int total = 0;\n    for (size_t i = 0; i < len; i++) {\n        total += arr[i];\n    }\n    return total;\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Track Allocation Lifecycles",
+      "body": "Every single instance of malloc() or calloc() must have a corresponding free() call to avoid leaking process memory."
+    },
+    {
+      "title": "Pass Array Dimensions Explicitly",
+      "body": "C arrays degenerate into pointers when passed to functions. You must pass the array size as a separate parameter since length properties do not exist."
+    },
+    {
+      "title": "Avoid Out-of-Bounds Access",
+      "body": "C will not throw an ArrayIndexOutOfBoundsException; it will blindly read or write corrupted data, or trigger a Segmentation Fault."
+    },
+    {
+      "title": "Handle Errors via Return Codes",
+      "body": "Replace try-catch blocks completely with manual error tracking by checking integers, null pointers, or system errno returns."
+    }
+  ]
+}

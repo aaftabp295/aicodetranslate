@@ -1,0 +1,62 @@
+{
+  "intro": "Migrating from Java to PHP represents a shift from an enterprise, multi-threaded compiled system to an interpreted scripting platform optimized for fast web deployment. This transition allows teams to build web applications without complex application servers, trading structural rigor for rapid cycle changes and streamlined server administration. Modern PHP brings strong object-oriented features while maintaining its core focus on stateless, request-driven lifecycles.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Strictly static, manifest, and validated by the JVM at load and compilation checkpoints.",
+      "to": "Dynamic, historically weak, but now supporting modern gradual type hinting and runtime safety enforcements."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose, requiring strict class modular structures for all execution paths and utility functions.",
+      "to": "C-style scripting syntax featuring global function capabilities, dynamic string evaluation, and mandatory '$' variable prefixes."
+    },
+    {
+      "category": "Memory",
+      "from": "Long-running process heap instances shared concurrently across worker execution frames and garbage collected asynchronously.",
+      "to": "Shared-nothing architectural memory model where memory allocations clear entirely at the end of every individual request lifecycle."
+    },
+    {
+      "category": "Async",
+      "from": "Native multi-threading capabilities, background thread pooling, and built-in parallel virtual processes.",
+      "to": "Synchronous by design, relying on external process managers (FPM) or non-blocking loop runtimes like Swoole or RoadRunner."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Unified, highly rigid enterprise application framework managing distributed file resources and infrastructure components.",
+      "to": "A large collection of globally accessible built-in array, string manipulation, and native database-driving functions."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Class and Constructor Property Promotion",
+      "description": "Porting a traditional Java constructor structure over to a clean PHP property promotion class structure.",
+      "fromCode": "public class LogService {\n    private final String prefix;\n    public LogService(String prefix) {\n        this.prefix = prefix;\n    }\n    public void log(String msg) {\n        System.out.println(prefix + \": \" + msg);\n    }\n}",
+      "toCode": "<?php\nclass LogService {\n    public function __construct(private string $prefix) {}\n    public function log(string $msg): void {\n        echo \"{$this->prefix}: {$msg}\\n\";\n    }\n}"
+    },
+    {
+      "title": "Associative Array Configurations",
+      "description": "Converting a traditional Java Map instantiation into a flexible, native PHP associative array initialization.",
+      "fromCode": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class Config {\n    public static Map<String, Object> getMap() {\n        Map<String, Object> m = new HashMap<>();\n        m.put(\"status\", 200);\n        m.put(\"active\", true);\n        return m;\n    }\n}",
+      "toCode": "<?php\nclass Config {\n    public static function getMap(): array {\n        return [\n            \"status\" => 200,\n            \"active\" => true,\n        ];\n    }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Understand Request Scopes",
+      "body": "Remember that data stored inside static class variables does not persist between separate browser requests or API calls."
+    },
+    {
+      "title": "Enable Strict Type Validation",
+      "body": "Always add declare(strict_types=1); to the very top of your PHP files to force typing boundary failures for mismatched method arguments."
+    },
+    {
+      "title": "Leverage Built-in Array Functions",
+      "body": "Instead of writing verbose loop operations, explore PHP's powerful array manipulation tools like array_map and array_filter."
+    },
+    {
+      "title": "Configure Composer Autoloading",
+      "body": "Avoid manually calling require or include commands. Use Composer to manage packages and set up standard PSR-4 class autoloading."
+    }
+  ]
+}

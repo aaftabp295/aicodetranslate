@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from Java to C++ moves a developer into a world of zero-cost abstractions, multi-paradigm design, and deterministic resource lifecycle management. While preserving object-oriented concepts, C++ eliminates runtime VM overhead, giving developers full control over memory layout and hardware optimization. This change is vital for systems engineering, game engine development, and low-latency financial systems.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, single-root nominal class hierarchy managed safely by runtime VM boundary verifications.",
+      "to": "Statically typed, multiple-inheritance class system supporting compile-time templates and undefined behaviors for unverified types."
+    },
+    {
+      "category": "Syntax",
+      "from": "Strictly structured around garbage-collected class modules with standard dot-notation object references.",
+      "to": "Extensive multi-paradigm syntax supporting operator overloading, templates, direct pointer access, and reference semantics."
+    },
+    {
+      "category": "Memory",
+      "from": "Automatic runtime garbage collection where objects live exclusively on the managed JVM heap.",
+      "to": "Deterministic scope-based lifecycle management (RAII), supporting stack allocation, manual heap management, and smart pointers."
+    },
+    {
+      "category": "Async",
+      "from": "Built-in managed synchronization primitives, monitors, execution pools, and lightweight virtual threads.",
+      "to": "Standard thread library (std::thread), futures, promises, and direct access to native operating system threading systems."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Monolithic built-in platform framework providing cross-platform networking, graphics, and data access libraries.",
+      "to": "Standard Template Library (STL) heavily optimized for abstract containers, type traits, algorithms, and stream I/O."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Deterministic Resource Management (RAII)",
+      "description": "Converting Java's AutoCloseable interface and try-with-resources statement into a native C++ scoped destructor lifecycle.",
+      "fromCode": "public class Resource implements AutoCloseable {\n    public Resource() { System.out.println(\"Acquired\"); }\n    public void use() { System.out.println(\"Using\"); }\n    @Override\n    public void close() { System.out.println(\"Released\"); }\n}\n// Usage\ntry (Resource r = new Resource()) {\n    r.use();\n}",
+      "toCode": "#include <iostream>\n\nclass Resource {\npublic:\n    Resource() { std::cout << \"Acquired\\n\"; }\n    ~Resource() { std::cout << \"Released\\n\"; }\n    void use() { std::cout << \"Using\\n\"; }\n};\n// Usage\n{\n    Resource r;\n    r.use();\n} // Automatically destructed here"
+    },
+    {
+      "title": "Generics vs Templates",
+      "description": "Porting a generic Java utility container to a highly performant, type-instantiated C++ template class.",
+      "fromCode": "public class Box<T> {\n    private T item;\n    public void set(T item) { this.item = item; }\n    public T get() { return item; }\n}",
+      "toCode": "template <typename T>\nclass Box {\nprivate:\n    T item;\npublic:\n    void set(const T& newItem) { item = newItem; }\n    T get() const { return item; }\n};"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Prefer Stack Over Heap",
+      "body": "Do not write 'new' for every object instantiation. Allocate objects on the stack by default so they clear automatically when exiting scope."
+    },
+    {
+      "title": "Master Smart Pointers",
+      "body": "When heap allocation is absolutely necessary, manage ownership safely via std::unique_ptr and std::shared_ptr instead of raw pointers."
+    },
+    {
+      "title": "Avoid Type Erasure Assumptions",
+      "body": "C++ templates generate actual concrete code variations for every parameter type at compilation, unlike Java Generics which erase type markers."
+    },
+    {
+      "title": "Implement Rule of Three/Five",
+      "body": "When managing a raw systemic resource, ensure you correctly implement custom copy/move constructors and destructors to prevent double-free crashes."
+    }
+  ]
+}

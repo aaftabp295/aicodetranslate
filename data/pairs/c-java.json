@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from C to Java shifts development from a platform-dependent procedural model to a highly structured, object-oriented enterprise runtime environment on the JVM. This move replaces manual pointer management and compile-time hardware targets with cross-platform byte code deployment and automated garbage collection. It is ideal for upgrading low-level system utilities into secure, scalable, and highly concurrent enterprise services.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, weakly enforced procedural types with no safety boundaries protecting memory layouts.",
+      "to": "Statically typed, nominal class hierarchy heavily verified at compilation and execution runtime checkpoints."
+    },
+    {
+      "category": "Syntax",
+      "from": "Procedural syntax tracking variables, global methods, structure layouts, and independent pointer files.",
+      "to": "Strict object-oriented layout where all functional code blocks, values, and methods must live inside class structures."
+    },
+    {
+      "category": "Memory",
+      "from": "Manually handled via explicit heap definitions (malloc) and manual code clearing operations (free).",
+      "to": "Automatically managed via automated JVM generational garbage collection sweeps running across background cycles."
+    },
+    {
+      "category": "Async",
+      "from": "No built-in language abstractions, relying entirely on platform-specific thread configurations (like pthreads).",
+      "to": "Robust concurrent execution platforms, thread workers, synchronized lock monitors, and modern virtual threads."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimalist suite managing fundamental console streams, basic math, file inputs, and core memory streams.",
+      "to": "Monolithic built-in runtime framework organizing international networking, secure cryptography, UI tools, and collections."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Object Class Representation",
+      "description": "Refactoring low-level C structural maps into clean, structured Java classes with encapsulated data.",
+      "fromCode": "#include <stdlib.h>\n\ntypedef struct {\n    int identifier;\n} Device;\n\nDevice* create_device(int id) {\n    Device* d = malloc(sizeof(Device));\n    if (d) d->identifier = id;\n    return d;\n}",
+      "toCode": "public class Device {\n    private final int identifier;\n\n    public Device(int id) {\n        this.identifier = id;\n    }\n    public int getIdentifier() { return identifier; }\n}"
+    },
+    {
+      "title": "Safe Exception Code Paths",
+      "description": "Converting manual C return-code status checks into clean, structured Java try-catch exception handling blocks.",
+      "fromCode": "#include <stdio.h>\n\nint write_data(const char* path) {\n    FILE* f = fopen(path, \"w\");\n    if (!f) return -1; // Return error state\n    fclose(f);\n    return 0;\n}",
+      "toCode": "import java.io.FileWriter;\nimport java.io.IOException;\n\npublic class DataWriter {\n    public void writeData(String path) throws IOException {\n        try (FileWriter f = new FileWriter(path)) {\n            f.write(\"\");\n        }\n    }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Encapsulate Logic in Classes",
+      "body": "Do not write detached global functions. Place all execution methods inside logical class boundaries to fit Java's object-oriented structure."
+    },
+    {
+      "title": "Use Try-With-Resources",
+      "body": "Replace manual file closing routines with Java's try-with-resources statement to guarantee resource cleanup automatically."
+    },
+    {
+      "title": "Swap Arrays for Collections",
+      "body": "Avoid tracking array sizes manually with separate variables. Use dynamic collections like ArrayList to manage list sizing automatically."
+    },
+    {
+      "title": "Catch Explicit Exceptions",
+      "body": "Stop passing integer error flags back up your application calls. Use structured try-catch exception handling blocks to manage operational failures cleanly."
+    }
+  ]
+}

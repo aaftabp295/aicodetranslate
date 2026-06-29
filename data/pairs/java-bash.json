@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from Java to Bash shifts a developer from a highly structured, type-safe enterprise compilation ecosystem down to shell script automation directly inside the operating system. Developers trade strict compile-time safety and advanced data structures for instant command execution, low-overhead process pipeline management, and direct environment manipulation. This transition is essential when writing deployment scripts, CI/CD pipelines, or systems infrastructure orchestration utilities.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, nominal class validation system ensuring type consistency before any byte code execution.",
+      "to": "Untyped string-based command processing framework where context dictates whether variables act as text or numbers."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose, class-bound boilerplate code relying on curly braces, explicit access rules, and strict expression statements.",
+      "to": "Command-oriented scripting syntax that uses unique whitespace boundaries, positional arguments, and standard Unix flow operators."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed via JVM runtime tracking, running inside a shared process heap with automatic background garbage collection.",
+      "to": "Process-isolated execution model where each script spawns lightweight sub-shells that automatically clean up upon termination."
+    },
+    {
+      "category": "Async",
+      "from": "Advanced concurrent execution runtimes, thread workers, synchronized locks, and managed virtual tasks.",
+      "to": "Process-level backgrounding using simple job control tracking operators (&), standard wait checkpoints, and Unix pipeline forks."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Monolithic, cross-platform utility framework managing enterprise applications, database drivers, and cryptographic systems.",
+      "to": "Relies entirely on standard Unix command utilities (like sed, awk, grep, and curl) interacting through text streams."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Conditional File Validation",
+      "description": "Replacing Java's verbose NIO file system verification API with a concise, native Bash file testing expression.",
+      "fromCode": "import java.io.File;\n\npublic class Check {\n    public static void verify(String path) {\n        File f = new File(path);\n        if (f.exists() && f.isFile()) {\n            System.out.println(\"Valid File\");\n        }\n    }\n}",
+      "toCode": "verify_file() {\n    local path=\"$1\"\n    if [[ -f \"$path\" ]]; then\n        echo \"Valid File\"\n    fi\n}"
+    },
+    {
+      "title": "System Command Execution Loops",
+      "description": "Converting a Java system process executor loop into an idiomatic, streamlined Bash pipeline collection loop.",
+      "fromCode": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\n\npublic class Run {\n    public static void main(String[] args) throws Exception {\n        Process p = Runtime.getRuntime().exec(new String[]{\"ls\", \"-l\"});\n        try (BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()))) {\n            String line;\n            while ((line = r.readLine()) != null) {\n                System.out.println(\"File: \" + line);\n            }\n        }\n    }\n}",
+      "toCode": "#!/bin/bash\nls -l | while read -r line; do\n    echo \"File: $line\"\ndone"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Quote Every Variable",
+      "body": "Always wrap your variable expansions in double quotes (e.g., \"$var\") to prevent unintended script breakages caused by unexpected spaces or globbing."
+    },
+    {
+      "title": "Enforce Fail-Fast Pipelines",
+      "body": "Add 'set -euo pipefail' to the very top of your scripts to force immediate termination upon any unexpected runtime error."
+    },
+    {
+      "title": "Mind Variable Whitespace Rules",
+      "body": "Avoid adding arbitrary trailing spaces around variable assignments; 'var = value' will fail, whereas 'var=value' evaluates correctly."
+    },
+    {
+      "title": "Ditch Try-Catch for Statuses",
+      "body": "Check the numeric return exit codes ($?) of executed commands instead of expecting formal exception tracking handlers."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from Java to Rust shifts an application from an optimistic execution environment reliant on an opaque runtime garbage collector to a zero-overhead system governed by compile-time resource ownership. Rust eliminates broad categories of data races and guarantees memory safety at compilation without sacrificing native performance. Developers choose Rust for critical systems where predictable memory latency, safety, and parallel resource footprints are paramount.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Object-oriented, single-root class heritage utilizing type erasure and unchecked runtime null values.",
+      "to": "Affine type system utilizing structural traits, explicit compile-time lifetimes, and algebraic enum sum types."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose class-based syntax using statements, standard visibility modifiers, and runtime exceptions for error paths.",
+      "to": "Expression-heavy syntax combining functional design elements, strict module semantics, macro expansion, and explicit pattern matching."
+    },
+    {
+      "category": "Memory",
+      "from": "Heavily reliant on runtime execution tracing collectors to sweep unreachable references from heap space.",
+      "to": "Governed by strict ownership rules and compile-time borrow checking that automatically drops resources when they exit scope."
+    },
+    {
+      "category": "Async",
+      "from": "Managed OS thread multiplexing, shared state synchronization monitors, or implicit runtime virtual threading loops.",
+      "to": "Zero-cost state-machine futures executed via pluggable runtime crates like Tokio, featuring strict multi-thread safety checks."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Comprehensive core framework including built-in SQL database connections, cross-platform UI, and networking.",
+      "to": "Lean, survivalist standard library focusing entirely on core memory layouts, primitive types, system files, and threads."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Error Handling Options",
+      "description": "Refactoring runtime null errors and exception handling patterns into clean, modern Rust type-safe Result and Option enums.",
+      "fromCode": "public class Finder {\n    public static String findName(int id) {\n        if (id == 1) return \"Alice\";\n        throw new IllegalArgumentException(\"Not found\");\n    }\n}",
+      "toCode": "pub fn find_name(id: i32) -> Result<String, String> {\n    match id {\n        1 => Ok(String::from(\"Alice\")),\n        _ => Err(String::from(\"Not found\")),\n    }\n}"
+    },
+    {
+      "title": "Polymorphism with Traits",
+      "description": "Converting a traditional abstract Java interface contract into a decoupled structural Rust behavioral trait.",
+      "fromCode": "public interface Renderable {\n    String draw();\n}\npublic class Circle implements Renderable {\n    public String draw() { return \"O\"; }\n}",
+      "toCode": "pub trait Renderable {\n    fn draw(&self) -> String;\n}\npub struct Circle;\nimpl Renderable for Circle {\n    fn draw(&self) -> String {\n        String::from(\"O\")\n    }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Surrender OOP Hierarchies",
+      "body": "Do not attempt to build class inheritance levels. Model your applications using compositional structures and decoupled trait definitions instead."
+    },
+    {
+      "title": "Understand Borrow Semantics",
+      "body": "Recognize that passing an object instance by default shifts structural ownership out of your current scope unless you explicitly pass a reference (&)."
+    },
+    {
+      "title": "Eliminate Null Assumptions",
+      "body": "Rust has no Null type. Always map potentially missing values using Option<T> wrapper boundaries to handle absence safely."
+    },
+    {
+      "title": "Heed the Borrow Checker",
+      "body": "Do not battle the compiler layout adjustments using unsafe blocks. Refactor code paths to separate mutations from concurrent read references."
+    }
+  ]
+}

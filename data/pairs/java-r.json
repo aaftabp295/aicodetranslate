@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from Java to R moves a developer from a general-purpose, object-oriented software engineering environment to a vector-optimized language tailored for statistical computing and data analysis. Instead of building monolithic application structures, developers work interactively with vectors, data frames, and statistical modeling tools. This shift is common when moving from core data engineering pipelines to specialized data science, machine learning research, or statistical reporting.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, strictly nominal class architecture requiring formal type declarations for all variables.",
+      "to": "Dynamically typed, vector-based language where types are inferred and structures scale implicitly to accommodate dimensions."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose C-style class declarations requiring curly braces, semicolons, and explicit functional method definitions.",
+      "to": "Functional, array-oriented scripting syntax that uses unique assignment operators (<-) and natively executes vector expressions."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed via complex JVM generational garbage collectors, optimized for long-lived concurrent objects.",
+      "to": "In-memory execution model where the entire workspace lives in RAM, managed by an internal single-threaded garbage collector."
+    },
+    {
+      "category": "Async",
+      "from": "Robust multi-threading, concurrency pools, and managed asynchronous virtual tasks running on the OS.",
+      "to": "Single-threaded by design, relying on external parallel processing packages (like 'parallel' or 'future') for distributed computing."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Monolithic backend framework providing comprehensive systems infrastructure, networking, and security tooling.",
+      "to": "Domain-specific standard core focused on advanced matrix mathematics, statistical data models, and built-in graphing tools."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Vector Math Processing",
+      "description": "Replacing explicit, verbose Java loops with efficient, native R vectorized operations.",
+      "fromCode": "public class VectorMath {\n    public static double[] scale(double[] data, double factor) {\n        double[] result = new double[data.length];\n        for (int i = 0; i < data.length; i++) {\n            result[i] = data[i] * factor;\n        }\n        return result;\n    }\n}",
+      "toCode": "scale_vector <- function(data, factor) {\n  return(data * factor)\n}"
+    },
+    {
+      "title": "Tabular Data Representation",
+      "description": "Converting a verbose list of custom Java data objects into a native, queryable R data frame structure.",
+      "fromCode": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class DataRepo {\n    public static class Row { String id; int val; Row(String i, int v) { id=i; val=v; } }\n    public static List<Row> load() {\n        List<Row> rows = new ArrayList<>();\n        rows.add(new Row(\"A\", 10));\n        rows.add(new Row(\"B\", 20));\n        return rows;\n    }\n}",
+      "toCode": "load_data <- function() {\n  df <- data.frame(\n    id = c(\"A\", \"B\"),\n    val = c(10, 20),\n    stringsAsFactors = FALSE\n  )\n  return(df)\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Eliminate Explicit Loops",
+      "body": "Avoid writing 'for' loops for data mutations. Rely on vectorized functions or the 'apply' family to process columns and matrices efficiently."
+    },
+    {
+      "title": "Master One-Based Indexing",
+      "body": "Remember that R collections, vectors, and data frames start indexing at position 1, not position 0 like Java."
+    },
+    {
+      "title": "Use Arrow Assignments",
+      "body": "Follow standard idiomatic R conventions by using the standard pointing arrow operator (<-) instead of the equal sign (=) for variable assignment."
+    },
+    {
+      "title": "Leverage Missing Value Markers",
+      "body": "Represent missing data using R's native NA flag instead of forcing null string comparisons or arbitrary numeric defaults."
+    }
+  ]
+}

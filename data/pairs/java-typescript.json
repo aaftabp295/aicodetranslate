@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from Java to TypeScript swaps a heavyweight, class-centric JVM language for a lightweight, structurally typed language tailored for rapid web and node.js development. Developers gain rapid iterative speed, flexible dynamic features, and highly ergonomic object literals without completely sacrificing type safety. This shift is common when migrating backend services to serverless microservices or adopting full-stack JavaScript architectures.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Nominal, manifest, and strictly enforced at runtime by the Java Virtual Machine.",
+      "to": "Structural, inferred, and completely erased at compile time, offering no runtime type verification."
+    },
+    {
+      "category": "Syntax",
+      "from": "Strictly object-oriented requiring all code to live inside classes, using verbose boilerplate for accessors and initializers.",
+      "to": "Multi-paradigm supporting functional, prototype-based, and object-oriented syntax with minimal boilerplate."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed by complex, tunable JVM garbage collectors (G1, ZGC) running in multi-threaded application environments.",
+      "to": "Managed by the host engine's GC (e.g., V8), optimized for rapid single-threaded event loop allocation patterns."
+    },
+    {
+      "category": "Async",
+      "from": "Multi-threaded parallelism utilizing OS threads, thread pools, and structured concurrency (Virtual Threads).",
+      "to": "Single-threaded event loop executing non-blocking asynchronous operations via Promises and microtasks."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Massive, highly stable standard JDK covering file I/O, networking, concurrency, cryptography, and systems management.",
+      "to": "Minimal global library augmented by Node.js or Web APIs, requiring npm modules for advanced tasks like cryptography."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Data Modeling and Representation",
+      "description": "Replacing a verbose Java POJO with a lightweight TypeScript structural type or interface.",
+      "fromCode": "public class Product {\n    private final String id;\n    private final double price;\n\n    public Product(String id, double price) {\n        this.id = id;\n        this.price = price;\n    }\n\n    public String getId() { return id; }\n    public double getPrice() { return price; }\n}",
+      "toCode": "interface Product {\n  readonly id: string;\n  readonly price: number;\n}"
+    },
+    {
+      "title": "Concurrent/Asynchronous Processing",
+      "description": "Converting multi-threaded Future task execution to single-threaded Promise resolution.",
+      "fromCode": "import java.util.concurrent.CompletableFuture;\n\npublic class DataService {\n    public CompletableFuture<String> loadData() {\n        return CompletableFuture.supplyAsync(() -> \"Payload\");\n    }\n}",
+      "toCode": "class DataService {\n  async loadData(): Promise<string> {\n    return \"Payload\";\n  }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Embrace Structural Shapes",
+      "body": "Do not instantiate classes solely to hold data. Use plain TypeScript interfaces or type aliases, which are free from runtime overhead."
+    },
+    {
+      "title": "Replace Threads with Promises",
+      "body": "Avoid searching for thread primitives. Concurrency in TypeScript is achieved by scheduling non-blocking asynchronous tasks on the event loop."
+    },
+    {
+      "title": "Avoid Type Assertions as Casts",
+      "body": "Do not use the 'as' keyword or angle brackets like java casts. They are compile-time type assertions and will not catch runtime type failures."
+    },
+    {
+      "title": "Configure Strict Flags",
+      "body": "Enable 'strict': true in your tsconfig.json to force explicit null checks, mimicking Java's compiler discipline regarding safety."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from C to Python moves a developer from bare-metal hardware execution to an ultra-high-level dynamic scripting platform. This swap replaces manual pointer arithmetic, explicit memory lifecycles, and fast binary compilation with rapid application prototyping, clean block-indentation syntax, and an expansive standard library. Developers make this change to build data pipelines, machine learning logic, script automated test routines, or leverage web orchestration frameworks.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, structural primitive layout with no automatic runtime verification or boundary safety checks.",
+      "to": "Dynamically typed, heavily object-oriented environment enforcing strong runtime type validation boundaries."
+    },
+    {
+      "category": "Syntax",
+      "from": "Procedural structural layout requiring manual header management, explicit semicolons, and curly brace block limits.",
+      "to": "Highly readable syntax that drops semicolons and braces, using clean visual whitespace indentation rules to define blocks."
+    },
+    {
+      "category": "Memory",
+      "from": "Manually handled via explicit stack frames or dynamic heap allocations using standard malloc() and free() operations.",
+      "to": "Fully managed runtime allocation environment relying on automatic reference counting and internal garbage collection."
+    },
+    {
+      "category": "Async",
+      "from": "No language-level abstractions, relying entirely on native OS library threads (like POSIX pthreads).",
+      "to": "Event loop orchestration driven by native async/await keywords, or multi-processing modules to bypass the Global Interpreter Lock."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Minimalist suite managing raw string conversions, system calculations, file inputs, and basic memory streams.",
+      "to": "Batteries-included standard framework offering native json tools, HTTP clients, cryptography, and comprehensive data collections."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Dynamic List Declarations",
+      "description": "Contrasting manual C heap pointer arrays with an automatic, resizable Python dynamic list instantiation.",
+      "fromCode": "#include <stdlib.h>\n\nint* build_array() {\n    int* arr = malloc(3 * sizeof(int));\n    if (arr) {\n        arr[0] = 100;\n        arr[1] = 200;\n        arr[2] = 300;\n    }\n    return arr;\n}",
+      "toCode": "def build_list():\n    return [100, 200, 300]"
+    },
+    {
+      "title": "String Parsing Operations",
+      "description": "Refactoring manual string scanning code into concise, safe, high-level Python string manipulation methods.",
+      "fromCode": "#include <string.h>\n#include <stdbool.h>\n\nbool has_token(const char* text, const char* token) {\n    return strstr(text, token) != NULL;\n}",
+      "toCode": "def has_token(text: str, token: str) -> bool:\n    return token in text"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Forget Memory Allocations",
+      "body": "Stop looking for tools to clear or free references. Let Python's runtime lifecycle manager clean up unused instances automatically."
+    },
+    {
+      "title": "Leverage Slicing Tools",
+      "body": "Replace pointer arithmetic logic with high-level collection slicing operations (e.g., items[1:4]) to extract sub-arrays cleanly."
+    },
+    {
+      "title": "Use Optional Type Hints",
+      "body": "Add explicit Python type annotations to method signatures to catch mismatch errors early during editor linting checks."
+    },
+    {
+      "title": "Rely on Rich Standard Containers",
+      "body": "Instead of implementing custom hash tables or linked lists from scratch, use Python's built-in dictionaries, sets, and lists."
+    }
+  ]
+}

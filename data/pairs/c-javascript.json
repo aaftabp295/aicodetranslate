@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from C to JavaScript is a shift from strict, low-level hardware compilation down to a dynamic, event-driven web and server application runtime. Developers swap raw pointer allocations and manual memory management for prototype-based objects, loose typing flexibility, and an asynchronous event loop architecture. This change is fundamental when moving from embedded firmware or system components to engineering web interfaces, cloud APIs, and dynamic tooling dashboards.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, weakly checked procedural variables requiring exact primitive size declarations.",
+      "to": "Dynamically typed, weakly checked language where variable values are resolved at runtime, supporting implicit casting."
+    },
+    {
+      "category": "Syntax",
+      "from": "Procedural syntax organized around distinct system headers, explicit function models, and strict type statements.",
+      "to": "Multi-paradigm script syntax supporting inline anonymous object literals, dynamic functions, and closure execution blocks."
+    },
+    {
+      "category": "Memory",
+      "from": "Manually controlled via explicit heap allocations (malloc) and manual code clearing operations (free).",
+      "to": "Automatically managed by the runtime engine (such as V8) utilizing automated garbage collection sweeps."
+    },
+    {
+      "category": "Async",
+      "from": "No built-in language primitives, depending on external operating system multithreading configurations (like pthreads).",
+      "to": "Single-threaded non-blocking event loop framework executing tasks via Promises, async/await, and event triggers."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Low-level system utilities handling basic file operations, console inputs, and basic memory streams.",
+      "to": "Web or runtime host environment extensions managing JSON translation, dynamic array alterations, DOM elements, and network sockets."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Anonymous Objects and Collections",
+      "description": "Replacing rigid C struct models with flexible, inline dynamic JavaScript object dictionaries.",
+      "fromCode": "#include <stdlib.h>\n#include <string.h>\n\ntypedef struct {\n    char title[32];\n    int code;\n} Status;\n\nStatus* build_status() {\n    Status* s = malloc(sizeof(Status));\n    strcpy(s->title, \"Ok\");\n    s->code = 200;\n    return s;\n}",
+      "toCode": "function buildStatus() {\n  return {\n    title: \"Ok\",\n    code: 200\n  };\n}"
+    },
+    {
+      "title": "Asynchronous Delayed Execution",
+      "description": "Converting synchronous platform sleep blocks into non-blocking, asynchronous JavaScript timeouts.",
+      "fromCode": "#include <unistd.h>\n\nvoid run_delayed() {\n    sleep(2);\n    // Execute post-sleep task\n}",
+      "toCode": "function runDelayed() {\n  setTimeout(() => {\n    // Execute post-delay task\n  }, 2000);\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Stop Managing Pointers",
+      "body": "Pointers do not exist in JavaScript. Treat variables as direct values or shared object references, and stop tracking memory addresses."
+    },
+    {
+      "title": "Use Strict Equality Primitives",
+      "body": "Always use the triple equals operator (===) for evaluations to bypass JavaScript's unpredictable implicit runtime type conversions."
+    },
+    {
+      "title": "Embrace First-Class Functions",
+      "body": "Pass functions around as arguments or save them directly inside objects to build modular, clean callback patterns."
+    },
+    {
+      "title": "Understand Local Scopes",
+      "body": "Declare variables using block-scoped keywords like 'let' and 'const' instead of legacy 'var' statements to prevent variable hoisting issues."
+    }
+  ]
+}

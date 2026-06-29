@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from C to C++ steps into a powerful multi-paradigm programming layer while preserving direct hardware execution and zero-overhead performance. While maintaining backward compatibility with standard C layouts, C++ introduces clean object-oriented encapsulation, strong type checks, and type-safe templates. Developers make this migration to introduce better structural design patterns and eliminate unsafe type casts without losing execution speed.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, weakly enforced procedural variables allowing unrestricted implicit pointer conversions.",
+      "to": "Statically typed, nominal system with strict type checking, function overloading, and compile-time templates."
+    },
+    {
+      "category": "Syntax",
+      "from": "Procedural syntax based entirely on functions, flat structure definitions, and explicit manual configuration hooks.",
+      "to": "Multi-paradigm syntax supporting classes, namespaces, operator definitions, and clean reference modifiers (&)."
+    },
+    {
+      "category": "Memory",
+      "from": "Manually controlled via explicit heap allocations (malloc) and manual cleanup code execution (free).",
+      "to": "Resource acquisition is initialization (RAII) semantics, stack destruction hooks, smart pointers, and new/delete operators."
+    },
+    {
+      "category": "Async",
+      "from": "No built-in language abstractions, depending entirely on host platform threading frameworks (such as pthreads).",
+      "to": "Built-in concurrency support (std::thread), async task futures, atomic variables, and language-level synchronization blocks."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Lean library managing fundamental console streams, file pointers, math algorithms, and raw memory allocations.",
+      "to": "Standard Template Library (STL) delivering highly optimized generic collections, stream-based I/O pipelines, and search algorithms."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Encapsulated Object Classes",
+      "description": "Refactoring separate procedural C structs and function chains into an encapsulated, class-based C++ object layout.",
+      "fromCode": "#include <stdio.h>\n\ntypedef struct {\n    int count;\n} Counter;\n\nvoid increment(Counter* c) {\n    c->count++;\n}",
+      "toCode": "#include <iostream>\n\nclass Counter {\nprivate:\n    int count = 0;\npublic:\n    void increment() { count++; }\n    int getCount() const { return count; }\n};"
+    },
+    {
+      "title": "Type-Safe Dynamic Allocations",
+      "description": "Upgrading manual byte-calculated C dynamic allocations into type-safe C++ constructors and smart pointers.",
+      "fromCode": "#include <stdlib.h>\n\nint* allocate_buffer(size_t size) {\n    return (int*)malloc(size * sizeof(int));\n}",
+      "toCode": "#include <memory>\n\nstd::unique_ptr<int[]> allocateBuffer(size_t size) {\n    return std::make_unique<int[]>(size);\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Prefer References over Pointers",
+      "body": "Use reference parameters (Type& arg) instead of raw pointers (Type* arg) to guarantee non-null arguments and clean up method call syntax."
+    },
+    {
+      "title": "Adopt Smart Heap Containers",
+      "body": "Stop calling raw malloc() and free() operations manually. Use std::unique_ptr or std::shared_ptr to handle dynamic object lifecycles safely."
+    },
+    {
+      "title": "Swap Arrays for std::vector",
+      "body": "Replace primitive pointer arrays with type-safe std::vector containers to let the library manage dynamic element resizing securely."
+    },
+    {
+      "title": "Encapsulate Global Constants",
+      "body": "Replace legacy preprocessor macros (#define) with type-safe 'constexpr' declarations and scope-controlled namespaces."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from Java to SQL moves a developer from an imperative, object-oriented application layout to a declarative data processing language optimized for relational sets. Instead of defining step-by-step logic to mutate in-memory collections, developers declare the exact criteria of the data shape they want to retrieve or alter, leaving execution strategies to the database query planner. This shift occurs when optimizing heavy data mutations directly on the database engine rather than pulling raw datasets into application memory.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, object-based class systems featuring interfaces, enums, and structural polymorphism boundaries.",
+      "to": "Relational, schema-enforced column types tracking strict structural constraints like primary keys, foreign links, and null flags."
+    },
+    {
+      "category": "Syntax",
+      "from": "Imperative, object-oriented structures using classes, methods, assignment variables, and iterative loops.",
+      "to": "Declarative block clauses (SELECT, JOIN, WHERE, GROUP BY) focused entirely on defining data set parameters."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed via JVM heap execution, loading object instances across short application frames.",
+      "to": "Managed by the database engine's internal server cache, optimizing disk access paths, tablespaces, and transaction log buffers."
+    },
+    {
+      "category": "Async",
+      "from": "Thread pooling frameworks, synchronized block routines, asynchronous tasks, and background virtual worker engines.",
+      "to": "Implicitly concurrent transactions managed by the server engine via isolation locks (ACID compliance rules)."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Vast software development kit covering network transport, file streaming, GUI construction, and encryption.",
+      "to": "Domain-specific analytical functions specializing in structural aggregations, string cleaning, date logic, and data casting math."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Data Filtering and Transformation",
+      "description": "Replacing an imperative Java collection loop filter with a declarative, indexed SQL query.",
+      "fromCode": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class FilterUsers {\n    public static class User { String name; int age; User(String n, int a) { name=n; age=a; } }\n    public List<String> getAdults(List<User> users) {\n        List<String> active = new ArrayList<>();\n        for (User u : users) {\n            if (u.age >= 18) active.add(u.name);\n        }\n        return active;\n    }\n}",
+      "toCode": "SELECT name \nFROM users \nWHERE age >= 18;"
+    },
+    {
+      "title": "Data Aggregation",
+      "description": "Converting an imperative Java reduction pipeline loop into an optimized SQL aggregation statement.",
+      "fromCode": "import java.util.List;\n\npublic class Stats {\n    public static class Sale { String dept; double amt; }\n    public double getDeptTotal(List<Sale> sales, String dept) {\n        double total = 0;\n        for (Sale s : sales) {\n            if (s.dept.equals(dept)) total += s.amt;\n        }\n        return total;\n    }\n}",
+      "toCode": "SELECT dept, SUM(amt) AS total_sales\nFROM sales\nWHERE dept = :dept\nGROUP BY dept;"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Think in Data Sets",
+      "body": "Stop thinking in single-record loops. Focus on defining operations that filter, join, and transform whole data sets simultaneously."
+    },
+    {
+      "title": "Leverage Database Indexes",
+      "body": "Avoid sorting large lists in application logic. Ensure relevant search columns have proper indexes to let the database optimizer handle sorting efficiently."
+    },
+    {
+      "title": "Use Joins over App Lookups",
+      "body": "Instead of executing multiple single queries inside application loops, combine related tables in a single step using SQL JOIN operations."
+    },
+    {
+      "title": "Guard Against Injections",
+      "body": "Never concatenate raw strings into queries. Always use parameterized inputs or binding variables to secure database execution paths safely."
+    }
+  ]
+}

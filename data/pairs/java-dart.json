@@ -1,0 +1,62 @@
+{
+  "intro": "Transitioning from Java to Dart streamlines client and mobile application development by moving from a verbose, enterprise-oriented environment to a modern, UI-centric language optimized for multi-platform compilation. Dart preserves the familiar class-based, object-oriented paradigms of Java while providing shorter modern syntax, implicit interfaces, and sound null safety. This shift is most common when adopting the Flutter framework to deploy high-fidelity mobile, web, and desktop clients from a single codebase.",
+  "diffs": [
+    {
+      "category": "Type System",
+      "from": "Statically typed, nominal hierarchy with generic type erasure and nullable references by default.",
+      "to": "Statically typed, nominal system with reified generics and rigorous, built-in compile-time sound null safety."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose class structures requiring explicit getters, setters, boilerplate constructors, and file-per-class organizational rules.",
+      "to": "Concise, modern syntax supporting property accessors, constructor field mirroring, and flexible multi-class file declarations."
+    },
+    {
+      "category": "Memory",
+      "from": "Managed via complex background JVM garbage collectors, optimized for long-running server thread operations.",
+      "to": "Managed via a highly responsive generational GC, specifically optimized for short-lived UI widget tree lifecycles."
+    },
+    {
+      "category": "Async",
+      "from": "Multi-threaded parallelism managed through OS pools, explicit synchronization locks, and virtual threading pipelines.",
+      "to": "Single-threaded event-loop isolate model, orchestrating asynchronous flows using Future structures and native Streams."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Monolithic, enterprise-focused suite managing database connections, server infrastructure, and network transport pipelines.",
+      "to": "Client-centric core library specializing in high-speed collection manipulation, text formatting, and asynchronous event loops."
+    }
+  ],
+  "examples": [
+    {
+      "title": "Constructor Property Initialization",
+      "description": "Refactoring a verbose Java constructor structure into Dart's highly concise constructor initializing formal syntax.",
+      "fromCode": "public class Profile {\n    private final String username;\n    private final int rank;\n\n    public Profile(String username, int rank) {\n        this.username = username;\n        this.rank = rank;\n    }\n    public String getUsername() { return username; }\n    public int getRank() { return rank; }\n}",
+      "toCode": "class Profile {\n  final String username;\n  final int rank;\n\n  Profile(this.username, this.rank);\n}"
+    },
+    {
+      "title": "Asynchronous Streams",
+      "description": "Converting Java's asynchronous task scheduling approach into clean, native Dart async stream generators.",
+      "fromCode": "import java.util.concurrent.Executors;\nimport java.util.concurrent.ScheduledExecutorService;\nimport java.util.concurrent.TimeUnit;\n\npublic class Ticker {\n    public void start(Runnable task) {\n        ScheduledExecutorService pool = Executors.newScheduledThreadPool(1);\n        pool.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);\n    }\n}",
+      "toCode": "Stream<int> countSeconds() async* {\n  int count = 0;\n  while (true) {\n    await Future.delayed(Duration(seconds: 1));\n    yield count++;\n  }\n}"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Leverage Sound Null Safety",
+      "body": "Types are non-nullable by default. Only append a question mark (e.g., int?) when an asset can explicitly be null, minimizing unexpected runtime checks."
+    },
+    {
+      "title": "Ditch Interface Keywords",
+      "body": "Do not look for an explicit interface keyword. Every Dart class implicitly exports an interface containing all its fields and methods, ready for any class to implement."
+    },
+    {
+      "title": "Group UI Elements Cleanly",
+      "body": "Feel free to declare multiple highly related helper or model classes inside a single source file to keep your workspace structure organized."
+    },
+    {
+      "title": "Explore Named Constructors",
+      "body": "Simplify class generation variants by using explicit named constructors (e.g., User.fromJson()) instead of overloading parameters like in Java."
+    }
+  ]
+}
