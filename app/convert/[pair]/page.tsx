@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           url: `/api/og?from=${from}&to=${to}`,
           width: 1200,
           height: 630,
-          alt: `${getLangDisplayName(from)} to ${getLangDisplayName(to)} Code Converter`,
+          alt: `${getLangDisplayName(from)} to ${getLangDisplayName(to)} AI Code Translate`,
         },
       ],
     },

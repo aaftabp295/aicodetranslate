@@ -5,7 +5,7 @@ import { LanguageFromGrid } from '@/components/converter/LanguageFromGrid'
 import { Button } from '@/components/ui/button'
 
 export const metadata = {
-  title: 'AI Code Converter – Translate Programming Languages Online',
+  title: 'AI Code Translate – Translate Programming Languages Online',
   description: 'Convert code from one programming language to another instantly using AI. Supports 18 languages, idiomatic output, explanations, and dynamic rate limits.',
 }
 
@@ -17,13 +17,13 @@ export default function Home() {
         <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-700">
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider mb-2">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Next Generation AI Converter</span>
+            <span>Next Generation AI Translation</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground leading-tight">
             Convert Code Between Languages <span className="text-primary">Instantly</span>
           </h1>
           <p className="text-muted-foreground text-sm sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Free AI-powered code converter. Paste your code, select languages, and get clean, idiomatic output in seconds. Supported by explanations and side-by-side highlighting.
+            Free AI-powered code translator. Paste your code, select languages, and get clean, idiomatic output in seconds. Supported by explanations and side-by-side highlighting.
           </p>
           <div className="pt-4 flex justify-center">
             <Button size="lg" asChild className="cursor-pointer font-bold gap-2 text-primary-foreground bg-primary hover:bg-primary/95 shadow-lg">

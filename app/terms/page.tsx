@@ -1,15 +1,15 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service – CodeConvert',
+  title: 'Terms of Service – AI Code Translate',
   description:
-    'Terms of service for CodeConvert. Acceptable use policy, no-warranty clause on AI output, and subscription terms.',
+    'Terms of service for AI Code Translate. Acceptable use policy, no-warranty clause on AI output, and subscription terms.',
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'}/terms`,
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com'}/terms`,
   },
 }
 
-const CONTACT_EMAIL = 'hello@codekonvert.com'
+const CONTACT_EMAIL = 'hello@aicodetranslate.com'
 const EFFECTIVE_DATE = 'June 29, 2025'
 
 export default function TermsPage() {
@@ -19,13 +19,13 @@ export default function TermsPage() {
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Terms of Service</h1>
         <p className="text-xs text-muted-foreground">Effective date: {EFFECTIVE_DATE}</p>
         <p className="text-muted-foreground text-sm leading-relaxed">
-          By using CodeConvert (&quot;the Service&quot;), you agree to these Terms of Service.
+          By using AI Code Translate (&quot;the Service&quot;), you agree to these Terms of Service.
           Please read them carefully.
         </p>
       </div>
 
       <Section title="1. Acceptable use">
-        <p>You may use CodeConvert to convert code for personal or commercial projects. You agree not to:</p>
+        <p>You may use AI Code Translate to convert code for personal or commercial projects. You agree not to:</p>
         <ul className="list-disc list-inside space-y-1 mt-2">
           <li>Use the Service to generate or translate malicious code, malware, or exploits.</li>
           <li>Attempt to reverse-engineer, scrape, or abuse the API in ways that degrade service for other users.</li>
@@ -41,7 +41,7 @@ export default function TermsPage() {
 
       <Section title="2. No warranty on AI output">
         <p>
-          CodeConvert uses AI (Google Gemini) to generate code translations.{' '}
+          AI Code Translate uses AI (Google Gemini) to generate code translations.{' '}
           <strong className="text-foreground">
             All output is provided &quot;as is&quot; without any warranty of correctness,
             completeness, or fitness for a particular purpose.
@@ -56,7 +56,7 @@ export default function TermsPage() {
           </strong>
         </p>
         <p className="mt-2">
-          CodeConvert shall not be liable for any damages — including but not limited to data loss,
+          AI Code Translate shall not be liable for any damages — including but not limited to data loss,
           security incidents, or financial loss — arising from reliance on AI-generated output.
         </p>
       </Section>
@@ -108,14 +108,14 @@ export default function TermsPage() {
       <Section title="5. Intellectual property">
         <p>
           You retain full ownership of any code you submit. We make no claim over your input or
-          the converted output. The CodeConvert brand, UI, and underlying platform code remain the
-          property of CodeConvert.
+          the converted output. The AI Code Translate brand, UI, and underlying platform code remain the
+          property of AI Code Translate.
         </p>
       </Section>
 
       <Section title="6. Limitation of liability">
         <p>
-          To the maximum extent permitted by law, CodeConvert&apos;s total liability to you for any
+          To the maximum extent permitted by law, AI Code Translate&apos;s total liability to you for any
           claim arising out of or related to these terms or use of the Service shall not exceed the
           greater of (a) the amount you paid us in the 3 months preceding the claim, or (b) $10 USD.
         </p>

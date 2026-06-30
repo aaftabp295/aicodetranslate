@@ -95,7 +95,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center space-x-2 cursor-pointer">
             <Code2 className="h-6 w-6 text-primary" />
             <span className="font-sans text-lg font-bold tracking-tight text-foreground">
-              CodeConvert
+              AI Code Translate
             </span>
           </Link>
         </div>
@@ -250,7 +250,7 @@ export function Navbar() {
                 <SheetHeader className="text-left mb-6">
                   <SheetTitle className="flex items-center space-x-2">
                     <Code2 className="h-5 w-5 text-primary" />
-                    <span className="font-sans text-base font-bold">CodeConvert</span>
+                    <span className="font-sans text-base font-bold">AI Code Translate</span>
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col space-y-4">

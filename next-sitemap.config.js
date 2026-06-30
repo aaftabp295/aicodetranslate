@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://codeconvert.ai',
+  siteUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com',
   generateRobotsTxt: true,
   exclude: ['/dashboard', '/login', '/auth/callback'],
   transform: async (config, path) => {

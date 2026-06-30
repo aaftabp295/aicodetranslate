@@ -35,7 +35,7 @@ export function Footer() {
             <Link href="/" className="flex items-center space-x-2">
               <Code2 className="h-6 w-6 text-primary" />
               <span className="font-sans text-lg font-bold tracking-tight text-foreground">
-                CodeConvert
+                AI Code Translate
               </span>
             </Link>
             <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
@@ -112,7 +112,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-          <p>© 2026 CodeConvert. All rights reserved.</p>
+          <p>© 2026 AI Code Translate. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-primary transition-colors">Terms</Link>

@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://yoursite.com
+Host: https://aicodetranslate.com
 
 # Sitemaps
-Sitemap: https://yoursite.com/sitemap.xml
+Sitemap: https://aicodetranslate.com/sitemap.xml

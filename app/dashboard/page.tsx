@@ -9,7 +9,7 @@ import { Sparkles, Calendar, Code, AlignLeft } from 'lucide-react'
 
 export const metadata = {
   title: 'Dashboard – Your Conversions',
-  description: 'View your AI conversion history, tracked metrics, and plan quotas on CodeConvert.',
+  description: 'View your AI conversion history, tracked metrics, and plan quotas on AI Code Translate.',
 }
 
 export default async function DashboardPage() {

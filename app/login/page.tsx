@@ -63,7 +63,7 @@ export default function LoginPage() {
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
       <Card className="w-full max-w-[400px] border-border bg-card shadow-md">
         <CardHeader className="space-y-2 text-center">
-          <CardTitle className="text-2xl font-bold tracking-tight">Welcome to CodeConvert</CardTitle>
+          <CardTitle className="text-2xl font-bold tracking-tight">Welcome to AI Code Translate</CardTitle>
           <CardDescription className="text-xs text-muted-foreground">
             Sign in to save your conversion history and get more free conversions.
           </CardDescription>

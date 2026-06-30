@@ -2,11 +2,11 @@ import { Metadata } from 'next'
 import { Code2, Zap, Globe, BookOpen } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'About CodeConvert – AI-Powered Code Conversion Tool',
+  title: 'About AI Code Translate – AI-Powered Code Conversion Tool',
   description:
-    'Learn about CodeConvert, the AI-powered code translation tool built for developers. Who built it, why it exists, and the technology powering it.',
+    'Learn about AI Code Translate, the AI-powered code translation tool built for developers. Who built it, why it exists, and the technology powering it.',
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'}/about`,
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com'}/about`,
   },
 }
 
@@ -20,10 +20,10 @@ export default function AboutPage() {
           <span>About Us</span>
         </div>
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground">
-          What is CodeConvert?
+          What is AI Code Translate?
         </h1>
         <p className="text-muted-foreground text-base leading-relaxed max-w-xl mx-auto">
-          CodeConvert is a free, AI-powered tool that translates source code between programming
+          AI Code Translate is a free, AI-powered tool that translates source code between programming
           languages — instantly, accurately, and idiomatically.
         </p>
       </div>
@@ -32,7 +32,7 @@ export default function AboutPage() {
       <section className="space-y-4 border-t border-border pt-10">
         <h2 className="text-2xl font-bold tracking-tight">Who built this?</h2>
         <p className="text-muted-foreground text-sm leading-relaxed">
-          CodeConvert was built by an independent developer with a background in software
+          AI Code Translate was built by an independent developer with a background in software
           engineering and developer tooling. Having spent years switching between Python, Go,
           TypeScript, and Rust across different projects, the tedium of manually translating idioms,
           patterns, and library calls between languages was a constant friction point.
@@ -40,14 +40,14 @@ export default function AboutPage() {
         <p className="text-muted-foreground text-sm leading-relaxed">
           Existing tools either produced naive, line-by-line transliterations that didn&apos;t
           respect the target language&apos;s conventions, or required a full IDE setup and plugin
-          chain. CodeConvert exists to solve that — a clean, zero-setup converter that understands
+          chain. AI Code Translate exists to solve that — a clean, zero-setup converter that understands
           the semantic differences between languages, not just their syntax.
         </p>
       </section>
 
       {/* Why it exists */}
       <section className="space-y-4 border-t border-border pt-10">
-        <h2 className="text-2xl font-bold tracking-tight">Why does CodeConvert exist?</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Why does AI Code Translate exist?</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2">
           <div className="space-y-2 p-4 rounded-xl border border-border bg-card">
             <div className="h-9 w-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
@@ -56,7 +56,7 @@ export default function AboutPage() {
             <h3 className="text-sm font-semibold">Save Hours of Work</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
               Porting a module from one language to another shouldn&apos;t take a full day.
-              CodeConvert handles the boilerplate in seconds so you can focus on the hard parts.
+              AI Code Translate handles the boilerplate in seconds so you can focus on the hard parts.
             </p>
           </div>
           <div className="space-y-2 p-4 rounded-xl border border-border bg-card">
@@ -87,7 +87,7 @@ export default function AboutPage() {
       <section className="space-y-4 border-t border-border pt-10">
         <h2 className="text-2xl font-bold tracking-tight">Technology</h2>
         <p className="text-muted-foreground text-sm leading-relaxed">
-          CodeConvert is built on <strong className="text-foreground">Next.js</strong> (deployed on
+          AI Code Translate is built on <strong className="text-foreground">Next.js</strong> (deployed on
           Cloudflare Pages with Edge runtime), uses{' '}
           <strong className="text-foreground">Google Gemini</strong> for AI-powered translation, and{' '}
           <strong className="text-foreground">Supabase</strong> for user accounts and quota
@@ -106,10 +106,10 @@ export default function AboutPage() {
         <p className="text-muted-foreground text-sm leading-relaxed">
           Questions, feedback, or bug reports?{' '}
           <a
-            href="mailto:hello@codekonvert.com"
+            href="mailto:hello@aicodetranslate.com"
             className="text-primary underline underline-offset-4 hover:opacity-80 transition-opacity"
           >
-            hello@codekonvert.com
+            hello@aicodetranslate.com
           </a>
         </p>
       </section>

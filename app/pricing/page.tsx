@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge'
 
 export const metadata = {
-  title: 'Pricing Plans – CodeConvert Pro',
-  description: 'Choose the perfect CodeConvert plan. Unlock unlimited conversions, priority processing, code explanation guides, and complete conversion histories.',
+  title: 'Pricing Plans – AI Code Translate Pro',
+  description: 'Choose the perfect AI Code Translate plan. Unlock unlimited conversions, priority processing, code explanation guides, and complete conversion histories.',
 }
 
 export default function PricingPage() {

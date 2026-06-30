@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://codeconvert.ai'),
-  title: "AI Code Converter",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com'),
+  title: "AI Code Translate",
   description: "Convert code between programming languages using AI.",
 };
 

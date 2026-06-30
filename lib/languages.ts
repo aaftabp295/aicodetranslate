@@ -82,7 +82,7 @@ export function getPairFromSlug(slug: string): { from: Language; to: Language } 
 export function getPageTitle(from: string, to: string): string {
   const fromDisplay = getLangDisplayName(from)
   const toDisplay = getLangDisplayName(to)
-  return `${fromDisplay} to ${toDisplay} Converter – Free Online AI Code Converter`
+  return `Convert ${fromDisplay} to ${toDisplay} Online – Free AI Code Translate`
 }
 
 /**

@@ -1,15 +1,15 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy – CodeConvert',
+  title: 'Privacy Policy – AI Code Translate',
   description:
-    'Privacy policy for CodeConvert. Learn what data we collect, what we never store, and how your information is handled.',
+    'Privacy policy for AI Code Translate. Learn what data we collect, what we never store, and how your information is handled.',
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'}/privacy`,
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com'}/privacy`,
   },
 }
 
-const CONTACT_EMAIL = 'hello@codekonvert.com'
+const CONTACT_EMAIL = 'hello@aicodetranslate.com'
 const EFFECTIVE_DATE = 'June 29, 2025'
 
 export default function PrivacyPage() {
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Privacy Policy</h1>
         <p className="text-xs text-muted-foreground">Effective date: {EFFECTIVE_DATE}</p>
         <p className="text-muted-foreground text-sm leading-relaxed">
-          This Privacy Policy explains what information CodeConvert collects, how it is used, and
+          This Privacy Policy explains what information AI Code Translate collects, how it is used, and
           what choices you have. We believe in radical transparency — especially about data.
         </p>
       </div>
@@ -133,7 +133,7 @@ export default function PrivacyPage() {
       <Section title="7. Changes to this policy">
         <p>
           We may update this policy occasionally. Material changes will be communicated via email
-          to registered users. Continued use of CodeConvert after changes constitutes acceptance
+          to registered users. Continued use of AI Code Translate after changes constitutes acceptance
           of the updated policy.
         </p>
       </Section>
