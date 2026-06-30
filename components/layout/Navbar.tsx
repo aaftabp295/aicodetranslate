@@ -43,15 +43,15 @@ export function Navbar() {
 
   React.useEffect(() => {
     // Check current session
-    async function getSession() {
+    async function getUser() {
       const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      setUser(session?.user ?? null)
+        data: { user },
+      } = await supabase.auth.getUser()
+      setUser(user ?? null)
       setLoading(false)
     }
 
-    getSession()
+    getUser()
 
     // Listen to real-time auth changes
     const {
@@ -196,7 +196,7 @@ export function Navbar() {
                           alt={user.email || 'User avatar'}
                         />
                         <AvatarFallback className="bg-primary/10 text-primary uppercase text-xs font-semibold">
-                          {user.email?.substring(0, 2) || 'US'}
+                          {user.email?.substring(0, 1).toUpperCase() || 'U'}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
@@ -219,6 +219,12 @@ export function Navbar() {
                         <span>Dashboard</span>
                       </Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="focus:bg-accent cursor-pointer">
+                      <Link href="/dashboard" className="w-full flex items-center">
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        <span>My Conversions</span>
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-border" />
                     <DropdownMenuItem
                       onClick={handleSignOut}
@@ -231,7 +237,7 @@ export function Navbar() {
                 </DropdownMenu>
               ) : (
                 <Button variant="outline" size="sm" asChild className="cursor-pointer border-border font-semibold">
-                  <Link href="/login">Log in</Link>
+                  <Link href="/login">Sign in</Link>
                 </Button>
               )}
             </>
@@ -266,7 +272,7 @@ export function Navbar() {
                   {!loading && !user && (
                     <div className="pt-4 border-t border-border">
                       <Button className="w-full cursor-pointer font-semibold" asChild>
-                        <Link href="/login">Log in</Link>
+                        <Link href="/login">Sign in</Link>
                       </Button>
                     </div>
                   )}
