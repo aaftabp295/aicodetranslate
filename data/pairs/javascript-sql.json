@@ -1,62 +1,76 @@
 {
-  "intro": "Rewriting JavaScript logic into SQL migrates programmatic procedural flows directly into relational database engines. Developers execute this refactoring to perform data filtering, aggregations, and transformations at the persistence layer, minimizing network payloads and speeding up throughput. This shifts the computational model from imperative, row-by-row iteration to declarative set-based operations.",
+  "intro": "Transitioning from JavaScript to SQL shifts a programmer's focus from imperative, step-by-step memory management to declarative, set-based database logic. Instead of writing procedural loops and filter chains to clean data collections in application memory, you instruct the database engine on *what* records to fetch or mutate directly at the persistence layer. This transition replaces short-lived runtime variables with a long-term, indexed database engine optimized for transaction isolation.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Dynamic runtime typing with weak equality coercions and mutable object shapes.",
-      "to": "Static, schema-driven data types strictly enforced at the column level on write operations."
+      "from": "Dynamic types attached to runtime values; flexible objects with loosely enforced keys.",
+      "to": "Static, rigidly enforced schemas defining column types (VARCHAR, INT, UUID, TIMESTAMP) at the table definition layer."
     },
     {
       "category": "Syntax",
-      "from": "Imperative and functional constructs tracking sequential commands, conditionals, and loops.",
-      "to": "Declarative statements focused on specifying the desired result set properties rather than step-by-step instructions."
+      "from": "Imperative, procedural script block syntax structured around variables, functions, and loop conditionals.",
+      "to": "Declarative query statements composed of clauses (SELECT, JOIN, WHERE, GROUP BY) processed as unified datasets."
     },
     {
       "category": "Memory",
-      "from": "V8 managed application memory tracking long-lived script instances and state trees.",
-      "to": "Database server cache, page buffers, and transient tables optimized for disk I/O operations."
+      "from": "Runtimes allocate structures in volatile heap memory, cleared periodically via automatic garbage collection.",
+      "to": "Managed database cache pools, transaction logs, indexes, and permanent disk allocations overseen by a relational engine."
     },
     {
       "category": "Async",
-      "from": "Non-blocking event loop managing network roundtrips and user interactions.",
-      "to": "Synchronous transactions managing parallel connection pools via locks, isolation levels, and WAL logs."
+      "from": "Event-driven asynchronous model built on single-threaded execution loops and promise-based deferrals.",
+      "to": "Synchronous request processing isolated by database connection pools, executing operations via strict transaction isolation levels."
     },
     {
       "category": "Standard Library",
-      "from": "General-purpose language components covering string utils, array features, and JSON parsing.",
-      "to": "Data-centric built-ins targeting relation joins, mathematical groupings, and date-time filtering."
+      "from": "Generic APIs serving environment primitives, cryptographic tools, network routing, and file system I/O.",
+      "to": "Specialized domain functions built exclusively for text parsing, aggregate calculations, mathematical computation, and datetime logic."
     }
   ],
   "examples": [
     {
-      "title": "Filtering and Grouped Summaries",
-      "description": "Summing order values by customer for active users.",
-      "fromCode": "const orders = [{ customerId: 1, amount: 50, active: true }, { customerId: 1, amount: 30, active: true }];\nconst totals = orders\n  .filter(o => o.active)\n  .reduce((acc, o) => {\n    acc[o.customerId] = (acc[o.customerId] || 0) + o.amount;\n    return acc;\n  }, {});",
-      "toCode": "SELECT customer_id, SUM(amount) AS total_amount\nFROM orders\nWHERE active = true\nGROUP BY customer_id;"
+      "title": "Filtering and Joining Related Structures",
+      "description": "Filtering a nested array or executing client-side data combining versus relational table joining.",
+      "fromCode": "const users = [{ id: 1, name: 'Alice' }];\nconst orders = [{ id: 101, userId: 1, total: 50 }];\n\nconst userOrders = orders\n  .filter(o => o.total > 20)\n  .map(o => {\n    const user = users.find(u => u.id === o.userId);\n    return { name: user.name, total: o.total };\n  });",
+      "toCode": "SELECT u.name, o.total\nFROM orders o\nJOIN users u ON o.user_id = u.id\nWHERE o.total > 20;"
     },
     {
-      "title": "Conditional Classification",
-      "description": "Mapping numerical scores to distinct categorical tags.",
-      "fromCode": "const items = [{ id: 1, score: 95 }];\nconst graded = items.map(item => ({\n  ...item,\n  grade: item.score >= 90 ? 'A' : 'B'\n}));",
-      "toCode": "SELECT id, score,\n  CASE \n    WHEN score >= 90 THEN 'A'\n    ELSE 'B'\n  END AS grade\nFROM items;"
+      "title": "Aggregating Totals across Categories",
+      "description": "Grouping an array of data objects using reducers vs standard SQL groupings.",
+      "fromCode": "const items = [\n  { category: 'tech', price: 100 },\n  { category: 'tech', price: 200 }\n];\nconst totals = items.reduce((acc, curr) => {\n  acc[curr.category] = (acc[curr.category] || 0) + curr.price;\n  return acc;\n}, {});",
+      "toCode": "SELECT category, SUM(price) AS total_price\nFROM items\nGROUP BY category;"
     }
   ],
   "tips": [
     {
       "title": "Think in Sets, Not Loops",
-      "body": "Avoid using loops or cursors in SQL to mimic JavaScript `forEach` blocks. SQL engine performance relies on evaluating entire tables as sets using structured clauses like `WHERE` and `JOIN` simultaneously."
+      "body": "Avoid running queries inside nested application loops (the N+1 query bug). Always aim to fetch or update records using single, combined set queries."
     },
     {
-      "title": "Enforce Strict Type Compatibility",
-      "body": "JavaScript implicitly converts strings to numbers when applying loose operations. SQL will fail or reject queries outright if you attempt to compare mismatched schemas without explicit `CAST` expressions."
+      "title": "Enforce Constraint Safety First",
+      "body": "Move your application-level data validations (like length checks or uniqueness validations) directly into database schema constraints like UNIQUE or NOT NULL."
     },
     {
-      "title": "Delegate Sorting to the Engine",
-      "body": "Do not pull unsorted data into JavaScript arrays to run `.sort()`. Use SQL's native `ORDER BY` clause, which leverages indexes and query execution plans to perform optimal disk and memory sort passes."
+      "title": "Utilize Indexes Strategically",
+      "body": "Unlike flat JavaScript arrays where finding elements is an O(N) operation, SQL tables require explicit indexing on foreign keys or search targets to remain O(log N)."
     },
     {
-      "title": "Leverage Indexes for Lookups",
-      "body": "Array searching via `.find()` or `.includes()` scales linearly ($O(N)$) in JavaScript. Ensure your queried SQL columns are appropriately indexed to shift lookup complexities down to $O(\\log N)$."
+      "title": "Sanitize Queries to Prevent Injection",
+      "body": "Never construct raw SQL query blocks via template literal string concatenation. Always use prepared statements or parameterized inputs to keep database targets secure."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can I write conditional conditional logic like if/else within standard SQL?",
+      "answer": "Yes, SQL uses the declarative 'CASE WHEN ... THEN ... ELSE END' expression syntax to evaluate branching logic directly inside select criteria or updates."
+    },
+    {
+      "question": "What is the equivalent of JS array iteration methods inside a relational database?",
+      "answer": "SQL queries utilize specific clauses: 'WHERE' acts as a filter, 'SELECT' maps columns, and 'GROUP BY' aggregates records, acting over whole datasets at once."
+    },
+    {
+      "question": "How do databases handle missing values compared to JavaScript code?",
+      "answer": "JavaScript handles missing properties via 'undefined' or explicit 'null'. SQL uses a single 'NULL' token which acts under three-valued logic systems."
     }
   ]
 }

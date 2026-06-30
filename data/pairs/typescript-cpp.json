@@ -1,62 +1,76 @@
 {
-  "intro": "Converting TypeScript to C++ transitions an application from a managed web language into an ultra-high-performance system language that features deterministic resource management. Developers make this structural pivot when building complex graphics systems, game engines, or low-latency computational tools requiring zero-cost abstractions. This requires migrating from garbage-collected reference safety to strict ownership controls and explicit object lifecycles.",
+  "intro": "Migrating from TypeScript to C++ transitions application logic from high-level, managed web engines to a highly complex, hardware-optimized system compilation language. Software architects pursue C++ to design fast game infrastructure, resource-sensitive systems, and low-latency network applications that need zero-cost structural abstractions. This shift trades prototype design and garbage collection abstractions for explicitly managed object lifecycles, template metaprogramming, and precise memory access mechanics.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Structural type definitions containing flexible union interfaces and compile-time type extraction helpers.",
-      "to": "Static, nominal type layout supporting generic template metaprogramming, multiple inheritance models, and type deduction via auto."
+      "from": "Structural static typing layers that disappear during project builds, prioritizing agile type checking.",
+      "to": "Static nominal compilation environment supporting rich template-based metaprogramming, multiple inheritance tracks, and strict type casting safety metrics."
     },
     {
       "category": "Syntax",
-      "from": "C-style block syntax integrating arrow parameters, modular imports, and structured object declarations.",
-      "to": "Extensive object-oriented design featuring manual operator overloads, namespaces, and template symbols."
+      "from": "C-style scripting syntax driven by functional closures, arrow expressions, module exports, and flexible layout variables.",
+      "to": "Multi-paradigm structural syntax requiring explicit operator handling, namespaces, header management, and detailed scoping operators (::)."
     },
     {
       "category": "Memory",
-      "from": "Engine-driven automatic memory collection; objects are tracked dynamically on a managed heap.",
-      "to": "Deterministic resource management leveraging RAII patterns, stack allocations, and explicit smart pointers (unique_ptr, shared_ptr)."
+      "from": "Volatile heap space overseen entirely by automated generational garbage collection routines.",
+      "to": "Deterministic scope-based allocations utilizing RAII principles, smart pointers (std::unique_ptr, std::shared_ptr), or manual heap routines."
     },
     {
       "category": "Async",
-      "from": "Built-in engine event loops processing background micro-tasks and task queues asynchronously.",
-      "to": "Multi-threaded capabilities leveraging system primitives like `std::async`, standard thread objects, and low-level condition variables."
+      "from": "Single-thread non-blocking task loops driven by runtime macro task queues and native promise models.",
+      "to": "Multi-threaded scheduling frameworks using std::future, std::async, concurrent thread primitives, or modern native coroutine libraries."
     },
     {
       "category": "Standard Library",
-      "from": "Web and platform execution hooks heavily augmented via external open-source module managers.",
-      "to": "Rich Standard Template Library (STL) delivering highly optimized vectors, hash maps, algorithms, and file stream tooling."
+      "from": "Base framework targeting structural environment requirements, relying heavily on NPM package distribution channels.",
+      "to": "Standard Template Library (STL) delivering highly optimized vector containers, sorting rules, threads, map abstractions, and file pipelines."
     }
   ],
   "examples": [
     {
-      "title": "Class Definitions with Resource Management",
-      "description": "Creating standard class configurations utilizing proper separation constructs.",
-      "fromCode": "class Vector2D {\n  constructor(public x: number, public y: number) {}\n}",
-      "toCode": "class Vector2D {\npublic:\n    double x;\n    double y;\n    Vector2D(double x, double y) : x(x), y(y) {}\n};"
+      "title": "Class Lifecycles and Automatic Destructuring",
+      "description": "Contrasting a typescript object initialization routine with a deterministic RAII-compliant object framework inside C++.",
+      "fromCode": "class VectorWriter {\n  private fileDescriptor: number;\n  constructor(path: string) {\n    this.fileDescriptor = fs.openSync(path, 'w');\n  }\n}",
+      "toCode": "#include <fstream>\n#include <string>\n\nclass VectorWriter {\nprivate:\n    std::ofstream fileStream;\npublic:\n    VectorWriter(const std::string& path) : fileStream(path) {}\n    // Stream automatically flushes and closes when object leaves context scope\n};"
     },
     {
-      "title": "Dynamic Hash Storage Operations",
-      "description": "Storing key-value pairings within high-performance lookup engines.",
-      "fromCode": "const map = new Map<string, number>();\nmap.set(\"age\", 30);",
-      "toCode": "#include <unordered_map>\n#include <string>\n\nstd::unordered_map<std::string, int> map;\nmap[\"age\"] = 30;"
+      "title": "Generic Template Conversions",
+      "description": "Converting a generic data structure array payload container from TypeScript into C++ STL Vector collections.",
+      "fromCode": "class DataBox<T> {\n  private contents: T[];\n  constructor(items: T[]) {\n    this.contents = items;\n  }\n}",
+      "toCode": "#include <vector>\n\ntemplate <typename T>\nclass DataBox {\nprivate:\n    std::vector<T> contents;\npublic:\n    DataBox(const std::vector<T>& items) : contents(items) {}\n};"
     }
   ],
   "tips": [
     {
-      "title": "Leverage RAII and Smart Pointers",
-      "body": "Avoid using raw pointers with manual `new` and `delete` invocations. Use `std::unique_ptr` and `std::shared_ptr` to ensure that heap-allocated resources are automatically freed when their managing object goes out of scope."
+      "title": "Adopt RAII for Resource Management",
+      "body": "Avoid manual allocation. Bind life cycles of external files, pointers, and locks to object context scopes so destructors clean up assets automatically."
     },
     {
-      "title": "Prefer Stack Allocations Natively",
-      "body": "In TypeScript, all objects are implicitly placed on the heap. In C++, instantiating an object without keywords places it directly on the stack, which guarantees high execution speeds and immediate cleanup."
+      "title": "Utilize Smart Pointer Infrastructure",
+      "body": "Ditch bare pointer definitions. Implement std::unique_ptr for isolated ownership or std::shared_ptr for reference-counted object access models."
     },
     {
-      "title": "Understand Passing Boundaries",
-      "body": "TypeScript passes objects by reference. C++ copies parameters by value by default unless specified otherwise; use const references (e.g., `const std::string& text`) to pass large structures efficiently without copying overhead."
+      "title": "Pass Parameters by Reference",
+      "body": "To bypass processing penalties from object copying, pass structural parameters via read-only references (const std::string& param) where possible."
     },
     {
-      "title": "Replace Array Methods with STL Algorithms",
-      "body": "Instead of using chained array actions like `.map()`, import the `<algorithm>` header and use utilities like `std::transform` alongside anonymous lambda expressions to modify your underlying data sequences."
+      "title": "Leverage auto for Type Inference",
+      "body": "Simplify verbose type configurations when declaring long iterator mappings by applying the 'auto' keyword to let the compiler resolve paths."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What matches the structural versatility of TypeScript Unions within C++ code structures?",
+      "answer": "C++ uses type-safe variant structures via 'std::variant<T1, T2>' alongside 'std::holds_alternative' to manage union data variables safely."
+    },
+    {
+      "question": "How do C++ templates differ functionally from TypeScript Generics?",
+      "answer": "TypeScript generics only exist to validate typing during compilation. C++ templates are generation blueprints that emit fresh binary configurations for every instance type used."
+    },
+    {
+      "question": "Is there a direct structural match for the 'undefined' indicator within C++ variables?",
+      "answer": "No. C++ properties hold concrete byte definitions. Missing parameters are typically modeled via wrapper structures like 'std::optional<T>'."
     }
   ]
 }

@@ -1,62 +1,76 @@
 {
-  "intro": "Translating TypeScript application code into SQL moves computational operations out of middle-tier servers and directly into a relational database engine. Developers make this refactoring choice to run intensive data sorting, filtering, and aggregation actions directly adjacent to stored records, eliminating network latency and processing overhead. This requires shifting from step-by-step imperative collection loops to declarative, relational set transformations.",
+  "intro": "Transitioning from TypeScript to SQL shifts a developer's paradigm from writing imperative, statically typed code to constructing declarative, set-based database queries. Instead of allocating memory layouts and handling object properties in an application layer, you instruct a relational engine exactly *what* dataset should be gathered or mutated. This migration replaces transient, compile-time verified models with permanent, disk-backed schemas protected by transaction boundaries.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Statically verified structural models with extensive generic abstractions, completely erased before execution.",
-      "to": "Static nominal schemas explicitly enforced on write operations at individual column boundaries."
+      "from": "Static structural type parameters checked ahead of code generation steps, vanishing into raw JavaScript.",
+      "to": "Static nominal schemas explicitly defined inside database columns (e.g., INT, TIMESTAMP, VARCHAR), enforced strictly at execution."
     },
     {
       "category": "Syntax",
-      "from": "C-style procedural formulation tracking continuous functions, variable declarations, and object definitions.",
-      "to": "Declarative relational sentences defining desired result parameters rather than the step-by-step execution path."
+      "from": "C-style procedural layouts combining interfaces, functions, variable closures, and block scopes.",
+      "to": "Declarative data clauses structured using unified blocks (SELECT, FROM, JOIN, WHERE) targeting dataset tables."
     },
     {
       "category": "Memory",
-      "from": "Application server heap allocations tracking variables and active instances across long-lived scopes.",
-      "to": "Database server cache, page buffers, and transient tables optimized for disk storage systems."
+      "from": "Short-lived object instances managed inside heap layers using runtime automated garbage collectors.",
+      "to": "Persistent database engine caches, index buffers, disk storage allocations, and transaction logs managed by the RDBMS."
     },
     {
       "category": "Async",
-      "from": "Non-blocking single-threaded execution loop scheduling long-running operations via Promise layers.",
-      "to": "Synchronous database transactions isolated using locks, isolation bounds, and write-ahead logs."
+      "from": "Event-driven architecture operating on single threads, scheduling macro task promises continuously.",
+      "to": "Synchronous transaction execution models isolated by server connection pools and governed by ACID properties."
     },
     {
       "category": "Standard Library",
-      "from": "Basic language utilities relying on external npm managers for database and network connections.",
-      "to": "Built-in relational operations focused on joining datasets, applying math calculations, and grouping elements."
+      "from": "Core environment types relying on extensive open NPM registry networks for system utility wrappers.",
+      "to": "Specialized built-in mathematical, aggregation, datetime processing, and text matching functions optimized for storage layers."
     }
   ],
   "examples": [
     {
-      "title": "Aggregating Filtered List Records",
-      "description": "Summing active financial balances grouped by category filters.",
-      "fromCode": "interface Account { active: boolean; group: string; amount: number }\nconst total = accounts\n  .filter(a => a.active)\n  .reduce((sum, a) => sum + a.amount, 0);",
-      "toCode": "SELECT SUM(amount) AS total_amount\nFROM accounts\nWHERE active = true;"
+      "title": "Data Filtering and Cross-Table Merging",
+      "description": "Contrasting typescript in-memory filtering against an optimized, declarative relational database JOIN statement.",
+      "fromCode": "interface User { id: number; username: string }\ninterface Post { id: number; userId: number; title: string }\n\nfunction combineData(users: User[], posts: Post[]): any[] {\n  return posts\n    .filter(p => p.title.startsWith(\"Release\"))\n    .map(p => {\n      const match = users.find(u => u.id === p.userId);\n      return { title: p.title, username: match?.username };\n    });\n}",
+      "toCode": "SELECT p.title, u.username\nFROM posts p\nINNER JOIN users u ON p.user_id = u.id\nWHERE p.title LIKE 'Release%';"
     },
     {
-      "title": "Combining Relational Objects",
-      "description": "Merging related models across explicit connection IDs safely.",
-      "fromCode": "interface User { id: number; name: string }\ninterface Post { userId: number; title: string }\nconst combined = posts.map(p => ({\n  ...p,\n  user: users.find(u => u.id === p.userId)\n}));",
-      "toCode": "SELECT p.title, u.name\nFROM posts p\nINNER JOIN users u ON p.user_id = u.id;"
+      "title": "Summation and Aggregation Metrics",
+      "description": "Replacing array loop reduction methods with a native SQL aggregation command.",
+      "fromCode": "interface Transaction { category: string; value: number }\n\nfunction computeTotals(txs: Transaction[]): Record<string, number> {\n  return txs.reduce((acc, curr) => {\n    acc[curr.category] = (acc[curr.category] || 0) + curr.value;\n    return acc;\n  }, {} as Record<string, number>);\n}",
+      "toCode": "SELECT category, SUM(value) AS total_value\nFROM transactions\nGROUP BY category;"
     }
   ],
   "tips": [
     {
-      "title": "Think in Data Sets Over Loops",
-      "body": "Avoid running cursors or database loops to mimic TypeScript array iterations. SQL engines achieve peak execution performance when handling tables concurrently using unified clauses like `WHERE` and `JOIN`."
+      "title": "Abandon Client Loops, Rely on Sets",
+      "body": "Avoid fetching full datasets to filter records in code. Write your logic within SQL WHERE clauses to let the database handle searching efficiently."
     },
     {
-      "title": "Enforce Schema Type Sizing Checks",
-      "body": "TypeScript allows variables to contain arbitrary string values fluidly. SQL strictly requires text and data structures to fit within explicit table allocations (e.g., `VARCHAR(255)`), or transactions fail."
+      "title": "Sync Database Schema with App Types",
+      "body": "Use schema generation tools or ORMs (like Prisma or TypeORM) to automatically synchronize your SQL table definitions with your TypeScript interfaces."
     },
     {
-      "title": "Delegate Sorting Tasks to the Database Engine",
-      "body": "Do not pull unsorted database data into memory to perform high-overhead client-side sorting transformations. Apply SQL's native `ORDER BY` keywords, which utilize indexing layouts for fast execution."
+      "title": "Index Foreign Keys for Performance",
+      "body": "Finding items in flat arrays takes O(N) time. Ensure your SQL tables have explicit indexes on foreign keys to maintain fast O(log N) lookup speeds."
     },
     {
-      "title": "Verify Join Columns are Indexed",
-      "body": "Array scanning using methods like `.find()` scales linearly ($O(N)$) in application logic. Ensure that database tables use proper indexes on foreign keys to drop lookup complexities down to $O(log N)$."
+      "title": "Use Parameters to Prevent Injection",
+      "body": "Never insert dynamic strings directly into SQL templates. Always pass variables via parameterized tokens to protect the database against injection attacks."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "How are conditional branches written inside declarative SQL files?",
+      "answer": "SQL handles conditional branching directly within data streams using the 'CASE WHEN condition THEN outcome ELSE alternative END' clause syntax."
+    },
+    {
+      "question": "What is the equivalent of the TypeScript structural type 'null | undefined' in SQL tables?",
+      "answer": "SQL uses a single 'NULL' state to represent missing values, which evaluates under specific three-valued logic rules during data filters."
+    },
+    {
+      "question": "Can I compose nested array properties within standard SQL data rows?",
+      "answer": "Standard relational tables require flat values. However, modern engines like PostgreSQL support JSONB column structures to store and query nested data objects."
     }
   ]
 }

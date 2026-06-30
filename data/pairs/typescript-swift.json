@@ -1,62 +1,76 @@
 {
-  "intro": "Transitioning from TypeScript to Swift elevates code from a web environment to a highly compiled, type-safe system language tailored for Apple platforms and modern cloud architectures. Developers execute this migration to build high-performance, native applications with zero runtime engine overhead. The change introduces developers to strict nominal types, explicit value immutability patterns, and advanced compiler guarantees.",
+  "intro": "Transitioning from TypeScript to Swift shifts development from a web-focused, single-threaded JavaScript ecosystem to Apple's highly compiled system language built for performance and safety. Developers migrate to Swift to build responsive, native applications across Apple platforms or create high-throughput Linux services. This change introduces ahead-of-time compilation, automatic reference counting, and compile-time type safety.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Static structural checking with structural duck-typing rules, completely stripped prior to runtime.",
-      "to": "Strict nominal static type safety featuring generic protocol extensions, associated types, and strict type safety controls."
+      "from": "Static structural type checking that is erased during build phases, leaving execution fully dynamic.",
+      "to": "Static nominal type layout with robust inference, checked ahead of time and retained via runtime metadata constraints."
     },
     {
       "category": "Syntax",
-      "from": "C-style syntax using explicit variable markers, class structures, and arrow declarations.",
-      "to": "Modern, streamlined syntax with parameter labels, explicit switch cases, and trailing closure configurations."
+      "from": "C-style block syntax driven by lexical scopes, arrow closures, and object structural literals.",
+      "to": "Clean modern nominal layout utilizing explicit argument labels, guard blocks, switch matching, and omission of semicolons."
     },
     {
       "category": "Memory",
-      "from": "Automated runtime generational garbage collection managing an application heap dynamically.",
-      "to": "Deterministic Automatic Reference Counting (ARC) tracking and deallocating object instances at runtime without stop-the-world sweeps."
+      "from": "Automated engine-level heap optimization driven by runtime generational garbage collection passes.",
+      "to": "Deterministic Automatic Reference Counting (ARC) tracking object graphs, requiring weak references to prevent memory cycles."
     },
     {
       "category": "Async",
-      "from": "Single-thread runtime event loop executing micro-task scheduling queues asynchronously.",
-      "to": "Structured concurrency framework natively utilizing async/await keyword pairs, Task queues, and state-isolating Actors."
+      "from": "Single-thread non-blocking architecture relying on microtask priority execution and native Promise variables.",
+      "to": "Structured concurrency utilizing actor models, task groups, and modern async/await syntax mapped across system threads."
     },
     {
       "category": "Standard Library",
-      "from": "EcmaScript core types heavily supplemented via external open-source module ecosystems.",
-      "to": "Comprehensive core toolkit covering cryptographic functions, string unicode engines, and highly optimized collection structures."
+      "from": "Minimal core structure requiring developers to pull a massive volume of external NPM utilities.",
+      "to": "Comprehensive framework providing optimized collections, OS synchronization tools, file systems, and encoding structures natively."
     }
   ],
   "examples": [
     {
-      "title": "Struct Definitions and Optional States",
-      "description": "Modeling data entities with explicit optional type tracking safely.",
-      "fromCode": "interface Employee {\n  id: string;\n  role?: string;\n}\nconst emp: Employee = { id: \"E1\" };",
-      "toCode": "struct Employee {\n    let id: String\n    var role: String?\n}\n\nlet emp = Employee(id: \"E1\", role: nil)"
+      "title": "Protocol-Oriented Struct Definitions",
+      "description": "Contrasting a typescript structural type implementation against an idiomatic immutable Swift Struct utilizing explicit Protocols.",
+      "fromCode": "interface Renderable {\n  id: string;\n  render(): void;\n}\n\nstruct WebWidget implements Renderable {\n  id: string;\n  render() { console.log(this.id); }\n}",
+      "toCode": "protocol Renderable {\n    var id: String { get }\n    func render()\n}\n\nstruct WebWidget: Renderable {\n    let id: String\n    func render() {\n        print(id)\n    }\n}"
     },
     {
-      "title": "Safe Pattern Guard Controls",
-      "description": "Unwrapping conditional states early to prevent cascading code indentation.",
-      "fromCode": "function process(msg: string | null) {\n  if (!msg) return;\n  console.log(msg);\n}",
-      "toCode": "fn process(msg: Option<&str>) {\n    let Some(m) = msg else { return };\n    println!(\"{}\", m);\n}"
+      "title": "Safe Optional Binding and Controls",
+      "description": "Replacing loose null-checks with explicit compile-time verified Swift unwrapping idioms.",
+      "fromCode": "function extractUsername(profile: { name?: string }): string {\n  return profile.name ? profile.name.toUpperCase() : \"ANONYMOUS\";\n}",
+      "toCode": "struct UserProfile {\n    var name: String?\n}\n\nfunc extractUsername(profile: UserProfile) -> String {\n    if let name = profile.name {\n        return name.uppercased()\n    }\n    return \"ANONYMOUS\"\n}"
     }
   ],
   "tips": [
     {
-      "title": "Understand Structs and Classes",
-      "body": "Swift prefers value types over reference types. Declare data models as `struct` rather than `class` to gain automatic thread safety and avoid reference-counting overhead; structs are copied on assignment."
+      "title": "Prefer Structs Over Class Models",
+      "body": "Swift structures are value types passed by copying, which avoids implicit shared mutation bugs. Use classes only when reference lifecycles are required."
     },
     {
-      "title": "Master Argument Parameter Labels",
-      "body": "Swift functions use external argument labels for parameters (e.g., `func greet(to name: String)`). When invoking the method, you must explicitly include the label tag name in the argument parameters: `greet(to: \"Alice\")`."
+      "title": "Master Argument Identification Labels",
+      "body": "Swift requires explicit argument labels when invoking functions (e.g., loadData(for: userId)). Adjust function signatures to embrace this readability feature."
     },
     {
-      "title": "Prevent Retain Cycles in Closures",
-      "body": "Because Swift tracks objects via ARC reference counters, passing long-lived classes into closures can cause cyclical leaks. Prevent this by defining explicit capture lists like `[weak self]` at the start of the block."
+      "title": "Prevent Memory Leaks in Closures",
+      "body": "To stop reference retention cycles within escaping closures, declare explicit weak or unowned captures using '[weak self]' tracking syntax blocks."
     },
     {
-      "title": "Use guard for Early Return Paths",
-      "body": "Replace traditional nested `if` statements with Swift's `guard` statement. This structure forces an early return block, keeping your primary code paths flat, clean, and highly readable."
+      "title": "Enforce Early Boundaries with guard",
+      "body": "Use the 'guard' statement to unpack optional fields and handle early exits cleanly at the top of functions, which avoids nested 'if-let' blocks."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What balances the TypeScript structural union feature within Swift?",
+      "answer": "Swift uses typed Enums with associated values to manage variable options safely, ensuring exhaustive compile-time verification during switch operations."
+    },
+    {
+      "question": "Can Swift code assets run on standard server systems?",
+      "answer": "Yes. Swift contains robust Linux compilation flags and server frameworks like Vapor, enabling high-performance, safe backend web processing pipelines."
+    },
+    {
+      "question": "How are missing system parameters managed compared to JavaScript variables?",
+      "answer": "Swift explicitly forbids standard unallocated references. Missing parameters use the 'Optional<Value>' enum, requiring compile-time validation to open."
     }
   ]
 }

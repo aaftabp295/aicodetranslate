@@ -1,62 +1,76 @@
 {
-  "intro": "Migrating from TypeScript to C# translates frontend web skills into Microsoft's enterprise-ready, component-based backend language. Developers frequently transition to C# to build secure enterprise cloud services, game backends with Unity, or large-scale web services within the .NET ecosystem. The shift moves developers from structural type matching rules into a rigid, fully integrated nominal runtime framework.",
+  "intro": "Transitioning from TypeScript to C# migrates application design from structural typing within a web ecosystem to an advanced, object-oriented runtime platform powered by Microsoft's .NET ecosystem. Developers execute this change to construct highly scalable enterprise architectures, complex cloud backends, or real-time game layouts using Unity. This process substitutes prototype generation models with a true nominal type framework and asynchronous execution engines optimized for multi-threaded performance.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Compile-time structural mechanics that erase interface footprints during execution.",
-      "to": "Strict nominal static typing verified at compile time and preserved at runtime via Reflection and Generics metadata."
+      "from": "Static structural type parameters checked ahead of code transformation steps before fading into base JavaScript models.",
+      "to": "Strongly enforced nominal static type architecture where relationships require explicit interface connections or base inheritance parameters."
     },
     {
       "category": "Syntax",
-      "from": "C-style presentation allowing loose structural models, implicit arrow constructs, and module configurations.",
-      "to": "Formal object-oriented layout utilizing explicit type definitions, properties, and strict namespace grouping frameworks."
+      "from": "C-style syntax favoring structural object mappings, flexible variable declarations, and arrow function definitions.",
+      "to": "Structured nominal syntax built on PascalCase guidelines, requiring explicit classes, properties with getters/setters, and strict namespaces."
     },
     {
       "category": "Memory",
-      "from": "V8 engine automatic reference handling and generation scanning scripts.",
-      "to": "Common Language Runtime (CLR) multi-generational garbage collector optimized for enterprise server configurations."
+      "from": "Heap tracking controlled by engine processes running single-threaded optimization loops.",
+      "to": "Managed platform space optimization driven by a generational garbage collector balancing heap objects over multiple execution pools."
     },
     {
       "category": "Async",
-      "from": "Single-thread event loop processing micro-tasks, Promise blocks, and async patterns.",
-      "to": "Task-based Asynchronous Pattern (TAP) using thread-pool schedulers alongside native async/await keywords."
+      "from": "Event-driven asynchronous sequencing utilizing microtask pipelines running promises.",
+      "to": "Task-based Asynchronous Pattern (TAP) utilizing underlying thread controllers and explicit Task instances with async/await tokens."
     },
     {
       "category": "Standard Library",
-      "from": "Basic operations primitives; depends on npm additions for file system structures or web utilities.",
-      "to": "Massive, high-performance base class framework (.NET BCL) covering data access, cryptography, and network sockets."
+      "from": "Sparse runtime package footprint forcing reliance on global public NPM repository infrastructure.",
+      "to": "Massive enterprise base library footprint (.NET BCL) delivering file processing, cryptography, networking, and direct LINQ data tools natively."
     }
   ],
   "examples": [
     {
-      "title": "Strong Properties and Model Configurations",
-      "description": "Creating read-only property bindings on models.",
-      "fromCode": "class Account {\n  constructor(public readonly id: string) {}\n}",
-      "toCode": "public class Account\n{\n    public string Id { get; }\n    public Account(string id) => Id = id;\n}"
+      "title": "Data Property Contracts and Initializers",
+      "description": "Contrasting a TypeScript interface definition structure against a native C# property object record format.",
+      "fromCode": "interface CustomerSession {\n  id: string;\n  token: string;\n  loginTime: number;\n}\n\nconst session: CustomerSession = { id: \"1\", token: \"abc\", loginTime: Date.now() };",
+      "toCode": "public record CustomerSession(\n    string Id, \n    string Token, \n    long LoginTime\n);\n\n// Instantiation\nvar session = new CustomerSession(\"1\", \"abc\", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());"
     },
     {
-      "title": "Asynchronous Task Implementations",
-      "description": "Fetching remote data streams using non-blocking asynchronous calls.",
-      "fromCode": "async function getData(url: string): Promise<string> {\n  const res = await fetch(url);\n  return res.text();\n}",
-      "toCode": "using System.Net.Http;\nusing System.Threading.Tasks;\n\npublic async Task<string> GetDataAsync(string url)\n{\n    using HttpClient client = new HttpClient();\n    return await client.GetStringAsync(url);\n}"
+      "title": "Asynchronous Operations and Exception Routing",
+      "description": "Converting asynchronous data retrieval logic between runtime engines.",
+      "fromCode": "async function downloadPayload(url: string): Promise<string> {\n  try {\n    const response = await httpClient.get(url);\n    return response.data;\n  } catch (error) {\n    throw new Error(`Download failed: ${error}`);\n  }\n}",
+      "toCode": "using System;\nusing System.Net.Http;\nusing System.Threading.Tasks;\n\npublic async Task<string> DownloadPayloadAsync(string url)\n{\n    try\n    {\n        using var client = new HttpClient();\n        return await client.GetStringAsync(url);\n    }\n    catch (Exception ex)\n    {\n        throw new InvalidOperationException($\"Download failed: {ex.Message}\", ex);\n    }\n}"
     }
   ],
   "tips": [
     {
-      "title": "Map LINQ over Array Iteration Paths",
-      "body": "Replace continuous TypeScript array methods like `.filter()` or `.map()` with C#'s Language Integrated Query (LINQ) extensions, using `.Where()` and `.Select()` inside the `System.Linq` namespace."
+      "title": "Deploy LINQ for Collection Logic",
+      "body": "Swap common TypeScript method sequences like '.filter().map()' for highly legible, performance-optimized C# LINQ expressions (.Where().Select())."
     },
     {
-      "title": "Enforce Value Type vs Reference Type Rules",
-      "body": "Understand that C# makes distinct structural distinctions between value models (`struct`) and standard heap references (`class`). Structs are copied completely during assignment actions, whereas classes pass reference handles."
+      "title": "Enforce Strict Non-Nullable Parameters",
+      "body": "Activate .NET Nullable Reference Types (<Nullable>enable</Nullable>) in project targets to duplicate compilation safety checks for missing property errors."
     },
     {
-      "title": "Utilize Tasks for Parallel Computations",
-      "body": "C# async execution tasks run on top of background thread-pool infrastructure. Unlike single-threaded TypeScript async execution loops, concurrent tasks in C# can execute simultaneously across multiple hardware processors."
+      "title": "Replace Type Casts with as/is Patterns",
+      "body": "Avoid using structural bracket type forcing. Apply type-safe keyword queries ('is' for inspection, 'as' for conditional parsing) to evaluate object patterns safely."
     },
     {
-      "title": "Leverage Capitalization and Formatting Rules",
-      "body": "Adhere to Microsoft naming standards. Method declarations, property references, and class definitions use PascalCase (e.g., `CalculateTotal`), whereas internal variable pointers use standard camelCase format bindings."
+      "title": "Manage Native Resources with using Blocks",
+      "body": "For files, network links, or heavy streams, wrap target scopes within 'using' statements to guarantee underlying memory structures drop cleanly."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "How are structural object configurations parsed dynamically inside C# pipelines?",
+      "answer": "While C# encourages concrete static type patterns, developers parse uncertain structural entities using standard 'System.Text.Json.Nodes.JsonNode' maps."
+    },
+    {
+      "question": "Can I deploy TypeScript compilation patterns directly inside Microsoft .NET systems?",
+      "answer": "No. C# code sheets assemble into intermediary CIL configurations executed inside the Common Language Runtime (CLR), requiring unique execution toolsets."
+    },
+    {
+      "question": "What is the C# structural equivalent for the TypeScript structural definition 'Record<string, T>'?",
+      "answer": "The closest native match is the generic dictionary structure 'Dictionary<string, T>', which maps key-value allocations similarly."
     }
   ]
 }

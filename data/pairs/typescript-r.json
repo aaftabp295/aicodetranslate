@@ -1,62 +1,76 @@
 {
-  "intro": "Migrating from TypeScript to R shifts focus from structured application architecture to vectorized data analysis and statistical visualization. Developers make this transition to gain access to R's specialized scientific ecosystem, complex matrix manipulation tools, and data science frameworks. This requires abandoning object-oriented application design in favor of functional data transformations and array-based calculations.",
+  "intro": "Migrating from TypeScript to R transitions software development from a general-purpose, web-centric runtime structure to a specialized data analysis and statistical environment. Developers adopt R to run heavy data science computation pipelines, mathematical transformations, and native data visualizations without writing custom math logic. This transition replaces single-threaded event architectures and object models with 1-indexed vectorized calculations and native Data Frame transformations.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Static structural type verification checking object properties, erased prior to compilation output.",
-      "to": "Dynamic type tracking organized around vectorized primitives, lists, and named data frame configurations."
+      "from": "Static structural validation layer compiled away at build phases, operating over fluid JavaScript object shapes.",
+      "to": "Dynamic type system built entirely around vector collections, data frames, matrices, factors, and nominal S3/S4 object hierarchies."
     },
     {
       "category": "Syntax",
-      "from": "C-style structural block layout utilizing curly braces, semicolons, and explicit functional parameters.",
-      "to": "Functional scripting syntax using arrow assignment operators (`<-`), 1-based data index references, and implicit returns."
+      "from": "C-style syntax reliant on brackets, explicit semicolons, arrow assignments, and clear modular imports.",
+      "to": "Functional, mathematically oriented layout utilizing arrow assignments (<-), custom formula indicators (~), and implicit method returns."
     },
     {
       "category": "Memory",
-      "from": "Managed engine allocations handling live objects and scope states dynamically.",
-      "to": "RAM-bound system execution models utilizing pass-by-value copies for operations unless modified using specialized tools."
+      "from": "Volatile object graph tracking overseen automatically by generational garbage collection routines.",
+      "to": "In-memory database constraints requiring entire active data blocks to sit within system RAM, managed via copy-on-write allocation schemes."
     },
     {
       "category": "Async",
-      "from": "Asynchronous engine loops running automated non-blocking macro-task queue lookups.",
-      "to": "Synchronous single-threaded calculation loops requiring explicit background processing libraries for parallel runs."
+      "from": "Single-thread non-blocking task execution driven natively by microtask queues and Promise workflows.",
+      "to": "Synchronous, single-threaded execution model; parallel execution requires explicit cluster orchestration libraries like 'future'."
     },
     {
       "category": "Standard Library",
-      "from": "Basic type abstractions relying on npm module additions for extended system interactions.",
-      "to": "Deeply focused mathematical libraries offering built-in data distribution, regression modeling, and statistical graphics."
+      "from": "Sparse core package environment heavily dependent on NPM public packages for basic operational tooling.",
+      "to": "Extensive statistical core, providing native linear regression, data grouping, array matrices, and statistical plotting tools out of the box."
     }
   ],
   "examples": [
     {
-      "title": "Vectorized Attribute Calculations",
-      "description": "Modifying numeric list entries directly without utilizing manual loop wrappers.",
-      "fromCode": "const readings: number[] = [10, 20, 30];\nconst adjusted: number[] = readings.map(r => r + 5);",
-      "toCode": "readings <- c(10, 20, 30)\nadjusted <- readings + 5"
+      "title": "Vectorized Processing Operations",
+      "description": "Converting a TypeScript loop or map array transformation into a high-performance native vectorized matrix operation in R.",
+      "fromCode": "const inputs: number[] = [10, 20, 30, 40];\nconst outputs = inputs.map(v => (v * 1.05) + 2);",
+      "toCode": "inputs <- c(10, 20, 30, 40)\noutputs <- (inputs * 1.05) + 2"
     },
     {
-      "title": "Structured Data Frame Generation",
-      "description": "Creating multi-column data structures for analysis.",
-      "fromCode": "interface Row { name: string; age: number }\nconst table: Row[] = [{ name: \"A\", age: 25 }, { name: \"B\", age: 30 }];",
-      "toCode": "table <- data.frame(\n  name = c(\"A\", \"B\"),\n  age = c(25, 30)\n)"
+      "title": "Data Filtering and Selection Primitives",
+      "description": "Filtering a dictionary array collection compared to filtering structural rows within an R Data Frame.",
+      "fromCode": "interface ItemLog { sku: string; stock: number }\nconst log: ItemLog[] = [\n  { sku: \"A\", stock: 5 },\n  { sku: \"B\", stock: 12 }\n];\nconst active = log.filter(i => i.stock > 10);",
+      "toCode": "# Declaring an R Data Frame matrix\nlog <- data.frame(\n  sku = c(\"A\", \"B\"),\n  stock = c(5, 12)\n)\nactive <- subset(log, stock > 10)"
     }
   ],
   "tips": [
     {
-      "title": "Think in Vector Elements Directly",
-      "body": "Avoid running loops or `.forEach()` maps over collections as you would in TypeScript. R operations apply to entire vectors automatically, yielding highly optimized native execution speeds."
+      "title": "Remember 1-Based Structural Indexing",
+      "body": "R vectors and data matrices begin indexing paths at 1 rather than 0. Keep this shift in mind to avoid off-by-one errors when converting loop counters."
     },
     {
-      "title": "Adjust to 1-Based Collection Indices",
-      "body": "TypeScript indexes list records starting at 0, while R references track the initial vector item starting at 1. Querying an index with a 0 value returns an empty vector structure of the item's primary type."
+      "title": "Ditch Manual Loops for Vectorization",
+      "body": "Do not write 'for' statements to modify dataset elements. R performs operations across whole vectors simultaneously, which is much faster than index loops."
     },
     {
-      "title": "Employ the Proper Assignment Operator",
-      "body": "While equal signs (`=`) can store values inside variables, the R community expects the arrow syntax assignment operator (`<-`). Reserve the equal sign for configuring parameters within function boundaries."
+      "title": "Adopt Arrow Variables For Clean Scope",
+      "body": "While equal signs (=) work for variable assignment in many R environments, use the arrow operator (<-) to maintain clean scoping boundaries."
     },
     {
-      "title": "Differentiate NA and NULL States",
-      "body": "TypeScript represents empty states via null or undefined tags. R tracks missing data fields within vector cells using `NA` (Not Available), while reserving `NULL` for entirely unassigned variable names."
+      "title": "Leverage Tidyverse for Array Pipeline Flow",
+      "body": "If you miss fluent TypeScript chaining methods (.filter().map()), import the 'tidyverse' package to use the pipe operator (%>%) for clear data staging."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What stands in for TypeScript null and undefined inside R datasets?",
+      "answer": "R models missing or undefined data points using specialized values: 'NA' for unrecorded variables, and 'NaN' for undefined mathematical outputs."
+    },
+    {
+      "question": "Can I validate R calculations using static type linter configurations?",
+      "answer": "R is fundamentally dynamic. You cannot apply ahead-of-time compile checks, but you can build assertions or runtime constraints using the 'types' package."
+    },
+    {
+      "question": "How do I serve R analytics models within production web backends?",
+      "answer": "Wrap your R analytics pipeline inside a library like 'Plumber' to expose data outputs as public REST API routes that web apps can query."
     }
   ]
 }

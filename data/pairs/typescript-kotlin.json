@@ -1,62 +1,76 @@
 {
-  "intro": "Converting TypeScript to Kotlin transitions an application from a web platform runtime to a modern, statically typed language targeting the JVM, Android, or Native configurations. Developers switch to Kotlin to build scalable enterprise microservices or mobile apps while maintaining a modern, concise developer experience. This change replaces structural type matching with explicit nominal types while retaining highly valued features like null safety and functional primitives.",
+  "intro": "Transitioning from TypeScript to Kotlin shifts code design from a structural compilation layer on top of JavaScript down to a modern statically typed language running on the JVM, native architectures, or multiplatform systems. Developers make this migration to create fluid Android apps, resilient Spring Boot server platforms, or multiplatform targets with high type safety. This move swaps prototype manipulation for explicit class models, comprehensive null safety constraints, and coroutine scheduling.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Compile-time structural mechanics featuring flexible utility shapes and intersection markers, erased at build.",
-      "to": "Strict static nominal typing with compile-time null safety validation and generic variance parameters."
+      "from": "Static structural type validation layer checked before deployment, fading completely inside runtime distributions.",
+      "to": "Static nominal type architecture combining advanced type inference, explicit variance declarations, and strict compile-time safety."
     },
     {
       "category": "Syntax",
-      "from": "C-style scripting syntax utilizing explicit variable keywords and arrow configuration scopes.",
-      "to": "Concise, expression-oriented layout omitting semicolons and providing trailing closures and smart type casts."
+      "from": "C-style structural scripts containing curly framing markers, explicit arrow functions, and open object definitions.",
+      "to": "Clean expression-focused architecture requiring trailing lambda shortcuts, explicit class formats, and omitting line-end punctuation."
     },
     {
       "category": "Memory",
-      "from": "Generational engine-level garbage collection optimized for web scripts running on a single heap.",
-      "to": "Managed JVM heap operations leveraging production collectors optimized for long-running processes."
+      "from": "Heap metrics tracked inside single execution lanes optimized by individual host engine profiles.",
+      "to": "Managed object spaces organized by Java Virtual Machine (JVM) garbage collection pipelines, optimized for multithreaded long-running tasks."
     },
     {
       "category": "Async",
-      "from": "Single-threaded execution loop managing non-blocking tasks via Promise queues.",
-      "to": "Sequential coroutines framework providing lightweight structured concurrency across multiple underlying threads."
+      "from": "Single-thread non-blocking macro queues utilizing Promise objects to yield processing tasks.",
+      "to": "Lightweight Coroutine frameworks utilizing suspension mechanisms to run parallel code tracks over multi-threaded background pools."
     },
     {
       "category": "Standard Library",
-      "from": "Basic type definitions requiring open-source extensions for extended OS interaction tasks.",
-      "to": "Rich collection extensions, functional processing combinators, and native Java interop capabilities."
+      "from": "Thin infrastructure base leaving engineers dependent on NPM third-party mirrors for routine data operations.",
+      "to": "Rich utility core containing extensive collection extensions, text transformations, sequence processors, and multiplatform tools."
     }
   ],
   "examples": [
     {
-      "title": "Data Carrying Data Classes",
-      "description": "Declaring structural entities with automatic equality checks.",
-      "fromCode": "type User = { id: number; email: string };\nconst user: User = { id: 1, email: \"a@b.com\" };",
-      "toCode": "data class User(val id: Int, val email: String)\n\n// Instantiation\nval user = User(1, \"a@b.com\")"
+      "title": "Immutable Data Models",
+      "description": "Contrasting a structural typescript data schema template against a native Kotlin Data Class layout providing built-in equality checking tools.",
+      "fromCode": "interface InvoiceItem {\n  readonly id: string;\n  readonly amount: number;\n}\n\nconst item: InvoiceItem = { id: \"INV-1\", amount: 250.00 };",
+      "toCode": "data class InvoiceItem(\n    val id: String,\n    val amount: Double\n)\n\n// Instantiation\nval item = InvoiceItem(\"INV-1\", 250.00)"
     },
     {
-      "title": "Safe Null Casting Blocks",
-      "description": "Executing code conditionally depending on the presence of values.",
-      "fromCode": "function display(text: string | null) {\n  if (text) console.log(text.toUpperCase());\n}",
-      "toCode": "fun display(text: String?) {\n    text?.let { println(it.uppercase()) }\n}"
+      "title": "Functional Transformations and Filtering Sequences",
+      "description": "Mapping arrays using standard closure approaches vs Kotlin's streamlined trailing lambda parameter patterns.",
+      "fromCode": "function captureActiveTokens(tokens: string[]): string[] {\n  return tokens\n    .filter(t => t.length > 10)\n    .map(t => t.trim());\n}",
+      "toCode": "fun captureActiveTokens(tokens: List<String>): List<String> {\n    return tokens\n        .filter { it.length > 10 }\n        .map { it.trim() }\n}"
     }
   ],
   "tips": [
     {
-      "title": "Utilize Built-in Smart Casting",
-      "body": "Once you check a variable's type via Kotlin's `is` keyword, the compiler automatically smart-casts the reference for the remainder of that block. You don't need to write explicit, repetitive type casting operations."
+      "title": "Embrace Integrated Compile Null Safety",
+      "body": "Kotlin enforces distinction between nullable (String?) and non-nullable (String) variables. Use safe calls (?.) and Elvis operators (?:) to manage structural flow cleanly."
     },
     {
-      "title": "Embrace Structured Coroutines",
-      "body": "Replace continuous Promise chains with Kotlin's coroutine wrappers. Prefixing async operations with `suspend` allows you to write non-blocking asynchronous routines sequentially without callback nesting."
+      "title": "Leverage Extension Functions heavily",
+      "body": "Kotlin lets you add utility methods to existing classes without extending them (e.g., fun String.clean() = this.trim()). Use extensions to simplify helper files."
     },
     {
-      "title": "Migrate Interfaces to Data Classes",
-      "body": "When translating standard TypeScript object interfaces used purely as data payloads, declare them as Kotlin `data class` structures to automatically obtain built-in structural copying methods."
+      "title": "Ditch Switch Blocks for when",
+      "body": "Replace standard nested control parameters with Kotlin's comprehensive, smart 'when' block statement, which evaluates complex conditions without explicit breaks."
     },
     {
-      "title": "Distinguish Read-Only Variable Declarations",
-      "body": "Kotlin enforces immutability at the variable layer using two separate keywords. Use `val` for read-only references (similar to TypeScript's `const`) and use `var` only when you need to reassign values."
+      "title": "Swap Out npm Tools for Gradle",
+      "body": "Configure your dependencies and build pipelines using Gradle (Kotlin DSL), which provides robust type-checked build scripts for managing external dependencies."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What acts in place of the TypeScript structural union features inside Kotlin builds?",
+      "answer": "Kotlin employs 'Sealed Classes' or sealed interfaces to specify precise class hierarchies, allowing exhaustive compile-time conditional checks inside when blocks."
+    },
+    {
+      "question": "Can Kotlin application assets compile into optimized JavaScript modules?",
+      "answer": "Yes. Kotlin/JS lets developers target web environments by compiling Kotlin codebases directly into compliant scripts that integrate with web platforms."
+    },
+    {
+      "question": "How are singleton object structures created compared to JavaScript definitions?",
+      "answer": "Kotlin replaces manual module instance wrapping with the 'object' keyword, which natively declares thread-safe singleton entities inside the compilation runtime."
     }
   ]
 }

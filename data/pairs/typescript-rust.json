@@ -1,62 +1,76 @@
 {
-  "intro": "Transitioning from TypeScript to Rust upgrades an application to a compiled systems language that guarantees memory safety without a garbage collector. Developers make this change to eliminate runtime overhead, optimize CPU-bound tasks, and prevent memory leaks in critical microservices. The migration requires swapping high-level runtime flexibility for a strict compile-time borrow checker and explicit variable ownership contracts.",
+  "intro": "Transitioning from TypeScript to Rust shifts development from a garbage-collected web layer to a high-performance system architecture language centered on total memory safety. Engineers make this change to construct low-latency networking engines, WebAssembly assets, or critical runtime components where absolute predictability is paramount. This move replaces automated garbage runtimes and fluid object shapes with strict compile-time borrow checking, explicit lifetimes, and zero-overhead abstractions.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Compile-time structural type matching that supports complex unions and mapped types, erased during build passes.",
-      "to": "Strict nominal static typing with comprehensive generic traits, algebraic data types (enums), and compile-time lifetime annotations."
+      "from": "Static structural typing system compiled down into dynamic JavaScript configurations, focused on structural agility.",
+      "to": "Statically typed nominal architecture tracking deep algebraic variable sets, advanced generics, trait restrictions, and explicit ownership boundaries."
     },
     {
       "category": "Syntax",
-      "from": "C-style syntax featuring explicit class components, arrow parameters, and structural object configurations.",
-      "to": "Expression-oriented block syntax leveraging pattern matching rules, macros, and explicit error propagation operators."
+      "from": "Modern C-based formatting featuring class interfaces, dynamic object spreads, and simple functional closures.",
+      "to": "Expression-oriented, macro-driven structure requiring explicit matching syntax, visibility flags, module declarations, and lifetime tickers."
     },
     {
       "category": "Memory",
-      "from": "Automated engine heap tracking utilizing runtime generational garbage collection passes.",
-      "to": "Compile-time ownership semantics where resources are automatically reclaimed the moment their tracking variable scope ends."
+      "from": "Volatile object graph overseen by host engine automatic generational garbage collection processes.",
+      "to": "Compile-time ownership management verified via a Borrow Checker framework, enforcing automatic resource deallocation without a runtime overhead layer."
     },
     {
       "category": "Async",
-      "from": "Single-threaded execution loop coordinating micro-tasks, Promise objects, and async/await blocks.",
-      "to": "Zero-overhead pull-based Future state machines requiring an external executor runtime like Tokio for multi-threaded polling."
+      "from": "Single-thread non-blocking task scheduler relying on microtask execution paths and explicit native Promises.",
+      "to": "Zero-cost asynchronous state machine logic requiring third-party runtime scheduling infrastructure (such as Tokio) to drive system Futures."
     },
     {
       "category": "Standard Library",
-      "from": "Basic language definitions requiring external npm packages for core filesystem or system operations.",
-      "to": "Lean system library delivering high-performance primitive wrappers, collections, and explicit I/O traits."
+      "from": "Thin utility baseline leaving developers highly dependent on NPM package distribution ecosystems.",
+      "to": "Highly optimized system API delivering structural primitive tools, atomic operations, thread utilities, and safe data synchronization wrappers."
     }
   ],
   "examples": [
     {
-      "title": "Algebraic Types and Comprehensive Matching",
-      "description": "Modeling data structures using tagged enums with pattern validation matches.",
-      "fromCode": "type Status = \"Loading\" | \"Success\";\nfunction handle(s: Status) {\n  if (s === \"Loading\") return 0;\n  return 1;\n}",
-      "toCode": "enum Status {\n    Loading,\n    Success,\n}\n\nfn handle(s: Status) -> i32 {\n    match s {\n        Status::Loading => 0,\n        Status::Success => 1,\n    }\n}"
+      "title": "Algebraic Type Structuring",
+      "description": "Contrasting a TypeScript string union pattern with a robust compile-time verified algebraic Rust Enum design pattern.",
+      "fromCode": "type NetworkState = \n  | { status: \"idle\" }\n  | { status: \"loading\" }\n  | { status: \"success\"; payload: string };\n\nfunction handleState(state: NetworkState) {\n  if (state.status === \"success\") console.log(state.payload);\n}",
+      "toCode": "enum NetworkState {\n    Idle,\n    Loading,\n    Success(String),\n}\n\nfunc handle_state(state: NetworkState) {\n    match state {\n        NetworkState::Success(payload) => println!(\"{}\", payload),\n        _ => {}\n    }\n}"
     },
     {
-      "title": "Safe Result Compilation Wrappers",
-      "description": "Orchestrating robust data pipelines without throw statements.",
-      "fromCode": "function parse(val: string): number {\n  const num = Number(val);\n  if (isNaN(num)) throw new Error(\"NaN\");\n  return num;\n}",
-      "toCode": "fn parse(val: &str) -> Result<i32, std::num::ParseIntError> {\n    val.parse::<i32>()\n}"
+      "title": "Safe Memory Access via Option Types",
+      "description": "Replacing arbitrary null-checks with explicit Option wrapping constructs.",
+      "fromCode": "function searchElement(list: string[], target: string): string | null {\n  const found = list.find(item => item === target);\n  return found ? found : null;\n}",
+      "toCode": "func search_element(list: &[String], target: &str) -> Option<String> {\n    list.iter()\n        .find(|&item| item == target)\n        .cloned()\n}"
     }
   ],
   "tips": [
     {
-      "title": "Internalize Ownership and Borrowing Rules",
-      "body": "Rust allows only one active owner per data resource. When passing variables into functions, the resource is 'moved' unless you pass a reference using an ampersand (`&` for read-only, `&mut` for mutable access)."
+      "title": "Internalize Ownership Mechanics",
+      "body": "Rust variables are governed by ownership constraints. Passing variables into standard functions moves them permanently unless you pass them via references (&)."
     },
     {
-      "title": "Replace Null States with Options",
-      "body": "Rust has no null or undefined references. Missing data or partial operations must be modeled explicitly using the `Option<T>` enum, forcing you to handle both `Some(val)` and `None` branches at compile time."
+      "title": "Embrace Pattern Matching heavily",
+      "body": "Ditch cascading conditional blocks. Implement Rust's explicit 'match' framework to map out complex variable configurations cleanly and with compile-time completeness checks."
     },
     {
-      "title": "Propagate Errors with the Question Mark Operator",
-      "body": "Instead of throwing exceptions that must be caught with try/catch blocks, return a `Result<T, E>` from functions and append the `?` operator to operations to cleanly propagate errors up the call stack."
+      "title": "Isolate Errors using Results",
+      "body": "Rust doesn't throw standard execution exceptions. Expected errors utilize the 'Result<T, E>' enum structure, leveraging the '?' character macro to propagate failures up."
     },
     {
-      "title": "Opt for Iterators Over Standard Loops",
-      "body": "Rust collections expose high-performance iterators via `.iter()`. Use functional combinators like `.filter()` and `.map()` directly; the compiler optimizes these into zero-cost loops that perform as fast as manual index updates."
+      "title": "Ditch Class Logic for Traits",
+      "body": "Rust lacks OOP class hierarchies. Define structural functionality targets via 'trait' interfaces and link them to data models using explicit 'impl' scopes."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can I target browser environments using Rust application logic?",
+      "answer": "Yes. Rust integrates deeply with WebAssembly (Wasm) toolchains like 'wasm-pack' to translate high-performance logic directly into modules optimized for web targets."
+    },
+    {
+      "question": "What handles the dynamic 'any' structural feature within Rust compilations?",
+      "answer": "Rust manages dynamic configurations using trait pointer allocations 'Box<dyn Any>' or object traits, requiring explicit casting rules to resolve."
+    },
+    {
+      "question": "How do package management systems contrast between platforms?",
+      "answer": "TypeScript relies on NPM to install project modules. Rust uses Cargo to track source parameters, download code dependencies, and optimize builds via crates.io."
     }
   ]
 }

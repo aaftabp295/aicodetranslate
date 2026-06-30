@@ -1,62 +1,76 @@
 {
-  "intro": "Porting TypeScript to Ruby transitions a codebase into a highly expressive, purely object-oriented dynamic scripting language optimized for developer happiness and rapid application prototyping. Developers make this switch when adopting frameworks like Ruby on Rails to build robust, database-driven web applications with minimal boilerplate. This shift requires moving from explicit compile-time type verification to dynamic runtime method evaluation and duck-typing mechanics.",
+  "intro": "Switching from TypeScript to Ruby changes development paradigms from an ahead-of-time compiled structural validation step to a dynamic, highly expressive object-oriented scripting environment. Developers adopt Ruby to leverage the robust convention-over-configuration guidelines of frameworks like Ruby on Rails for rapid application deployment. This migration replaces bracket-bound lexical code blocks with block-based, purely object-oriented constructs where every variable is an instantiated object.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Strict structural static type layer verified during compilation and erased before execution.",
-      "to": "Strongly typed dynamic system centered around duck-typing, where object capabilities are verified at runtime when methods are called."
+      "from": "Static structural validation layer checked before code builds, turning into raw dynamic JavaScript parameters.",
+      "to": "Purely dynamic, strongly typed environment leveraging duck-typing runtime resolutions, with optional typing via RBS configuration mappings."
     },
     {
       "category": "Syntax",
-      "from": "C-style block structures requiring curly braces, semicolons, and explicit return markers.",
-      "to": "Clean, human-readable layout omitting curly braces and semicolons, utilizing trailing blocks and implicit expression returns."
+      "from": "C-style syntax containing structural brackets, explicit semicolons, arrow assignments, and visible module definitions.",
+      "to": "Highly elegant, implicit language layout skipping structural brackets/semicolons, utilizing clean text-blocks concluded by explicit 'end' markers."
     },
     {
       "category": "Memory",
-      "from": "Managed automatically via engine generational garbage collection sweeps on a persistent application heap.",
-      "to": "Automated object slot reference tracking combined with a generational mark-and-sweep garbage collector."
+      "from": "Managed execution layout relying on browser engine garbage collectors optimized for high-frequency user tasks.",
+      "to": "Automatic object space allocation overseen by a mark-and-sweep garbage system, optimized for dynamic object creation tracking."
     },
     {
       "category": "Async",
-      "from": "Single-threaded event loop architecture executing non-blocking Promise queues natively.",
-      "to": "Synchronous by default, utilizing Fiber objects, concurrent thread abstractions, or Guild isolation patterns for parallel logic."
+      "from": "Single-thread non-blocking orchestration loop driven by Promise priorities and microtask structures.",
+      "to": "Synchronous multi-threaded design patterns managed via system threads, constrained by a Global VM Lock (GVL); modern versions include Fibers (Ractor)."
     },
     {
       "category": "Standard Library",
-      "from": "Minimal core focusing on JavaScript foundations, relying heavily on npm packages for expanded features.",
-      "to": "Extensive standard library offering powerful string manipulators, file handling utilities, and native system scripting tools."
+      "from": "Thin utility baseline leaving developers highly dependent on NPM package configurations for core tasks.",
+      "to": "Comprehensive scripting runtime delivering robust text manipulation engines, file processors, object management utilities, and network modules."
     }
   ],
   "examples": [
     {
-      "title": "Class and Initialization Blocks",
-      "description": "Declaring regular classes with instance variable setters.",
-      "fromCode": "class Customer {\n  constructor(private name: string) {}\n  getName() { return this.name; }\n}",
-      "toCode": "class Customer\n  def initialize(name)\n    @name = name\n  end\n\n  def name\n    @name\n  end\nend"
+      "title": "Object Blueprinting and Variable Scope",
+      "description": "Contrasting a structured class contract in TypeScript against a classic, dynamically evaluated Ruby class layout.",
+      "fromCode": "class Workspace {\n  private name: string;\n  constructor(name: string) {\n    this.name = name;\n  }\n  public getName(): string { return this.name; }\n}",
+      "toCode": "class Workspace\n  def initialize(name)\n    @name = name\n  end\n\n  def name\n    @name\n  end\nend"
     },
     {
-      "title": "Block-Based Collection Transformations",
-      "description": "Filtering list datasets using closures.",
-      "fromCode": "const inputs: number[] = [1, 2, 3, 4];\nconst odds: number[] = inputs.filter(x => x % 2 !== 0);",
-      "toCode": "inputs = [1, 2, 3, 4]\nodds = inputs.select { |x| x.odd? }"
+      "title": "Collection Filtering and Yield Operations",
+      "description": "Converting functional block operations across systems using alternative block yield expressions.",
+      "fromCode": "function isolatePremium(prices: number[]): number[] {\n  return prices.filter(p => p > 100);\n}",
+      "toCode": "def isolate_premium(prices)\n  prices.select { |p| p > 100 }\nend"
     }
   ],
   "tips": [
     {
-      "title": "Leverage Implicit Return Values",
-      "body": "Ruby functions automatically return the value of the last evaluated expression inside their block scope. You can safely omit the `return` keyword unless you need to exit a function early based on a conditional check."
+      "title": "Internalize Everything is an Object",
+      "body": "In Ruby, numbers, strings, and classes are concrete objects. You can invoke methods directly on numbers (e.g., 5.times) without boxing abstractions."
     },
     {
-      "title": "Understand Everything is an Object",
-      "body": "Unlike TypeScript, Ruby contains no primitive values or standalone functions. Every entity—including numbers, nil states, and class definitions—is a true object that inherits from the base Object class."
+      "title": "Leverage Truthy Evaluations Carefully",
+      "body": "Unlike JavaScript where 0, '', and NaN evaluate as falsey values, in Ruby only 'false' and 'nil' are falsey; zero and empty string arrays are fully truthy."
     },
     {
-      "title": "Replace Callbacks with Blocks",
-      "body": "Instead of passing anonymous arrow functions as callbacks, use Ruby's native blocks passed via curly braces or `do...end` markers, which are received using the internal `yield` keyword."
+      "title": "Swap Out NPM Dependencies for Bundler Gems",
+      "body": "Track external system dependencies by shifting from package.json setups to Ruby Gemfile definitions managed via the Bundler tracking pipeline."
     },
     {
-      "title": "Verify Interface Contracts via RBS",
-      "body": "If you miss TypeScript's compile-time validation, adopt Ruby's modern typing companion files (`.rbs`) alongside static analysis engines like Steep to check parameter constraints before execution."
+      "title": "Embrace Implicit Method Returns",
+      "body": "Ruby methods automatically return the output value of their final evaluated statement line. Omit the 'return' keyword unless creating early exits."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What is the Ruby structural equivalent for TypeScript's 'undefined' flag?",
+      "answer": "Ruby uses a singular object entity named 'nil' to indicate missing parameters or unallocated structural targets across script blocks."
+    },
+    {
+      "question": "How are structural object configurations checked if Ruby lacks static types?",
+      "answer": "Ruby operates on 'Duck Typing' ('if it walks like a duck...'). Code evaluates an object by testing if it responds to a method call at execution time."
+    },
+    {
+      "question": "Can Ruby script code execute concurrently using web worker equivalents?",
+      "answer": "Yes. Modern Ruby introduces Ractors, which isolate execution state and memory spaces to run parallel computations without GVL thread interference."
     }
   ]
 }

@@ -1,62 +1,76 @@
 {
-  "intro": "Migrating from JavaScript to Scala transitions a codebase from a dynamically typed, single-threaded event loop environment to a statically typed, multi-paradigm language running on the JVM. Developers make this shift to leverage Scala's powerful type system, functional programming primitives, and robust concurrency models for high-throughput backend services. This move eliminates runtime type errors common in JavaScript while introducing advanced features like pattern matching and implicits.",
+  "intro": "Transitioning from JavaScript to Scala shifts execution from a dynamically typed, single-threaded event loop environment to a statically typed, highly concurrent JVM ecosystem. Developers typically make this move to leverage Scala's powerful functional programming paradigms, strong compile-time safety, and superior performance for massive parallel processing. This migration replaces prototype-based object orientation with a sophisticated blend of object-oriented and functional constructs backed by advanced type inference.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Dynamically typed with implicit type coercion and runtime resolution.",
-      "to": "Statically typed with advanced type inference, structural typing, and generalized type constraints."
+      "from": "Dynamically typed with weak coercion; types are bound to values at runtime, often requiring defensive checks.",
+      "to": "Statically typed with sophisticated type inference, structural typing, implicits, and compile-time verification."
     },
     {
       "category": "Syntax",
-      "from": "C-style syntax heavily reliant on functions, object literals, and prototype chains.",
-      "to": "Expression-oriented syntax blending object-oriented classes with functional constructs like traits and case classes."
+      "from": "C-style syntax relying heavily on functions, object literals, and prototypes, with optional semicolons.",
+      "to": "Expression-oriented syntax blending object-oriented classes/traits with functional patterns, pattern matching, and minimal boilerplate."
     },
     {
       "category": "Memory",
-      "from": "Managed by host environment engine (V8, JavaScriptCore) using a generational garbage collector.",
-      "to": "Managed by the Java Virtual Machine (JVM) using highly configurable collectors like G1GC or ZGC."
+      "from": "Managed via a V8/runtime-specific generational garbage collector tied to the host environment thread.",
+      "to": "Managed by the Java Virtual Machine (JVM) garbage collector, optimized for high-throughput heap allocations across multiple threads."
     },
     {
       "category": "Async",
-      "from": "Single-threaded event loop utilizing Promises, async/await keyword pairs, and callbacks.",
-      "to": "Multi-threaded concurrency managed via Futures, ExecutionContexts, and functional effect systems like Cats Effect or ZIO."
+      "from": "Single-threaded event loop utilizing Promises, async/await keywords, and microtask queues for non-blocking I/O.",
+      "to": "Multi-threaded concurrency leveraging Futures, Akka/Pekko actors, or functional effect systems (ZIO, Cats Effect) backed by ThreadPools."
     },
     {
       "category": "Standard Library",
-      "from": "Minimal core focusing on prototype primitives, arrays, and basic math; heavily relies on npm.",
-      "to": "Extensive core standard library with powerful collections, functional combinators, and native multi-threading primitives."
+      "from": "Minimalist core library heavily reliant on third-party ecosystem (NPM) for advanced data structures and utilities.",
+      "to": "Comprehensive, highly optimized collections framework featuring native immutable/mutable structures and powerful functional combinators."
     }
   ],
   "examples": [
     {
-      "title": "Data Transformation",
-      "description": "Filtering and mapping a list of user objects based on attributes.",
-      "fromCode": "const users = [{ name: 'Alice', active: true }, { name: 'Bob', active: false }];\nconst activeNames = users.filter(u => u.active).map(u => u.name);",
-      "toCode": "case class User(name: String, active: Boolean)\nval users = List(User(\"Alice\", true), User(\"Bob\", false))\nval activeNames: List[String] = users.filter(_.active).map(_.name)"
+      "title": "Asynchronous Data Fetching",
+      "description": "Converting an asynchronous API fetch routine using async/await to Scala's Future with an explicit ExecutionContext.",
+      "fromCode": "async function fetchUser(id) {\n  try {\n    const response = await api.get(`/users/${id}`);\n    return response.data;\n  } catch (error) {\n    throw new Error(`Failed to fetch: ${error.message}`);\n  }\n}",
+      "toCode": "import scala.concurrent.{Future, ExecutionContext}\nimport scala.util.{Success, Failure}\n\ndef fetchUser(id: String)(implicit ec: ExecutionContext): Future[User] = {\n  api.get(s\"/users/$id\").map(_.data).recoverWith {\n    case ex => Future.failed(new RuntimeException(s\"Failed to fetch: ${ex.getMessage}\"))\n  }\n}"
     },
     {
-      "title": "Asynchronous Computation Chain",
-      "description": "Fetching a resource and transforming the result asynchronously.",
-      "fromCode": "async function processData(id) {\n  const raw = await fetchUser(id);\n  return { ...raw, processed: true };\n}",
-      "toCode": "import scala.concurrent.Future\nimport scala.concurrent.ExecutionContext.Implicits.global\n\ndef processData(id: String): Future[User] = {\n  fetchUser(id).map(raw => raw.copy(processed = true))\n}"
+      "title": "Data Transformation with Collection Utilities",
+      "description": "Filtering and mapping a list of objects based on a property matching operation.",
+      "fromCode": "const processOrders = (orders) => {\n  return orders\n    .filter(o => o.status === 'completed')\n    .map(o => ({ id: o.id, total: o.amount * 1.1 }));\n};",
+      "toCode": "case class Order(id: String, status: String, amount: Double)\ncase class ProcessedOrder(id: String, total: Double)\n\ndef processOrders(orders: List[Order]): List[ProcessedOrder] = {\n  orders\n    .filter(_.status == \"completed\")\n    .map(o => ProcessedOrder(o.id, o.amount * 1.1))\n}"
     }
   ],
   "tips": [
     {
-      "title": "Embrace Expression-Oriented Design",
-      "body": "In Scala, almost every construct (including if-else blocks and try-catch) returns a value. Avoid defining mutable variable placeholders and reassigning them; instead, assign the outcome of the conditional or loop directly to an immutable val."
+      "title": "Embrace Immutability By Default",
+      "body": "Replace JavaScript 'let' and mutable object mutations with Scala 'val' and case class 'copy' methods to eliminate side effects."
     },
     {
-      "title": "Replace Prototypes with Traits",
-      "body": "JavaScript's prototype-based inheritance does not exist in Scala. Use traits to define shared interfaces and modular behavior that can be mixed into classes and objects at compile time."
+      "title": "Leverage Options Instead of Nulls",
+      "body": "Avoid checking for 'null' or 'undefined'. Use Scala's 'Option[T]' (Some/None) along with pattern matching or 'getOrElse' constructs."
     },
     {
-      "title": "Isolate Side Effects via Options",
-      "body": "Instead of returning null or undefined for missing data, wrap results in Scala's Option (Some/None) monad. This forces compile-time handling of empty states and eliminates NullPointerExceptions."
+      "title": "Understand the ExecutionContext",
+      "body": "While JS manages its event loop implicitly, Scala's Futures require an explicit or implicit ExecutionContext to schedule threads."
     },
     {
-      "title": "Understand ExecutionContexts",
-      "body": "Unlike JavaScript's automatic global event loop, Scala requires an explicit ExecutionContext to execute Futures. Ensure you scope your implicits correctly to avoid leaking thread pools across application boundaries."
+      "title": "Shift from Prototypes to Traits",
+      "body": "Translate runtime prototype compositions into Scala's compile-time mixin composition using 'traits' for shared, reusable interfaces."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can Scala code run in the browser like JavaScript?",
+      "answer": "Yes, through Scala.js, which compiles Scala source code directly into optimized JavaScript, allowing sharing of logic between frontend and JVM backend."
+    },
+    {
+      "question": "How do JavaScript objects map to Scala?",
+      "answer": "JavaScript plain objects map best to Scala Case Classes for typed data, or to 'Map[String, Any]' if the keys and values are fully dynamic."
+    },
+    {
+      "question": "What is the equivalent of JS undefined in Scala?",
+      "answer": "There is no direct structural equivalent. Scala models missing values safely using 'None' via the 'Option' monad instead of unassigned reference types."
     }
   ]
 }
