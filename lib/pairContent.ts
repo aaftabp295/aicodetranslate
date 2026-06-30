@@ -19,12 +19,37 @@ export interface MigrationTip {
   body: string
 }
 
+export interface FaqItem {
+  question: string
+  answer: string
+}
+
 export interface PairContent {
   intro: string
   diffs: DiffRow[]
   examples: CodeExample[]
   tips: MigrationTip[]
+  faqs?: FaqItem[]
 }
+
+/** Returns the dynamic default FAQ items for a language pair. */
+export function getDefaultFaqs(fromDisplay: string, toDisplay: string): FaqItem[] {
+  return [
+    {
+      question: `Is this ${fromDisplay} to ${toDisplay} converter free?`,
+      answer: `Yes! Our ${fromDisplay} to ${toDisplay} converter is completely free to use. You can run up to 5 conversions per day without even needing to create an account. For unlimited conversions, you can choose one of our affordable premium subscriptions.`
+    },
+    {
+      question: `How accurate is the ${fromDisplay} to ${toDisplay} conversion?`,
+      answer: `The conversion is powered by Gemini, Google's advanced language model. It produces highly accurate, idiomatic, and syntactically valid code by mapping corresponding libraries, types, and logic constructs between the two languages.`
+    },
+    {
+      question: `What types of ${fromDisplay} code can I convert to ${toDisplay}?`,
+      answer: `You can convert any standard ${fromDisplay} code, including individual helper functions, complex classes, standard algorithms, data structure operations, and business logic. The converter handles scoping, syntax, and keyword translations automatically.`
+    }
+  ]
+}
+
 
 /** Helper to read a pair file from disk. */
 function readPairFile(from: string, to: string): PairContent | null {

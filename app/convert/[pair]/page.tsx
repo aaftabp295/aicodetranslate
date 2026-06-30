@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Home, ChevronRight } from 'lucide-react'
 import { getPairFromSlug, getPageTitle, getPageDescription, getLangDisplayName, getPopularTargetsFor, PAIRS } from '@/lib/languages'
-import { getPairIntro } from '@/lib/pairContent'
+import { getPairIntro, getPairContent, getDefaultFaqs } from '@/lib/pairContent'
 import { ConverterPanel } from '@/components/converter/ConverterPanel'
 import { PairPageContent } from '@/components/converter/PairPageContent'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
@@ -68,11 +68,14 @@ export default async function ConvertPage({ params }: PageProps) {
   const toDisplay = getLangDisplayName(to)
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'
 
+  const content = getPairContent(from, to)
   const introParagraph =
-    getPairIntro(from, to) ??
+    content?.intro ??
     `While ${fromDisplay} excels in its specific runtime environment and syntax style, ${toDisplay} offers unique language primitives, optimizations, and standard idioms. This converter bridges the gap by translating your ${fromDisplay} code to idiomatic ${toDisplay} — handling library mappings, type system differences, and structural patterns automatically.`
   const seoTitle = `Convert ${fromDisplay} to ${toDisplay} Online`
   const metaDescription = getPageDescription(from, to)
+
+  const faqs = content?.faqs ?? getDefaultFaqs(fromDisplay, toDisplay)
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -85,6 +88,19 @@ export default async function ConvertPage({ params }: PageProps) {
       'priceCurrency': 'USD',
     },
     'description': metaDescription,
+  }
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': faqs.map((faq) => ({
+      '@type': 'Question',
+      'name': faq.question,
+      'acceptedAnswer': {
+        '@type': 'Answer',
+        'text': faq.answer,
+      },
+    })),
   }
 
   const breadcrumbJsonLd = {
@@ -121,6 +137,12 @@ export default async function ConvertPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      {/* JSON-LD FAQPage Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* JSON-LD BreadcrumbList Schema */}
@@ -172,32 +194,16 @@ export default async function ConvertPage({ params }: PageProps) {
         <h2 className="text-2xl font-bold tracking-tight text-center">Frequently Asked Questions</h2>
         
         <Accordion type="single" collapsible className="w-full border border-border rounded-lg bg-card px-4 divide-y divide-border">
-          <AccordionItem value="faq-1" className="border-0 py-2">
-            <AccordionTrigger className="text-left font-semibold text-sm cursor-pointer hover:no-underline hover:text-primary">
-              Is this {fromDisplay} to {toDisplay} converter free?
-            </AccordionTrigger>
-            <AccordionContent className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              Yes! Our {fromDisplay} to {toDisplay} converter is completely free to use. You can run up to 5 conversions per day without even needing to create an account. For unlimited conversions, you can choose one of our affordable premium subscriptions.
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="faq-2" className="border-0 py-2">
-            <AccordionTrigger className="text-left font-semibold text-sm cursor-pointer hover:no-underline hover:text-primary">
-              How accurate is the {fromDisplay} to {toDisplay} conversion?
-            </AccordionTrigger>
-            <AccordionContent className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              The conversion is powered by Gemini, Google's advanced language model. It produces highly accurate, idiomatic, and syntactically valid code by mapping corresponding libraries, types, and logic constructs between the two languages.
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="faq-3" className="border-0 py-2">
-            <AccordionTrigger className="text-left font-semibold text-sm cursor-pointer hover:no-underline hover:text-primary">
-              What types of {fromDisplay} code can I convert to {toDisplay}?
-            </AccordionTrigger>
-            <AccordionContent className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              You can convert any standard {fromDisplay} code, including individual helper functions, complex classes, standard algorithms, data structure operations, and business logic. The converter handles scoping, syntax, and keyword translations automatically.
-            </AccordionContent>
-          </AccordionItem>
+          {faqs.map((faq, index) => (
+            <AccordionItem key={index} value={`faq-${index + 1}`} className="border-0 py-2">
+              <AccordionTrigger className="text-left font-semibold text-sm cursor-pointer hover:no-underline hover:text-primary">
+                {faq.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
         </Accordion>
       </div>
 

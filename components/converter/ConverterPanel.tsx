@@ -82,17 +82,19 @@ export function ConverterPanel({
     fetchQuota()
   }, [fetchQuota])
 
-  // Sync route parameters with store if store is empty on hydration
+  const lastParamsRef = React.useRef({ from: '', to: '' })
+
+  // Sync route parameters with store if route changes
   React.useEffect(() => {
     if (hydrated) {
-      if (defaultFrom && fromLang !== defaultFrom && !code) {
+      const routeChanged = lastParamsRef.current.from !== defaultFrom || lastParamsRef.current.to !== defaultTo
+      if (routeChanged) {
         setFromLang(defaultFrom)
-      }
-      if (defaultTo && toLang !== defaultTo && !code) {
         setToLang(defaultTo)
+        lastParamsRef.current = { from: defaultFrom, to: defaultTo }
       }
     }
-  }, [hydrated, defaultFrom, defaultTo, fromLang, toLang, code, setFromLang, setToLang])
+  }, [hydrated, defaultFrom, defaultTo, setFromLang, setToLang])
 
   // Copy converted code to clipboard
   const handleCopy = async () => {
