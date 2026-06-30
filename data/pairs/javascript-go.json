@@ -1,62 +1,76 @@
 {
-  "intro": "JavaScript applications use an asynchronous, event-driven runtime to handle heavy network I/O. Moving to Go transitions the codebase to a compiled, statically typed language that handles concurrency through structural channels and lightweight goroutines. Developers adopt Go to build highly scalable backend microservices, network pipelines, and cloud-native infrastructure tooling.",
+  "intro": "Converting code from JavaScript to Go replaces an interpreted, event-loop architecture with a compiled, statically typed language optimized for high-performance backend infrastructure. This migration is typically driven by the need to handle massive network concurrency, reduce memory consumption, and eliminate runtime typing errors. The transition trades functional scripting flexibility for explicit, predictable performance primitives.",
   "diffs": [
     {
-      "category": "Type Safety",
-      "from": "Dynamic, weak, with structural mutation freedoms.",
-      "to": "Static, strong, structural composition without traditional inheritance."
+      "category": "Type System",
+      "from": "Dynamic, weakly typed runtime with runtime coercion and prototypical object inheritance.",
+      "to": "Static, strongly typed compilation with structural typing via implicit interface fulfillment."
     },
     {
-      "category": "Concurrency Design",
-      "from": "Event loop using callbacks, promises, and async/await syntax.",
-      "to": "Communicating Sequential Processes (CSP) via Goroutines and Channels."
+      "category": "Syntax",
+      "from": "Flexible C-derivative syntax featuring arrow functions, destructuring, and loose statement rules.",
+      "to": "Minimalist, highly strict syntax with mandatory code formatting rules and zero unused variables permitted."
     },
     {
-      "category": "Compilation Model",
-      "from": "Interpreted or JIT-compiled at runtime.",
-      "to": "Compiled directly to a single, statically linked native binary."
+      "category": "Memory",
+      "from": "Managed heap allocation governed by non-deterministic engine garbage collection routines optimized for scripts.",
+      "to": "Optimized stack-vs-heap allocation with a highly concurrent, low-latency garbage collector designed for backend services."
     },
     {
-      "category": "Error Architecture",
-      "from": "Implicit throw exceptions caught inside try/catch blocks.",
-      "to": "Explicit multi-value returns returning error objects as values."
+      "category": "Async",
+      "from": "Single-threaded event loop processing macro/microtask queues using modern promises and async/await syntax.",
+      "to": "Multi-threaded CSP concurrency model utilizing lightweight goroutines scheduled natively over OS threads."
     },
     {
-      "category": "Object Orientation",
-      "from": "Prototypes and modern class syntax wrappers.",
-      "to": "Composition via structs and implicit interface implementation."
+      "category": "Standard Library",
+      "from": "Minimalist core primitives for text and collection manipulation, depending on npm for advanced networking or encryption tools.",
+      "to": "Production-ready system library featuring fully robust HTTP servers, comprehensive crypto tools, and optimized serialization encoders."
     }
   ],
   "examples": [
     {
-      "title": "Concurrent Task Execution",
-      "description": "Running tasks concurrently and coordinating results across execution paths.",
-      "fromCode": "async function run() {\n    const p1 = fetchLog(1);\n    const p2 = fetchLog(2);\n    const results = await Promise.all([p1, p2]);\n}",
-      "toCode": "package main\n\nimport \"sync\"\n\nfunc fetchLog(id int, wg *sync.WaitGroup) {\n\tdefer wg.Done()\n\t// operation body\n}\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\twg.Add(2)\n\tgo fetchLog(1, &wg)\n\tgo fetchLog(2, &wg)\n\twg.Wait()\n}"
+      "title": "HTTP Server Setup",
+      "description": "Translating an asynchronous Node.js Express endpoint into native, concurrent Go routing.",
+      "fromCode": "const express = require('express');\nconst app = express();\n\napp.get('/health', (req, res) => {\n    res.json({ status: \"OK\" });\n});\napp.listen(8080);",
+      "toCode": "package main\nimport (\n\t\"encoding/json\"\n\t\"net/http\"\n)\n\nfunc main() {\n\thttp.HandleFunc(\"/health\", func(w http.ResponseWriter, r *http.Request) {\n\t\tw.Header().Set(\"Content-Type\", \"application/json\")\n\t\tjson.NewEncoder(w).Encode(map[string]string{\"status\": \"OK\"})\n\t})\n\thttp.ListenAndServe(\":8080\", nil)\n}"
     },
     {
-      "title": "Explicit Error Strategy",
-      "description": "Handling operational execution errors safely.",
-      "fromCode": "try {\n    const records = parse(data);\n} catch (err) {\n    console.error(\"Failed\", err);\n}",
-      "toCode": "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n)\n\nfunc parse(data string) ([]string, error) {\n\treturn nil, errors.New(\"failed\")\n}\n\nfunc main() {\n\t_, err := parse(\"data\")\n\tif err != nil {\n\t\tfmt.Println(\"Failed\", err)\n\t}\n}"
+      "title": "Dictionary Parsing",
+      "description": "Converting loose object definitions into rigid, compiled structural types with metadata keys.",
+      "fromCode": "function parseUser(jsonStr) {\n    const user = JSON.parse(jsonStr);\n    return `User: ${user.name}`;\n}",
+      "toCode": "package main\nimport \"encoding/json\"\n\ntype User struct {\n\tName string `json:\"name\"`\n}\n\nfunc parseUser(jsonStr string) (string, error) {\n\tvar u User\n\terr := json.Unmarshal([]byte(jsonStr), &u)\n\tif err != nil {\n\t\treturn \"\", err\n\t}\n\treturn \"User: \" + u.Name, nil\n}"
     }
   ],
   "tips": [
     {
-      "title": "Handle Errors Natively",
-      "body": "Check error return arguments immediately after function calls instead of wrapping code blocks in try/catch."
+      "title": "Handle Errors Explicitly",
+      "body": "Completely remove try/catch paradigms. In Go, you must check returned error interfaces manually at every failure point."
     },
     {
-      "title": "Prefer Structural Composition",
-      "body": "Avoid subclass hierarchies; build composite types by embedding structs within other structs."
+      "title": "Map Objects to Structs",
+      "body": "Replace open-ended JavaScript dictionary structures with static Go structs using explicit serialization tags."
     },
     {
-      "title": "Use Channels for Shared Data",
-      "body": "Share data across concurrent tasks using channels rather than relying on shared memory locks."
+      "title": "Leverage Channels for Async",
+      "body": "Convert Promise.all workflows into synchronized goroutines managed via channels or sync.WaitGroup groupings."
     },
     {
-      "title": "Generate Single Standalone Binaries",
-      "body": "Compile application code into a single native binary to simplify containerization and deployment steps."
+      "title": "Enforce Formatting Controls",
+      "body": "Integrate 'go fmt' into your delivery pipeline early; Go strictly rejects idiosyncratic structural formatting layout variances."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Is Go multi-threaded compared to Node.js?",
+      "answer": "Yes. While Node.js handles parallel tasks via a single thread event loop, Go distributes lightweight goroutines across all available CPU cores natively."
+    },
+    {
+      "question": "How do I implement optional parameters in Go?",
+      "answer": "Go does not support function overloading or default arguments. You must pass configuration structs or write distinct functions."
+    },
+    {
+      "question": "What is the Go equivalent of 'null' or 'undefined'?",
+      "answer": "Go uses 'nil' for pointers, maps, slices, and interfaces, but uninitialized primitives automatically receive their distinct zero-values (e.g., 0 or empty string)."
     }
   ]
 }

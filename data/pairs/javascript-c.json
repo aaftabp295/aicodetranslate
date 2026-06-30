@@ -1,62 +1,76 @@
 {
-  "intro": "JavaScript manages dynamic application lifecycles inside a single-threaded web or server event loop. Shifting to C replaces this abstraction with direct hardware access, absolute structural memory management, and compiled machine code. Developers undertake this fundamental shift to write low-level systems, high-throughput engines, or hardware driver extensions where high runtime overhead cannot be tolerated.",
+  "intro": "Porting code from JavaScript to C requires moving from a high-level, single-threaded runtime environment to a bare-metal, compiled language. Developers execute this extreme shift to optimize resource-constrained embedded hardware, author low-level system extensions, or eliminate garbage collection latencies. This migration requires abandoning dynamic objects in favor of explicit manual memory layouts.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Dynamic, weakly typed.",
-      "to": "Static, weakly typed, structural manifest declaration requirements."
+      "from": "Dynamic type definitions allocating variables freely at runtime with pervasive type coercion rules.",
+      "to": "Static, weakly checked primitive types where structural changes require explicit memory offset remapping."
     },
     {
-      "category": "Memory Model",
-      "from": "Automatic tracking handled by engine garbage collection.",
-      "to": "Manual allocation and memory cleanup via system pointers."
+      "category": "Syntax",
+      "from": "Modern C-derivative script layout featuring flexible object literals, array syntax, and arrow function definitions.",
+      "to": "Rigid C standard structure requiring explicit function headers, strict type definitions, and manual management of pointer symbols."
     },
     {
-      "category": "Execution Engine",
-      "from": "Just-In-Time (JIT) bytecode interpretation inside V8 or similar engines.",
-      "to": "Ahead-Of-Time (AOT) direct binary generation via compilers."
+      "category": "Memory",
+      "from": "Fully automated tracking and cleanup managed dynamically by a high-performance engine garbage collector.",
+      "to": "Manual memory lifecycle control using allocation and release functions (malloc, calloc, free) risking memory corruption bugs."
     },
     {
-      "category": "Concurrency Engine",
-      "from": "Single-threaded event loop utilizing non-blocking asynchronous callbacks.",
-      "to": "Multi-threaded execution pathways managed natively via OS threads."
+      "category": "Async",
+      "from": "Non-blocking, event loop-driven architecture prioritizing asynchronous task completions and native Promises.",
+      "to": "Synchronous linear execution flows; parallel architecture requires direct invocation of low-level OS threading primitives like POSIX threads."
     },
     {
-      "category": "Data Structures",
-      "from": "Dynamic structural objects and flexible array buffers.",
-      "to": "Fixed structures (structs) and rigid, fixed-size memory arrays."
+      "category": "Standard Library",
+      "from": "Built around high-level APIs for string parsing, complex web workers, cryptographic tools, and DOM/Node environments.",
+      "to": "Minimalist header collection focusing tightly on raw system inputs, file operations, math macros, and basic string buffers."
     }
   ],
   "examples": [
     {
-      "title": "Memory Struct Allocations",
-      "description": "Allocating storage data layouts explicitly across functional boundaries.",
-      "fromCode": "const item = { id: 42, label: \"core\" };\nconsole.log(item.id);",
-      "toCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\ntypedef struct {\n    int id;\n    char label[16];\n} Item;\n\nint main() {\n    Item item;\n    item.id = 42;\n    strncpy(item.label, \"core\", sizeof(item.label));\n    printf(\"%d\\n\", item.id);\n    return 0;\n}"
+      "title": "String Concatenation vs Buffer Management",
+      "description": "Transforming dynamic high-level string joining into safe C character array buffer creation.",
+      "fromCode": "function combine(str1, str2) {\n    return str1 + \" \" + str2;\n}",
+      "toCode": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\nchar* combine(const char* str1, const char* str2) {\n    char* res = malloc(strlen(str1) + strlen(str2) + 2);\n    if (res) {\n        strcpy(res, str1);\n        strcat(res, \" \");\n        strcat(res, str2);\n    }\n    return res;\n}"
     },
     {
-      "title": "Array Creation and Loop",
-      "description": "Instantiating collections and applying incremental traversal rules.",
-      "fromCode": "const numbers = [10, 20, 30];\nfor (let i = 0; i < numbers.length; i++) {\n    console.log(numbers[i]);\n}",
-      "toCode": "#include <stdio.h>\n\nint main() {\n    int numbers[] = {10, 20, 30};\n    int count = sizeof(numbers) / sizeof(numbers[0]);\n    for (int i = 0; i < count; i++) {\n        printf(\"%d\\n\", numbers[i]);\n    }\n    return 0;\n}"
+      "title": "Iterating an Array",
+      "description": "Mapping a dynamic JavaScript collection loop to a standard static pointer block index loop.",
+      "fromCode": "function total(arr) {\n    return arr.reduce((sum, val) => sum + val, 0);\n}",
+      "toCode": "#include <stddef.h>\n\nint total(const int* arr, size_t size) {\n    int sum = 0;\n    for (size_t i = 0; i < size; i++) {\n        sum += arr[i];\n    }\n    return sum;\n}"
     }
   ],
   "tips": [
     {
-      "title": "Prevent Memory Leaks",
-      "body": "Track every malloc allocation across execution branches and ensure free() is called explicitly."
+      "title": "Track Collection Capacities",
+      "body": "C arrays cannot automatically grow or track their own lengths. You must always pass explicit size tracking arguments alongside array data buffers."
     },
     {
-      "title": "Track Array Sizes Natively",
-      "body": "Pass collection sizes alongside pointers to functions, because C arrays do not expose a length property."
+      "title": "Perform Manual Memory Audits",
+      "body": "Ensure every execution path through a block allocating memory with malloc contains a matching, single invocation of the free function."
     },
     {
-      "title": "Avoid String Overflows",
-      "body": "Replace open string assignments with strncpy to prevent data corruption beyond buffer boundaries."
+      "title": "Replace Dynamic Objects with Structs",
+      "body": "Map JavaScript key-value dictionaries into static C structs with predefined primitive data fields."
     },
     {
-      "title": "Inspect Pointer Addresses",
-      "body": "Use reference symbols (&) and dereference symbols (*) carefully to update memory safely without segmentation faults."
+      "title": "Eliminate Closure Patterns",
+      "body": "Functions in C cannot trap local scope state variables. Convert all closures into standalone functions that accept explicit state pointers."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What happens if I read past an array index in C?",
+      "answer": "Unlike JavaScript which safely returns 'undefined', C reads raw unallocated memory addresses. This triggers undefined behavior or crashes the program with a segmentation fault."
+    },
+    {
+      "question": "How do I handle JSON strings in C?",
+      "answer": "C has no built-in object parser. You must import an external open-source utility like cJSON to manually tokenize and walk through text documents."
+    },
+    {
+      "question": "Is there a direct equivalent to 'null'?",
+      "answer": "Yes, C uses the NULL macro, which evaluates numerically to 0. It indicates an uninitialized or empty memory reference pointer."
     }
   ]
 }

@@ -1,62 +1,76 @@
 {
-  "intro": "JavaScript excels at dynamic UI programming but can scale poorly across complex enterprise architectures. Transitioning to Kotlin provides a type-safe environment that runs seamlessly on the JVM, native binaries, or Android platforms. This shift helps development teams improve compile-time correctness, write clean code with structured concurrency, and scale backend services efficiently.",
+  "intro": "Migrating from JavaScript to Kotlin shifts your system from a highly dynamic script environment to a modern, type-safe multiplatform language executing on the JVM or native binaries. This pipeline transition enhances codebase maintainability and eradicates common null-pointer runtime crashes via explicit compilation validation rules. Developers gain deep object safety constraints without sacrificing modern, concise language ergonomics.",
   "diffs": [
     {
-      "category": "Type Safety",
-      "from": "Dynamic type system with runtime type resolution.",
-      "to": "Statically typed with smart type inference engines."
+      "category": "Type System",
+      "from": "Dynamic type models relying on runtime evaluation and loosely structured object layouts.",
+      "to": "Static strong typing with explicit nullability tracking baked completely into the compiler constraints."
     },
     {
-      "category": "Null Management",
-      "from": "Allows null or undefined properties, causing runtime errors.",
-      "to": "Strict compile-time separation of nullable and non-nullable types."
+      "category": "Syntax",
+      "from": "Flexible script layout allowing unbracketed operations, variable re-declarations, and implicit statements.",
+      "to": "Expressive, concise layout requiring explicit scope block validation while removing legacy boilerplate overhead like semicolons."
     },
     {
-      "category": "Concurrency Engine",
-      "from": "Single-thread event loop processing microtask steps.",
-      "to": "Lightweight structured concurrency using Coroutines."
+      "category": "Memory",
+      "from": "Engine-driven automatic garbage collection optimized for UI interfaces and browser loops.",
+      "to": "Managed JVM runtime garbage execution profiles enhanced with lightweight compilation tracking routines like inline optimizations."
     },
     {
-      "category": "Execution Platform",
-      "from": "Browser runtimes, Node.js, or specialized engine sandboxes.",
-      "to": "JVM bytecode, Android system drivers, or compiled native binaries."
+      "category": "Async",
+      "from": "Single-threaded event loop pipeline invoking promises and microtask schedules.",
+      "to": "Compiler-managed coroutine architectures executing non-blocking asynchronous routines natively across multi-core paths."
     },
     {
-      "category": "Data Containment",
-      "from": "Standard object mappings or loose JSON schemas.",
-      "to": "Compiler-optimized \"data class\" blueprints."
+      "category": "Standard Library",
+      "from": "Core library managing runtime variables, string parsing, and web platform primitives.",
+      "to": "Rich collection extensions, functional pipeline filters, and cross-platform multi-threaded utility libraries."
     }
   ],
   "examples": [
     {
-      "title": "Data Definition Layout",
-      "description": "Creating immutable data containers with automatic structural methods.",
-      "fromCode": "class Employee {\n    constructor(id, email) {\n        this.id = id;\n        this.email = email;\n    }\n}",
-      "toCode": "data class Employee(\n    val id: Int,\n    val email: String\n)"
+      "title": "Null Containment Logic",
+      "description": "Transforming runtime verification conditions into compile-time null-safe expressions.",
+      "fromCode": "function logName(user) {\n    if (user && user.name) {\n        console.log(user.name.toUpperCase());\n    }\n}",
+      "toCode": "fun logName(user: User?) {\n    println(user?.name?.uppercase())\n}"
     },
     {
-      "title": "Null Safe Chains",
-      "description": "Invoking methods on fields that might be null without causing crashes.",
-      "fromCode": "const length = stringVal ? stringVal.length : 0;",
-      "toCode": "val length = stringVal?.length ?: 0"
+      "title": "Collection Transformation",
+      "description": "Mapping functional array tracking mutations into concise Kotlin collection operations.",
+      "fromCode": "function getEvenStrings(items) {\n    return items\n        .filter(x => x % 2 === 0)\n        .map(x => `Val: ${x}`);\n}",
+      "toCode": "fun getEvenStrings(items: List<Int>): List<String> {\n    return items\n        .filter { it % 2 == 0 }\n        .map { \"Val: $it\" }\n}"
     }
   ],
   "tips": [
     {
-      "title": "Leverage the Safe Call Operator",
-      "body": "Use the ?. operator along with the Elvis operator (?:) to handle potentially null values safely."
+      "title": "Map Variables to Val or Var",
+      "body": "Enforce strict state rules by declaring read-only properties with 'val' and mutable data pipelines with 'var'."
     },
     {
-      "title": "Adopt Data Classes",
-      "body": "Replace basic JavaScript object models with Kotlin data classes to auto-generate toString, equals, and hashCode methods."
+      "title": "Utilize Named Function Parameters",
+      "body": "Replicate dynamic configurations cleanly by utilizing Kotlin's native named arguments and default parameters."
     },
     {
-      "title": "Use Coroutines for Async Tasks",
-      "body": "Replace promises and async/await loops with Kotlin coroutines to run lightweight asynchronous tasks."
+      "title": "Replace Callbacks with Coroutines",
+      "body": "Convert nested callback chains or promise chains into sequential, highly readable async blocks using suspending functions."
     },
     {
-      "title": "Prefer val for Immutability",
-      "body": "Declare local variables using \"val\" to ensure immutability unless the value needs to be reassigned."
+      "title": "Adopt Smart Casting",
+      "body": "Stop manual variable casting. Once you verify an object type with Kotlin's 'is' operator, the compiler auto-casts it dynamically."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can Kotlin run on the frontend like JavaScript?",
+      "answer": "Yes. Kotlin Multiplatform can compile directly down to JavaScript backend targets or transpile into native web execution modules."
+    },
+    {
+      "question": "What is the equivalent of a JavaScript Object literal?",
+      "answer": "For simple map needs use mapOf(), or use Kotlin data classes to model structured records safely."
+    },
+    {
+      "question": "How do I handle global variables safely?",
+      "answer": "Avoid open global variables. Define variables within package structures as top-level declarations or encapsulate them within top-level objects."
     }
   ]
 }

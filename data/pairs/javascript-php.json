@@ -1,62 +1,76 @@
 {
-  "intro": "JavaScript provides an event-driven model optimized for real-time applications across client and server environments. Transitioning to PHP updates backends to an isolated, request-driven architecture designed specifically for rapid web rendering and CMS integration. Developers select this approach to build traditional web applications, use mature server-side ecosystems, or match standard hosting architectures.",
+  "intro": "Converting code from JavaScript to PHP swaps a front-to-back asynchronous runtime for a server-side engine traditionally optimized for synchronous HTTP request-response processing. Developers perform this transition when working with classic content management architectures or consolidating specialized backend web services. The migration model moves from an ongoing single-threaded loop process to an isolated, request-scoped execution lifecycle.",
   "diffs": [
     {
-      "category": "Execution Model",
-      "from": "Persistent long-running single process managing non-blocking loops.",
-      "to": "Short-lived shared-nothing execution lifecycle spawning per request."
+      "category": "Type System",
+      "from": "Dynamic types evaluated at runtime with automatic coercion rules and prototypal object linking.",
+      "to": "Gradual typing system supporting strong explicit scalar type declarations and strict mode settings per file."
     },
     {
-      "category": "Type Constraints",
-      "from": "Dynamic, weak typing rules.",
-      "to": "Dynamic with powerful progressive type-hinting support."
+      "category": "Syntax",
+      "from": "Modern scripting syntax using arrow notations, implicit variable declarations, and camelCase conventions.",
+      "to": "Sigil-based syntax requiring dollar signs ($) for variables, explicit semicolons, and arrow mapping operators (->)."
     },
     {
-      "category": "Syntax Elements",
-      "from": "Standard variable declarations without prefixes.",
-      "to": "Variables require a leading dollar sign sigil prefix ($var)."
+      "category": "Memory",
+      "from": "Persistent engine-level allocations tracking variables throughout long-running application process loops.",
+      "to": "Short-lived stateless application memory footprint that is completely allocated and purged on every individual HTTP request loop."
     },
     {
-      "category": "I/O Model",
-      "from": "Non-blocking, asynchronous operations by default.",
-      "to": "Synchronous, blocking operations by default."
+      "category": "Async",
+      "from": "Native asynchronous processing model utilizing internal event queues, promises, and non-blocking tasks.",
+      "to": "Synchronous sequential execution loops; asynchronous tasks require external workers or task-runner queues."
     },
     {
-      "category": "Data Arrays",
-      "from": "Separate concepts for indexed arrays and structural objects.",
-      "to": "Unified associative arrays used for collections, lists, and maps."
+      "category": "Standard Library",
+      "from": "Built around web browser interfaces, text parsing APIs, and Node ecosystem modules.",
+      "to": "Extensive built-in array operations, SQL connectivity, and server-side web utility modules."
     }
   ],
   "examples": [
     {
-      "title": "Associative Object Lookup",
-      "description": "Creating a lookup map and accessing values safely.",
-      "fromCode": "const data = { id: 200, status: \"pending\" };\nconsole.log(data[\"status\"]);",
-      "toCode": "<?php\n$data = [\"id\" => 200, \"status\" => \"pending\"];\necho $data['status'];"
+      "title": "Associative Array Mapping",
+      "description": "Translating structural JavaScript object properties into functional PHP associative array syntax.",
+      "fromCode": "function generateConfig() {\n    const cfg = { debug: true, port: 80 };\n    return cfg.port;\n}",
+      "toCode": "<?php\nfunction generateConfig(): int {\n    $cfg = [\"debug\" => true, \"port\" => 80];\n    return $cfg[\"port\"];\n}"
     },
     {
-      "title": "JSON Payload Formatting",
-      "description": "Converting structural values into serializable string formats.",
-      "fromCode": "const encoded = JSON.stringify({ ok: true, count: 1 });",
-      "toCode": "<?php\n$encoded = json_encode([\"ok\" => true, \"count\" => 1]);"
+      "title": "Class Structuring",
+      "description": "Converting public JavaScript constructors into modern PHP typed properties and instance methods.",
+      "fromCode": "class Logger {\n    constructor(prefix) {\n        this.prefix = prefix;\n    }\n    log(msg) {\n        console.log(`${this.prefix}: ${msg}`);\n    }\n}",
+      "toCode": "<?php\nclass Logger {\n    private string $prefix;\n    public function __construct(string $prefix) {\n        $this->prefix = $prefix;\n    }\n    public function log(string $msg): void {\n        echo \"{$this->prefix}: {$msg}\";\n    }\n}"
     }
   ],
   "tips": [
     {
-      "title": "Enforce Explicit Type Hinting",
-      "body": "Add declare(strict_types=1); at the beginning of PHP files to catch incorrect parameter types early."
+      "title": "Prepend Variables with Sigils",
+      "body": "Remember to add the mandatory '$' prefix character to all variables when translating logic blocks."
     },
     {
-      "title": "Prefix Variables Correctly",
-      "body": "Remember to prefix all variable identifiers with a dollar sign ($) to write valid PHP syntax."
+      "title": "Activate Strict Types",
+      "body": "Enforce strong typing discipline by declaring 'declare(strict_types=1);' at the absolute top of every converted PHP file."
     },
     {
-      "title": "Adapt to Synchronous Operations",
-      "body": "Write synchronous, sequential steps for standard file and database operations, as PHP does not use an event loop."
+      "title": "Swap String Concatenations",
+      "body": "Change your string joining syntax symbols from plus signs ('+') over to standard PHP dot ('.') operator tokens."
     },
     {
-      "title": "Leverage Associative Arrays",
-      "body": "Use native associative arrays to handle both sequential lists and key-value dictionary structures."
+      "title": "Rethink Persistent Caching",
+      "body": "Do not store runtime parameters in simple global arrays; since memory clears after every request, utilize persistent layer stores like Redis."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What replaces JavaScript Array.length in PHP?",
+      "answer": "Use the built-in count($array) function to evaluate collection lengths dynamically."
+    },
+    {
+      "question": "How do I handle asynchronous code blocks in PHP?",
+      "answer": "Standard PHP is strictly synchronous. To run background jobs, dispatch tasks out to system message queues like RabbitMQ or use async runtimes like Swoole."
+    },
+    {
+      "question": "Are PHP objects passed by reference?",
+      "answer": "Yes. In modern PHP, object variables act as data references, mirroring how JavaScript objects operate when passed into functions."
     }
   ]
 }

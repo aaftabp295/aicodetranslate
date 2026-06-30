@@ -1,62 +1,76 @@
 {
-  "intro": "JavaScript maximizes developer flexibility through a dynamic runtime and managed garbage collection. Moving to Rust introduces strict compile-time guarantees, zero-cost abstractions, and memory safety without a garbage collector via an explicit ownership model. This migration is vital when building highly optimized engines, WebAssembly targets, or reliability-critical infrastructure services.",
+  "intro": "Migrating a system from JavaScript to Rust replaces a managed, single-threaded web runtime with a compiled, system-level language prioritizing raw speed and memory safety. This architecture transition is often chosen to build high-performance WebAssembly tools, eliminate non-deterministic garbage collection pauses, or construct bulletproof backend infrastructure. The rewrite requires adopting strict static typing rules and explicit memory ownership models.",
   "diffs": [
     {
-      "category": "Type Architecture",
-      "from": "Dynamic, weak type rules.",
-      "to": "Static, strong type rules with affine type ownership validation."
+      "category": "Type System",
+      "from": "Dynamic types evaluated via loose coercion rules at runtime with open prototypical layouts.",
+      "to": "Static, strongly typed compilation backed by explicit generic constraints, algebraic data types, and compile-time verification."
     },
     {
-      "category": "Memory Integrity",
-      "from": "Automated background engine garbage collection.",
-      "to": "Compile-time ownership analysis checking borrow lifespans."
+      "category": "Syntax",
+      "from": "Flexible scripting conventions featuring dynamic closures, arrow notation, and loosely ordered executions.",
+      "to": "Explicit expression-oriented syntax utilizing explicit type annotations, pattern matching structures, and strict macro systems."
     },
     {
-      "category": "Execution Flow",
-      "from": "V8 JIT compilation executing inside an asynchronous loop.",
-      "to": "AOT optimized compilation powered by LLVM architectures."
+      "category": "Memory",
+      "from": "Automated engine heap analysis and background tracking via an internal runtime garbage collector.",
+      "to": "Compile-time memory safety governed by an explicit ownership model with strict lifetime and borrowing verification rules."
     },
     {
-      "category": "Error Management",
-      "from": "Runtime dynamic runtime exceptions (throw/catch).",
-      "to": "Monadic Result<T, E> and Option<T> type evaluations."
+      "category": "Async",
+      "from": "Built-in event loop scheduling macro/microtask queues using modern native Promises.",
+      "to": "Zero-cost asynchronous futures polled via pluggable runtime frameworks like Tokio, compiled into state machines."
     },
     {
-      "category": "Concurrency Rules",
-      "from": "Single thread event execution looping macro tasks.",
-      "to": "Data-race-free concurrent threading guaranteed by type bounds."
+      "category": "Standard Library",
+      "from": "Core library managing runtime variables, web data manipulation, and text processing frameworks.",
+      "to": "Low-level primitives for memory layouts, thread management, OS interfaces, and optimized container structures."
     }
   ],
   "examples": [
     {
-      "title": "Safe Option Parsing",
-      "description": "Validating missing data elements without risking runtime errors.",
-      "fromCode": "function display(msg) {\n    if (msg === null || msg === undefined) {\n        console.log(\"Empty\");\n    } else {\n        console.log(msg);\n    }\n}",
-      "toCode": "fn display(msg: Option<&str>) {\n    match msg {\n        Some(text) => println!(\"{}\", text),\n        None => println!(\"Empty\"),\n    }\n}"
+      "title": "Error Processing Optimization",
+      "description": "Transforming risky try/catch blocks into compile-time verified Result enum matching structures.",
+      "fromCode": "function parsing(str) {\n    try {\n        return JSON.parse(str);\n    } catch (e) {\n        return null;\n    }\n}",
+      "toCode": "fn parsing(str: &str) -> Result<serde_json::Value, serde_json::Error> {\n    serde_json::from_str(str)\n}"
     },
     {
-      "title": "Error Bound Transformations",
-      "description": "Validating operations using type-safe structures.",
-      "fromCode": "function divide(a, b) {\n    if (b === 0) throw new Error(\"Zero division\");\n    return a / b;\n}",
-      "toCode": "fn divide(a: f64, b: f64) -> Result<f64, &'static str> {\n    if b == 0.0 {\n        Err(\"Zero division\")\n    } else {\n        Ok(a / b)\n    }\n}"
+      "title": "Immutable State Control",
+      "description": "Converting dynamic object collections into explicit, type-safe vector mappings with pattern matching.",
+      "fromCode": "function filterScores(items) {\n    return items.filter(x => x > 10);\n}",
+      "toCode": "fn filter_scores(items: Vec<i32>) -> Vec<i32> {\n    items.into_iter().filter(|&x| x > 10).collect()\n}"
     }
   ],
   "tips": [
     {
-      "title": "Master Ownership Tracking",
-      "body": "Understand Rust's core concepts of ownership, moves, borrows, and lifespans to work effectively with the borrow checker."
+      "title": "Understand Memory Ownership",
+      "body": "Learn Rust's ownership model early. Passing parameters transfers data ownership unless you explicitly pass data references (&)."
     },
     {
-      "title": "Avoid Explicit Nil Allocations",
-      "body": "Replace null variables with explicit Option enums to intercept missing data during compilation."
+      "title": "Use Cargo Tooling",
+      "body": "Replace your npm execution steps with Cargo commands to compile packages and automate tests seamlessly."
     },
     {
-      "title": "Propagate Errors with Operators",
-      "body": "Use the question mark operator (?) to return errors early and simplify nested Result pipelines."
+      "title": "Map Exceptions to Enums",
+      "body": "Eliminate open runtime panics; refactor code execution flows around explicit Option and Result enum pipelines."
     },
     {
-      "title": "Leverage Pattern Matching",
-      "body": "Deconstruct structures using match or if let statements to ensure all code execution branches are accounted for."
+      "title": "Enforce Strict Immutability",
+      "body": "Variables are immutable by default in Rust. You must explicitly declare mutable state scopes using the 'mut' keyword."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can I reuse my existing JavaScript structure?",
+      "answer": "No, you must re-architect your data models around structs, traits, and explicit data lifespans to satisfy the compiler requirements."
+    },
+    {
+      "question": "What is the equivalent of 'null' in Rust?",
+      "answer": "Rust has no raw null values. Missing states must be explicitly wrapped inside the Option enum (Some/None) pattern."
+    },
+    {
+      "question": "How fast is Rust compared to JavaScript?",
+      "answer": "Rust compiles down to native machine binaries, delivering orders of magnitude faster execution speeds and significantly lower memory overhead than JS runtime engines."
     }
   ]
 }

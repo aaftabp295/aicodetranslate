@@ -1,62 +1,76 @@
 {
-  "intro": "Go's explicit error returns, goroutines, and static typing give way to Python's exceptions, `asyncio`, and dynamic runtime when porting in this direction. Go's `struct` types map to Python dataclasses or plain classes, goroutines can be approximated with `asyncio` tasks or `threading.Thread`, and Go's interface-based polymorphism translates to Python's duck-typed protocols. The resulting Python is typically far shorter but trades compile-time safety for runtime flexibility.",
+  "intro": "Moving code from Go to Python replaces a compiled, statically typed language optimized for high-performance backend infrastructure with an interpreted language optimized for developer ergonomics. Codebases are typically ported when system engineering demands pivot toward data analysis, machine learning scripting, or rapid feature iteration. This change simplifies language primitives at the cost of execution speed and memory footprint optimization.",
   "diffs": [
     {
-      "category": "Error handling",
-      "from": "Explicit (value, error) returns. Callers must check err != nil.",
-      "to": "Exceptions raised and propagated automatically. try/except at the boundary."
+      "category": "Type System",
+      "from": "Statically typed with explicit compilation, interface-driven structural typing, and no implicit runtime conversions.",
+      "to": "Dynamically typed with runtime evaluation, supporting optional structural protocols via abstract base classes or duck typing."
     },
     {
-      "category": "Typing",
-      "from": "Static; every symbol has a concrete type known at compile time.",
-      "to": "Dynamic; duck typing. Optional hints with mypy for static analysis."
+      "category": "Syntax",
+      "from": "Strict, opinionated syntax with mandatory error checking patterns, implicit structural keywords, and forced compilation rules.",
+      "to": "Flexible, whitespace-delimited syntax favoring brevity, exception handling blocks, and runtime flexibility."
     },
     {
-      "category": "Concurrency",
-      "from": "Goroutines + channels are first-class. Scheduler is part of the runtime.",
-      "to": "asyncio for I/O; threading for CPU (limited by GIL). Multiprocessing for true parallelism."
+      "category": "Memory",
+      "from": "Highly optimized allocation with low-latency garbage collection and explicit control over pointer indirection vs value copy.",
+      "to": "Reference-counted allocation with a cyclic garbage collector, inducing significant structural object overhead."
     },
     {
-      "category": "Collections",
-      "from": "slice ([]T), map[K]V. Set is map[T]struct{}.",
-      "to": "list, dict, set are built-in. Comprehensions for inline creation."
+      "category": "Async",
+      "from": "First-class CSP model utilizing lightweight goroutines and native channels for synchronization and message passing.",
+      "to": "Single-threaded cooperative multitasking utilizing an explicit event loop via the asyncio framework."
     },
     {
-      "category": "OOP model",
-      "from": "Composition via struct embedding. No inheritance. Interfaces are implicit.",
-      "to": "Class hierarchy with explicit inheritance. Multiple inheritance supported."
+      "category": "Standard Library",
+      "from": "Tailored for network primitives, HTTP servers, crypto, and low-level system communication without external dependencies.",
+      "to": "Broad-scoped platform containing OS interfaces, text processing libraries, and math utilities extended by a massive community package registry."
     }
   ],
   "examples": [
     {
-      "title": "Error return → exception",
-      "description": "Go's (result, error) pattern collapses into a Python function that raises on failure.",
-      "fromCode": "func readConfig(path string) (map[string]string, error) {\n    data, err := os.ReadFile(path)\n    if err != nil {\n        return nil, fmt.Errorf(\"readConfig: %w\", err)\n    }\n    // ... parse and return config\n    return config, nil\n}",
-      "toCode": "def read_config(path: str) -> dict[str, str]:\n    try:\n        with open(path) as f:\n            data = f.read()\n        # ... parse and return config\n        return config\n    except OSError as e:\n        raise RuntimeError(f\"read_config: {e}\") from e"
+      "title": "Concurrent Execution / Task Groups",
+      "description": "Converting Go channels and wait groups into Python asyncio tasks.",
+      "fromCode": "package main\nimport \"sync\"\n\nfunc worker(wg *sync.WaitGroup) {\n\tdefer wg.Done()\n\t// perform work\n}\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo worker(&wg)\n\twg.Wait()\n}",
+      "toCode": "import asyncio\n\nasync def worker():\n    pass  # perform work\n\nasync def main():\n    task = asyncio.create_task(worker())\n    await task\n\nasyncio.run(main())"
     },
     {
-      "title": "Struct + receiver → dataclass + method",
-      "description": "Go struct definitions and receiver methods translate directly to Python dataclasses.",
-      "fromCode": "type Point struct {\n    X, Y float64\n}\n\nfunc (p Point) Distance(other Point) float64 {\n    dx := p.X - other.X\n    dy := p.Y - other.Y\n    return math.Sqrt(dx*dx + dy*dy)\n}",
-      "toCode": "import math\nfrom dataclasses import dataclass\n\n@dataclass\nclass Point:\n    x: float\n    y: float\n\n    def distance(self, other: \"Point\") -> float:\n        dx = self.x - other.x\n        dy = self.y - other.y\n        return math.sqrt(dx**2 + dy**2)"
+      "title": "Error Handling Translation",
+      "description": "Transforming explicit multiple return values into standard try/except blocks.",
+      "fromCode": "package main\nimport (\"errors\"; \"fmt\")\n\nfunc compute(val int) (int, error) {\n\tif val < 0 { return 0, errors.New(\"negative\") }\n\treturn val * 2, nil\n}\n\nfunc main() {\n\tres, err := compute(-1)\n\tif err != nil {\n\t\tfmt.Println(err)\n\t}\n}",
+      "toCode": "def compute(val: int) -> int:\n    if val < 0:\n        raise ValueError(\"negative\")\n    return val * 2\n\ntry:\n    res = compute(-1)\nexcept ValueError as err:\n    print(err)"
     }
   ],
   "tips": [
     {
-      "title": "(value, error) → exceptions",
-      "body": "Go's if err != nil patterns become try/except blocks. Wrapping errors with fmt.Errorf(\"ctx: %w\", err) translates to raise RuntimeError(\"ctx\") from e."
+      "title": "Restructure Error Flow",
+      "body": "Strip away continuous 'if err != nil' patterns and collapse them into unified try-except-finally containment hierarchies."
     },
     {
-      "title": "Struct → dataclass or class",
-      "body": "Simple Go structs become @dataclass. Structs with complex receiver methods become regular classes. Go's struct embedding maps to Python composition (self.inner = Inner())."
+      "title": "Watch Goroutine Scalability",
+      "body": "Do not attempt a 1:1 map of millions of goroutines to Python threads. Python threads are OS-backed and will crash your system due to memory exhausted by overhead."
     },
     {
-      "title": "Goroutines → asyncio.gather",
-      "body": "Multiple goroutines collecting into a channel translate to async def functions run with asyncio.gather(). Use asyncio.Queue instead of channels."
+      "title": "Encapsulate Structs into Classes",
+      "body": "Convert Go structs and their associated receiver methods into standard Python classes with explicit self references."
     },
     {
-      "title": "Interface → Protocol",
-      "body": "Go interfaces (implicit satisfaction) map to Python typing.Protocol. Any class implementing the required methods satisfies it without explicit declaration."
+      "title": "Manage Virtual Environments",
+      "body": "Replace Go's rigid module system (go.mod) with isolated python environments (venv, poetry) to handle brittle runtime dependencies safely."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can I achieve Go's concurrency speeds in Python?",
+      "answer": "Not natively for CPU-bound problems due to the GIL. For I/O-bound processes, asyncio provides comparable architecture but operates slower per individual task execution."
+    },
+    {
+      "question": "How do I map Go interfaces to Python?",
+      "answer": "Python uses duck typing; if an object has the method, it works. For explicit static guarantees, subclass from typing.Protocol."
+    },
+    {
+      "question": "What happens to Go channels in Python?",
+      "answer": "You must replace them with queue.Queue for multi-threaded applications or asyncio.Queue for asynchronous code blocks."
     }
   ]
 }

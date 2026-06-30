@@ -1,62 +1,76 @@
 {
-  "intro": "JavaScript relies on explicit callback loops, promises, and dynamic prototypes to drive web applications. Transitioning to Ruby introduces a highly expressive, pure object-oriented environment where every data element is an object and developer flexibility is paramount. Developers move to Ruby to use the opinionated Ruby on Rails framework, simplify business logic, and eliminate asynchronous boilerplate.",
+  "intro": "Porting your codebase from JavaScript to Ruby swaps an asynchronous, event-driven scripting runtime for a pure object-oriented language focused on developer happiness and human-readable syntax. This path is commonly utilized when integrating with comprehensive backend framework platforms like Ruby on Rails. The conversion process repositions your execution pattern from an async event pipeline into a highly elegant object-driven model.",
   "diffs": [
     {
-      "category": "Paradigm Design",
-      "from": "Multi-paradigm engine utilizing functional patterns and prototype chains.",
-      "to": "Pure object-oriented architecture; all values are instances of a class."
+      "category": "Type System",
+      "from": "Dynamic types evaluated with lenient type coercion routines and prototype structure schemas.",
+      "to": "Strong dynamic typing where everything is an object, strictly rejecting invalid cross-type calculations."
     },
     {
-      "category": "Method Execution",
-      "from": "Parentheses required for calls; values are passed as references.",
-      "to": "Optional execution parentheses; high support for custom DSL building."
+      "category": "Syntax",
+      "from": "C-style brace scripting containing explicit return declarations and optional semicolon endings.",
+      "to": "Highly concise, natural language layout omitting brackets, parentheses, and explicit return statements from block evaluations."
     },
     {
-      "category": "Asynchronous Work",
-      "from": "Asynchronous non-blocking architecture driven by default.",
-      "to": "Synchronous execution blocks; multi-threading managed via OS or fiber pools."
+      "category": "Memory",
+      "from": "Engine-driven garbage collection optimized for short-duration variable scopes and UI rendering actions.",
+      "to": "Mark-and-sweep garbage collection engines managing highly abstract runtime object allocations dynamically."
     },
     {
-      "category": "Boolean Metrics",
-      "from": "Falsy parameters include 0, empty strings, undefined, null.",
-      "to": "Only false and nil evaluate to falsy values; 0 and empty strings are truthy."
+      "category": "Async",
+      "from": "Native asynchronous execution queues processing task pipelines via promises.",
+      "to": "Synchronous by design; concurrent execution requires explicit utilization of native threads, fibers, or background job runners."
     },
     {
-      "category": "Object Mutation",
-      "from": "Object properties are modified directly or extended at runtime.",
-      "to": "Encapsulated variables modified via explicit accessor methods or metaprogramming."
+      "category": "Standard Library",
+      "from": "Tailored for web platform APIs, browser layouts, and string conversions.",
+      "to": "Deep structural toolsets designed for string handling, metadata transformations, and system management scripting tasks."
     }
   ],
   "examples": [
     {
-      "title": "Dynamic Array Processing",
-      "description": "Filtering values out of sequences using functional block calls.",
-      "fromCode": "const scores = [45, 80, 95];\nconst high = scores.filter(s => s > 75);",
-      "toCode": "scores = [45, 80, 95]\nhigh = scores.select { |s| s > 75 }"
+      "title": "Array Iteration Logic",
+      "description": "Transforming standard array iterations into clean, idiomatic Ruby block processing loops.",
+      "fromCode": "function cleanItems(arr) {\n    return arr.map(x => x.trim().toLowerCase());\n}",
+      "toCode": "def clean_items(arr)\n  arr.map { |x| x.strip.downcase }\nend"
     },
     {
-      "title": "Class State Definition",
-      "description": "Creating objects that manage instance state through encapsulated properties.",
-      "fromCode": "class Account {\n    constructor(holder) { this.holder = holder; }\n}",
-      "toCode": "class Account\n  attr_accessor :holder\n  def initialize(holder)\n    @holder = holder\n  end\nend"
+      "title": "Dynamic Class Layouts",
+      "description": "Converting public JavaScript constructors into unified object representations using implicit returns.",
+      "fromCode": "class Device { \n    constructor(model) {\n        this.model = model;\n    }\n    info() { return this.model; }\n}",
+      "toCode": "class Device\n  def initialize(model)\n    @model = model\n  end\n  def info\n    @model\n  end\nend"
     }
   ],
   "tips": [
     {
-      "title": "Check Boolean Truthiness",
-      "body": "Re-evaluate conditional statements, because 0, empty strings, and empty arrays evaluate to true in Ruby."
+      "title": "Drop Explicit Returns",
+      "body": "Ruby automatically returns the evaluation result of the last line executed inside a block structure."
     },
     {
-      "title": "Omit Execution Parentheses",
-      "body": "Clean up function calls by omitting optional parentheses when calling idiomatic Ruby methods."
+      "title": "Convert Scopes to Instance Variables",
+      "body": "Replace internal class references (this.prop) with explicit instance variable markers (@prop) inside your models."
     },
     {
-      "title": "Use Attribute Synthesizers",
-      "body": "Avoid writing manual getter and setter methods by using attr_accessor, attr_reader, or attr_writer declarations."
+      "title": "Utilize Ruby Blocks Safely",
+      "body": "Swap out standard arrow functions and lambda handlers for clean, native Ruby block expressions."
     },
     {
-      "title": "Pass Logic with Blocks",
-      "body": "Replace JavaScript callback parameters with native Ruby blocks and yield instructions."
+      "title": "Watch Variable Conversions",
+      "body": "Python and Ruby strictly block adding numbers to text strings; enforce explicit type casting using methods like '.to_s' or '.to_i'."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What is the equivalent of an Object literal in Ruby?",
+      "answer": "Use Hash structures (e.g., { key: 'value' }) to manage flexible key-value data mappings safely."
+    },
+    {
+      "question": "How do I install external libraries?",
+      "answer": "Instead of using npm, Ruby relies on the Bundler system alongside a Gemfile to download library extensions called 'gems'."
+    },
+    {
+      "question": "Is Ruby single-threaded like JavaScript?",
+      "answer": "Ruby supports OS multi-threading, but its standard CRuby engine relies on a Global VM Lock (GVL) that restricts concurrent execution of Ruby bytecode to a single core."
     }
   ]
 }

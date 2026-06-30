@@ -1,62 +1,76 @@
 {
-  "intro": "Java's JVM ecosystem and object-oriented class hierarchy contrast with Go's lean compiled runtime and structural typing. Converting Java to Go replaces abstract classes and interfaces with Go interfaces (defined by method sets, not inheritance), maps Java's thread-pool executor to goroutines and channels, and substitutes Java's checked exceptions with Go's explicit `(value, error)` return convention. The result is typically leaner, faster, and more explicit.",
+  "intro": "Converting from Java to Go strips out the heavy runtime abstraction of the JVM in favor of a lean, compiled language that outputs static binaries. This migration is typically executed to minimize container startup latency, slash memory consumption, and optimize microservice architecture scaling profiles. The translation involves discarding object-oriented inheritance frameworks for Go's simplified composition-over-inheritance design.",
   "diffs": [
     {
-      "category": "OOP model",
-      "from": "Nominal typing; abstract classes, explicit implements, extends.",
-      "to": "Structural typing; interfaces satisfied implicitly by method sets. No inheritance."
+      "category": "Type System",
+      "from": "Statically typed, nominal object-oriented design emphasizing deep inheritance hierarchies and class-based polymorphism.",
+      "to": "Statically typed, structural layout favoring implicit interfaces and composition over inheritance paths."
     },
     {
-      "category": "Error handling",
-      "from": "Checked exceptions declared with throws. try/catch/finally.",
-      "to": "Errors as return values. No exceptions. defer for cleanup."
-    },
-    {
-      "category": "Concurrency",
-      "from": "Threads, synchronized, ExecutorService, CompletableFuture.",
-      "to": "Goroutines + channels. Lightweight (4 KB stack). Scheduler built into runtime."
+      "category": "Syntax",
+      "from": "Highly verbose, enterprise-oriented design requiring boilerplate classes, packages, and public/private declarations per file.",
+      "to": "Minimalist and strict, optimizing for code readability with reduced keywords and capital-letter-based visibility tracking."
     },
     {
       "category": "Memory",
-      "from": "JVM heap with generational GC. Objects always on heap.",
-      "to": "GC but compiler can stack-allocate via escape analysis. Smaller runtime footprint."
+      "from": "Heavy virtual machine (JVM) heap optimization using complex generational garbage collection schemes.",
+      "to": "Direct compilation to machine code with a low-latency, concurrent garbage collector optimizing for stack allocation."
     },
     {
-      "category": "Binary",
-      "from": "JVM bytecode; requires JRE. Fat JARs for distribution.",
-      "to": "Single statically-linked binary. No runtime dependency."
+      "category": "Async",
+      "from": "Thread pools (ExecutorService) or Virtual Threads managed by the runtime framework over OS-level scheduling.",
+      "to": "Native Communicating Sequential Processes (CSP) via lightweight, runtime-scheduled goroutines and native channels."
+    },
+    {
+      "category": "Standard Library",
+      "from": "Large enterprise frameworks bundled with a deep, historical hierarchy for reflection, manipulation, and UI components.",
+      "to": "Pragmatic, modern toolset designed natively for web systems, networking protocols, tooling, and low-level parsing."
     }
   ],
   "examples": [
     {
-      "title": "Interface implementation",
-      "description": "Java's explicit implements becomes implicit structural satisfaction in Go.",
-      "fromCode": "interface Animal {\n    String speak();\n    String name();\n}\n\nclass Dog implements Animal {\n    private String name;\n    Dog(String name) { this.name = name; }\n    public String speak() { return \"Woof!\"; }\n    public String name()  { return name; }\n}",
-      "toCode": "type Animal interface {\n    Speak() string\n    Name()  string\n}\n\ntype Dog struct{ name string }\n\nfunc (d Dog) Speak() string { return \"Woof!\" }\nfunc (d Dog) Name()  string { return d.name }\n\n// Dog implicitly satisfies Animal — no declaration needed"
+      "title": "Class Implementation vs Struct Composition",
+      "description": "Converting an inheritance/interface class to a Go struct with implicit interface alignment.",
+      "fromCode": "public interface Greeter {\n    String greet();\n}\npublic class User implements Greeter {\n    private String name;\n    public User(String name) { this.name = name; }\n    public String greet() { return \"Hello \" + this.name; }\n}",
+      "toCode": "type Greeter interface {\n\tGreet() string\n}\ntype User struct {\n\tName string\n}\nfunc (u User) Greet() string {\n\treturn \"Hello \" + u.Name\n}"
     },
     {
-      "title": "Checked exception → error return",
-      "description": "Java throws IOException becomes Go's (T, error) return pattern with defer for cleanup.",
-      "fromCode": "public String readFile(String path) throws IOException {\n    try (BufferedReader r = new BufferedReader(\n            new FileReader(path))) {\n        StringBuilder sb = new StringBuilder();\n        String line;\n        while ((line = r.readLine()) != null)\n            sb.append(line).append('\n');\n        return sb.toString();\n    }\n}",
-      "toCode": "func readFile(path string) (string, error) {\n    f, err := os.Open(path)\n    if err != nil {\n        return \"\", fmt.Errorf(\"readFile: %w\", err)\n    }\n    defer f.Close()\n    data, err := io.ReadAll(f)\n    if err != nil {\n        return \"\", fmt.Errorf(\"readFile: %w\", err)\n    }\n    return string(data), nil\n}"
+      "title": "Concurrent Execution",
+      "description": "Replacing thread pool executors with modern, native goroutines.",
+      "fromCode": "import java.util.concurrent.ExecutorService;\nimport java.util.concurrent.Executors;\n\npublic class App {\n    public static void main(String[] args) {\n        ExecutorService executor = Executors.newFixedThreadPool(2);\n        executor.submit(() -> System.out.println(\"Running\"));\n        executor.shutdown();\n    }\n}",
+      "toCode": "package main\nimport (\"fmt\"; \"time\")\n\nfunc main() {\n\tgo func() {\n\t\tfmt.Println(\"Running\")\n\t}()\n\ttime.Sleep(10 * time.Millisecond) // Simplified sync for illustration\n}"
     }
   ],
   "tips": [
     {
-      "title": "Replace class hierarchy with composition",
-      "body": "Java's extends becomes embedding: type Manager struct { Employee }. Go favours composition over inheritance — embed structs to reuse behaviour."
+      "title": "Flatten Class Trees",
+      "body": "Do not attempt to replicate extended class lineages. Unroll them completely using embedded Go structs to share data layouts instead."
     },
     {
-      "title": "throws → (T, error) returns",
-      "body": "Remove all throws declarations. Every function that can fail returns (value, error). Callers check if err != nil immediately after the call."
+      "title": "Reconstruct Exception Flow",
+      "body": "Eliminate try-catch structures. Explicitly evaluate and return instances of the 'error' interface as the final argument from Go functions."
     },
     {
-      "title": "ExecutorService → goroutines",
-      "body": "Java thread pools map to go func() {...}. Use sync.WaitGroup to wait for completion and buffered channels to limit concurrency."
+      "title": "Avoid Package Proliferation",
+      "body": "Java developers tend to make deep nested directories. Go favors flat, unified package layout structures per functional boundary."
     },
     {
-      "title": "finally → defer",
-      "body": "Java's finally block (for cleanup) maps to defer in Go. defer f.Close() runs when the surrounding function returns, regardless of how it exits."
+      "title": "Check Pointer Mutability",
+      "body": "Decide deliberately whether functions need a value receiver (copies data) or a pointer receiver (mutates original struct reference)."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Does Go have generics like Java?",
+      "answer": "Go introduces type parameters since version 1.18, allowing generic functions and types, but it omits advanced type constraints like variance or wildcards."
+    },
+    {
+      "question": "How do dependency injections translate?",
+      "answer": "Avoid heavy reflection frameworks like Spring. In Go, dependencies are explicitly initialized in your main entrypoint and passed downstream via constructors."
+    },
+    {
+      "question": "Where is the standard null pointer exception handled?",
+      "answer": "Go uses nil. Calling methods on nil pointer receivers will panic, requiring defensive checking before usage."
     }
   ]
 }

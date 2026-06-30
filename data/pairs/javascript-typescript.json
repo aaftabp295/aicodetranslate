@@ -1,62 +1,76 @@
 {
-  "intro": "TypeScript is a strict superset of JavaScript, so most JavaScript code is valid TypeScript — but the value comes from adding type annotations. Converting JavaScript to TypeScript means introducing interface and type declarations, annotating function parameters and return types, replacing `any`-typed patterns with proper generics, and enabling strict null checks. The result catches entire classes of runtime bugs at compile time.",
+  "intro": "Converting a codebase from JavaScript to TypeScript adds a robust static type layer over your existing execution infrastructure without altering the underlying runtime engine mechanics. This migration path provides developers with enhanced IDE autocompletion, compile-time error detection, and explicit documentation of internal code contracts. The transition turns implicit architecture assumptions into clear, verifiable type blueprints.",
   "diffs": [
     {
-      "category": "Type safety",
-      "from": "No types. Errors appear at runtime when values have unexpected shapes.",
-      "to": "Static type checking catches shape mismatches at compile time."
+      "category": "Type System",
+      "from": "Dynamic types evaluated purely at runtime, permitting arbitrary property additions and mutations.",
+      "to": "Static typing checked during compilation, supporting explicit interface models, generic constraints, and union types."
     },
     {
-      "category": "Tooling",
-      "from": "IDE hints rely on JSDoc comments or type inference from assignment.",
-      "to": "Rich autocomplete, refactoring, and error highlighting from the type graph."
+      "category": "Syntax",
+      "from": "Standard ECMAScript scripting layout containing variables, structures, and function definitions.",
+      "to": "Superset layout adding explicit type keywords, enums, type definitions, and access modifier declarations."
     },
     {
-      "category": "Interfaces",
-      "from": "Objects are plain. Duck typing is implicit and unchecked.",
-      "to": "interface and type alias define explicit structural contracts."
+      "category": "Memory",
+      "from": "Managed execution heap tracked via background engine garbage collection routines.",
+      "to": "Identical runtime behavior since TypeScript transpiles directly into standard JavaScript before execution."
     },
     {
-      "category": "Null handling",
-      "from": "Null/undefined errors are the most common runtime crash source.",
-      "to": "strictNullChecks forces you to handle null before using a value."
+      "category": "Async",
+      "from": "Single-threaded event loop queuing asynchronous operations via Promise blocks.",
+      "to": "Identical asynchronous architecture utilizing type-safe Promise declarations and typed async/await wrappers."
     },
     {
-      "category": "Generics",
-      "from": "Functions work on any type. No way to express parameterised behaviour.",
-      "to": "Generics <T> let you write type-safe reusable utilities like Array<T>."
+      "category": "Standard Library",
+      "from": "Standard browser/Node runtime tools governing variables, arrays, and IO systems.",
+      "to": "Identical runtime capabilities supplemented by extensive type declaration mappings for all core APIs."
     }
   ],
   "examples": [
     {
-      "title": "Adding types to a function",
-      "description": "TypeScript parameter and return type annotations catch argument mismatches at build time.",
-      "fromCode": "// JavaScript - no type safety\nfunction calculateTotal(items, taxRate) {\n  const subtotal = items.reduce(\n    (sum, item) => sum + item.price * item.qty,\n    0\n  );\n  return subtotal + subtotal * taxRate;\n}",
-      "toCode": "// TypeScript - compile-time checked\ninterface LineItem {\n  price: number;\n  qty: number;\n}\n\nfunction calculateTotal(\n  items: LineItem[],\n  taxRate: number\n): number {\n  const subtotal = items.reduce(\n    (sum, item) => sum + item.price * item.qty,\n    0\n  );\n  return subtotal + subtotal * taxRate;\n}"
+      "title": "Interface Structuring",
+      "description": "Transforming a loose payload into a type-safe interface declaration.",
+      "fromCode": "function processUser(user) {\n    return `User ${user.id}: ${user.email}`;\n}",
+      "toCode": "interface User {\n    id: number;\n    email: string;\n}\n\nfunction processUser(user: User): string {\n    return `User ${user.id}: ${user.email}`;\n}"
     },
     {
-      "title": "Extracting an interface from an API response",
-      "description": "Untyped fetch results gain compile-time shape guarantees through a response interface.",
-      "fromCode": "// JavaScript\nasync function getUser(id) {\n  const res = await fetch('/api/users/' + id);\n  const user = await res.json();\n  return user.name.toUpperCase(); // crashes if name missing\n}",
-      "toCode": "// TypeScript\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n}\n\nasync function getUser(id: number): Promise<string> {\n  const res = await fetch('/api/users/' + id);\n  const user: User = await res.json();\n  return user.name.toUpperCase(); // safe — name is required\n}"
+      "title": "Typed Function Arguments",
+      "description": "Enforcing data constraints on function parameters using inline type declarations.",
+      "fromCode": "function calculate(price, tax) {\n    return price * (1 + tax);\n}",
+      "toCode": "function calculate(price: number, tax: number): number {\n    return price * (1 + tax);\n}"
     }
   ],
   "tips": [
     {
-      "title": "Start with noImplicitAny",
-      "body": "Enable noImplicitAny in tsconfig first. This forces you to annotate any intentionally. From there, add strictNullChecks once nulls are handled."
+      "title": "Enable Strict Flags",
+      "body": "Activate the 'strict: true' rule in your tsconfig.json file to enforce robust type-checking protections."
     },
     {
-      "title": "Replace any with unknown",
-      "body": "When you truly don't know a type, prefer unknown over any. unknown forces you to narrow the type before using it, preventing silent bugs."
+      "title": "Avoid Any Typing",
+      "body": "Do not bypass compiler safety with the 'any' keyword. Utilize 'unknown' for unpredictable dynamic inputs instead."
     },
     {
-      "title": "Extract interfaces from usage",
-      "body": "For every object shape passed to multiple functions, extract an interface. This is the highest-ROI refactor when migrating a JavaScript codebase."
+      "title": "Migrate Incrementally",
+      "body": "Convert your application smoothly file-by-file by updating file extensions from .js to .ts one module at a time."
     },
     {
-      "title": "Use satisfies for literal objects",
-      "body": "The satisfies operator validates an object against a type without widening it. Ideal for config objects where you want both type safety and inferred literal types."
+      "title": "Install Type Declarations",
+      "body": "Download missing library typing files from the @types npm scope to ensure type safety across external third-party dependencies."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Does TypeScript run directly in the browser?",
+      "answer": "No. TypeScript must pass through a build step to be compiled into standard JavaScript files before execution in a browser or engine environment."
+    },
+    {
+      "question": "What happens to types at runtime?",
+      "answer": "Types undergo erasure during the compilation step, meaning they leave no runtime footprint or performance overhead in the final JavaScript file."
+    },
+    {
+      "question": "Are classes different in TypeScript?",
+      "answer": "TypeScript classes follow the ECMAScript standard but add useful features like access modifiers (public/private) and explicit class interface implementations."
     }
   ]
 }

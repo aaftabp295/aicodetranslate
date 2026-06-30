@@ -1,62 +1,76 @@
 {
-  "intro": "JavaScript's flexible execution engine works well for broad web scripting but lacks strict runtime guarantees. Moving to Swift transitions applications to a compiled, type-safe ecosystem engineered for performance on Apple platforms and optimized backend environments. This shift helps development teams eliminate runtime errors, use advanced value types, and maximize hardware utilization.",
+  "intro": "Transitioning code from JavaScript to Swift upgrades a dynamic web script architecture into a highly compiled, type-safe systems language optimized for Apple platforms and modern server runtimes. This migration eliminates common runtime script exceptions via strong compile-time validation rules and deterministic memory controls. The conversion process repositions your data logic into a highly optimized, safe structural ecosystem.",
   "diffs": [
     {
-      "category": "Type Validation",
-      "from": "Dynamic, loose tracking.",
-      "to": "Static, strong compile-time validation with type inference."
+      "category": "Type System",
+      "from": "Dynamic types evaluated via loose coercion rules at runtime with open prototypical layouts.",
+      "to": "Static strong typing featuring full inference, explicit protocols, generics, and strict compile-time checking."
     },
     {
-      "category": "Memory Layout",
-      "from": "Automated garbage collection cycles.",
-      "to": "Automatic Reference Counting (ARC) tracking instances at compile time."
+      "category": "Syntax",
+      "from": "Flexible C-style brace scripting containing dynamic variables and optional semicolon completions.",
+      "to": "Clean, highly expressive syntax omitting semicolons while requiring explicit structures and type controls."
     },
     {
-      "category": "Null Protection",
-      "from": "Variables can be null or undefined, risking runtime errors.",
-      "to": "Compile-time Optional types that prevent unexpected null access."
+      "category": "Memory",
+      "from": "Managed heap allocation governed by non-deterministic background engine garbage collection routines.",
+      "to": "Deterministic Automatic Reference Counting (ARC) tracking object references and releasing memory instantly upon scope exit."
     },
     {
-      "category": "Execution Model",
-      "from": "JIT-compiled bytecode executed inside a dedicated engine loop.",
-      "to": "Ahead-of-time compiled directly into native machine code."
+      "category": "Async",
+      "from": "Single-threaded event loop executing task queues using Promises and async/await syntax.",
+      "to": "Native actor-based concurrency utilizing async/await primitives to distribute background work safely across thread boundaries."
     },
     {
-      "category": "Data Structures",
-      "from": "Dynamic object structures and flexible array sequences.",
-      "to": "Explicit value types (structs, enums) and reference types (classes)."
+      "category": "Standard Library",
+      "from": "Core library managing runtime variables, web data manipulation, and text processing frameworks.",
+      "to": "Robust collection types, internationalization resources, file processing tools, and OS communication layers."
     }
   ],
   "examples": [
     {
-      "title": "Safe Value Unwrapping",
-      "description": "Accessing optional fields securely without causing app crashes.",
-      "fromCode": "function greeting(user) {\n    if (user) console.log(`Hi ${user}`);\n}",
-      "toCode": "func greeting(user: String?) {\n    if let name = user {\n        print(\"Hi \\(name)\")\n    }\n}"
+      "title": "Optional Data Handlers",
+      "description": "Converting runtime type validation conditions into compile-time verified Swift Optional unwrap blocks.",
+      "fromCode": "function display(msg) {\n    if (msg !== null && msg !== undefined) {\n        console.log(msg.trim());\n    }\n}",
+      "toCode": "func display(msg: String?) {\n    if let unwrapped = msg {\n        print(unwrapped.trimmingCharacters(in: .whitespacesAndNewlines))\n    }\n}"
     },
     {
-      "title": "Value Type Structs",
-      "description": "Defining lightweight, thread-safe models using structural configurations.",
-      "fromCode": "const coordinate = { x: 10, y: 20 };",
-      "toCode": "struct Coordinate {\n    let x: Double\n    let y: Double\n}"
+      "title": "Struct Blueprint Models",
+      "description": "Transforming dynamic JavaScript objects into efficient, value-typed Swift structs.",
+      "fromCode": "const createUser = (id, role) => {\n    return { id, role };\n};",
+      "toCode": "struct User {\n    let id: String\n    let role: String\n}\n\nfunc createUser(id: String, role: String) -> User {\n    return User(id: id, role: role)\n}"
     }
   ],
   "tips": [
     {
-      "title": "Break Reference Cycles",
-      "body": "Mark closure references and delegates as weak or unowned to prevent memory leaks under ARC."
+      "title": "Prefer Structs to Classes",
+      "body": "Use value-typed Swift structs by default to guarantee safe data isolation and eliminate multi-threaded data race risks."
     },
     {
-      "title": "Prefer Structs by Default",
-      "body": "Use structs for data models instead of classes to take advantage of value semantics and thread safety."
+      "title": "Avoid Retain Cycles",
+      "body": "Prevent memory leaks by marking parent reference connections as 'weak' or 'unowned' inside your class closures to avoid circular ARC holds."
     },
     {
-      "title": "Unwrap Optionals Safely",
-      "body": "Use if-let or guard-let patterns to unwrap optional values cleanly without risking runtime crashes."
+      "title": "Leverage Guard Statements",
+      "body": "Use Swift's 'guard' syntax early in functions to validate entry constraints and cleanly exit out of invalid execution paths."
     },
     {
-      "title": "Declare Constants with let",
-      "body": "Enforce data immutability by using \"let\" for all stable values and \"var\" only when values must change."
+      "title": "Maximize Type Inference",
+      "body": "Keep your code concise by omitting explicit type declarations when the compiler can accurately infer types from initialization data."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What matches JavaScript arrays in Swift?",
+      "answer": "Use Swift's native type-safe Array struct, which automatically enforces uniform type constraints on all contained elements."
+    },
+    {
+      "question": "Is Swift multi-threaded?",
+      "answer": "Yes. Swift includes modern structured concurrency primitives (Tasks, Actors) built to leverage multi-core processors efficiently."
+    },
+    {
+      "question": "Can I run Swift outside Apple platforms?",
+      "answer": "Yes. Swift is fully open-source and provides optimized deployment runtimes for Linux backend servers and containerized environments."
     }
   ]
 }

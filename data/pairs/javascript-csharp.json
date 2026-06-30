@@ -1,62 +1,76 @@
 {
-  "intro": "JavaScript's dynamic scripting works well for highly decoupled web interfaces but can become error-prone in enterprise environments. Transitioning to C# provides a robust, type-safe, component-driven architecture managed by Microsoft's .NET platform. This migration path helps engineering teams implement explicit software design patterns, maintain codebase stability at scale, and maximize backend compute efficiency.",
+  "intro": "Migrating from JavaScript to C# transforms a dynamic scripting stack into a structured, component-driven enterprise architecture hosted on the .NET runtime core. This upgrade provides developers with deep static safety guarantees, robust enterprise development pipelines, and multi-threaded processing mechanics. The shift requires moving from open prototype chaining models to rigorous nominal class structures.",
   "diffs": [
     {
-      "category": "Type Security",
-      "from": "Dynamic, weak type assumptions.",
-      "to": "Static, strict compile-time validation."
+      "category": "Type System",
+      "from": "Dynamic types resolved at runtime execution boundaries, permitting implicit field creations.",
+      "to": "Static, nominal typing architecture enforced at compilation, supporting clean explicit interfaces and generic abstractions."
     },
     {
-      "category": "Runtime Model",
-      "from": "Single-threaded event loop handling asynchronous logic.",
-      "to": "Multi-threaded execution engine backed by a generational garbage collector."
+      "category": "Syntax",
+      "from": "Lenient syntax rules supporting functional expressions, isolated code variables, and loosely ordered executions.",
+      "to": "Strict block-scoped layout requiring code encapsulation inside defined namespaces, classes, and formal visibility scopes."
     },
     {
-      "category": "Async Architecture",
-      "from": "Promise engines driven by macro/micro task scheduling.",
-      "to": "Task Parallel Library (TPL) utilizing thread pool task handoffs."
+      "category": "Memory",
+      "from": "Dynamic runtime engine memory garbage collector optimized for UI interface adjustments and DOM changes.",
+      "to": "High-performance generational garbage collector built directly into the .NET runtime framework."
     },
     {
-      "category": "OOP Mechanics",
-      "from": "Prototype chain inheritance structures.",
-      "to": "Strict class-based single inheritance with interface support."
+      "category": "Async",
+      "from": "Single-threaded event loop engine triggering microtask queues and asynchronous callback workflows.",
+      "to": "Task-based Asynchronous Pattern (TAP) using async/await syntax to distribute concurrent workloads across multi-core CPU threads."
     },
     {
-      "category": "Package Control",
-      "from": "npm or yarn package systems.",
-      "to": "NuGet package management integration."
+      "category": "Standard Library",
+      "from": "Focused on file/network IO primitives, browser DOM structures, and basic variable data utilities.",
+      "to": "Comprehensive .NET class ecosystem providing advanced LINQ data tools, native cryptography, and optimized data stream structures."
     }
   ],
   "examples": [
     {
-      "title": "Asynchronous Task Processing",
-      "description": "Executing a delayed background operations without freezing primary processing threads.",
-      "fromCode": "async function compute() {\n    await new Promise(r => setTimeout(r, 1000));\n    return \"done\";\n}",
-      "toCode": "using System.Threading.Tasks;\n\npublic class Computer {\n    public async Task<string> ComputeAsync() {\n        await Task.Delay(1000);\n        return \"done\";\n    }\n}"
+      "title": "Data Query and Processing",
+      "description": "Translating array functional maps into clean, structured .NET LINQ statements.",
+      "fromCode": "function processScores(scores) {\n    return scores\n        .filter(s => s >= 50)\n        .map(s => s * 10);\n}",
+      "toCode": "#include <vector>\nusing System.Collections.Generic;\nusing System.Linq;\n\npublic class Processor {\n    public static List<int> ProcessScores(List<int> scores) {\n        return scores\n            .Where(s => s >= 50)\n            .Select(s => s * 10)\n            .ToList();\n    }\n}"
     },
     {
-      "title": "Data Collection Mapping",
-      "description": "Transforming values inside array containers cleanly.",
-      "fromCode": "const source = [1, 2, 3];\nconst double = source.map(x => x * 2);",
-      "toCode": "using System.Linq;\nusing System.Collections.Generic;\n\npublic class Mapper {\n    public void Process() {\n        int[] source = { 1, 2, 3 };\n        var doubled = source.Select(x => x * 2).ToArray();\n    }\n}"
+      "title": "Asynchronous Task Definition",
+      "description": "Converting a standard JavaScript Promise routine into an idiomatic C# Task execution pattern.",
+      "fromCode": "function fetchPayload(client) {\n    return client.get('/api/v1')\n        .then(res => res.data);\n}",
+      "toCode": "using System.Net.Http;\nusing System.Threading.Tasks;\n\npublic class ApiService {\n    public static async Task<string> FetchPayloadAsync(HttpClient client) {\n        HttpResponseMessage response = await client.GetAsync(\"/api/v1\");\n        return await response.Content.ReadAsStringAsync();\n    }\n}"
     }
   ],
   "tips": [
     {
-      "title": "Apply LINQ Extensions",
-      "body": "Replace array array transformations like map and filter with C# LINQ syntax (Select and Where)."
+      "title": "Leverage LINQ Transformations",
+      "body": "Replace iterative for loops or complex map chains with C#'s highly expressive LINQ expression keywords."
     },
     {
-      "title": "Configure Access Visibility",
-      "body": "Explicitly mark classes and methods as public or internal, as C# defaults to private access."
+      "title": "Enforce Proper Properties",
+      "body": "Avoid raw public fields. Use implicit property accessors (public string Name { get; set; }) to preserve proper encapsulation patterns."
     },
     {
-      "title": "Handle Nullable References",
-      "body": "Enable nullable reference tracking to intercept potential null reference exceptions before compilation."
+      "title": "Handle Nullable Contexts",
+      "body": "Enable modern C# nullable context settings (#nullable enable) to track potential null assignment risks at compilation time."
     },
     {
-      "title": "Enforce Explicit Type Declarations",
-      "body": "Use explicit type declarations or the \"var\" keyword for local variables when the assigned type is clear."
+      "title": "Convert Structs explicitly",
+      "body": "Evaluate whether your lightweight data payloads fit C# 'struct' patterns rather than always relying on heavy heap-allocated classes."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can I use dynamic fields in C#?",
+      "answer": "Yes, C# includes the 'dynamic' keyword which bypasses static compile-time checking, but it should be used sparingly as it reduces type safety and performance."
+    },
+    {
+      "question": "What is the equivalent of JavaScript arrays in C#?",
+      "answer": "Use List<T> for dynamic resizing arrays, or T[] for fixed-length memory allocations."
+    },
+    {
+      "question": "How do modules translate?",
+      "answer": "JavaScript ES modules map directly to C# files wrapped in explicit namespace scopes, organized globally via assemblies and projects."
     }
   ]
 }

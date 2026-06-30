@@ -1,62 +1,76 @@
 {
-  "intro": "C++ requires manual memory management, explicit type declarations, and compile-time resolution — Python automates all of that. Porting C++ to Python means replacing `new`/`delete` with Python's garbage collector, translating pointer arithmetic to list indexing, converting C++ templates to Python generics or duck-typed functions, and replacing `std::vector`/`std::map` with `list`/`dict`. Header files disappear entirely.",
+  "intro": "Transitioning from C++ to Python trades strict compile-time performance and manual memory management for rapid development velocity and a highly expressive syntax. Developers typically convert codebases to leverage Python's extensive data science ecosystem or to simplify complex multi-threaded logic into high-level asynchronous workflows. This shift shifts the focus from machine-level optimization to architectural productivity.",
   "diffs": [
     {
+      "category": "Type System",
+      "from": "Statically typed with mandatory variable declarations, compile-time checking, and rigid object hierarchies.",
+      "to": "Dynamically and strongly typed where types are associated with values at runtime, eliminating explicit type declarations."
+    },
+    {
+      "category": "Syntax",
+      "from": "Verbose, block-scoped syntax utilizing semicolons, explicit braces, and mandatory boilerplate like main functions.",
+      "to": "Minimalist, indentation-scoped syntax where whitespace determines blocks, omitting semicolons and explicit wrappers for simple scripts."
+    },
+    {
       "category": "Memory",
-      "from": "Manual new/delete or RAII smart pointers. Destructors run deterministically.",
-      "to": "Garbage collected. Reference counting via CPython. No delete."
+      "from": "Manual memory management via RAII, smart pointers (unique_ptr, shared_ptr), or raw new/delete operators.",
+      "to": "Automated memory management driven by a reference-counting garbage collector supplemented by a cyclic garbage sweeper."
     },
     {
-      "category": "Typing",
-      "from": "Static, strong. Every variable has a compile-time type.",
-      "to": "Dynamic, duck-typed. Type hints optional. No compile step."
+      "category": "Async",
+      "from": "Low-level OS threads via std::thread, futures, promises, and synchronization primitives like std::mutex.",
+      "to": "High-level event-loop driven concurrency using the async/await syntax and built-in libraries like asyncio."
     },
     {
-      "category": "Compilation",
-      "from": "Compiled to native machine code. Headers + source files.",
-      "to": "Interpreted. Single file per module. No headers."
-    },
-    {
-      "category": "Collections",
-      "from": "std::vector, std::map, std::set from <vector>, <map>.",
-      "to": "list, dict, set built-in. Comprehensions for inline creation."
-    },
-    {
-      "category": "Error handling",
-      "from": "try/catch with exception types; error codes common in C-style APIs.",
-      "to": "Exceptions only. No error codes. try/except at the boundary."
+      "category": "Standard Library",
+      "from": "The Standard Template Library (STL) focusing on foundational containers, algorithms, and basic input/output utilities.",
+      "to": "A comprehensive \"batteries-included\" standard library containing rich modules for networking, file parsing, and system serialization."
     }
   ],
   "examples": [
     {
-      "title": "Vector operations",
-      "description": "C++ std::vector maps directly to Python list. Iterator loops become comprehensions.",
-      "fromCode": "#include <vector>\n#include <algorithm>\n#include <iostream>\n\nint main() {\n    std::vector<int> nums = {1,2,3,4,5,6,7,8};\n    std::vector<int> evens;\n    std::copy_if(nums.begin(), nums.end(),\n        std::back_inserter(evens),\n        [](int n){ return n % 2 == 0; });\n    for (int n : evens) std::cout << n << \" \";\n}",
-      "toCode": "nums = [1, 2, 3, 4, 5, 6, 7, 8]\nevens = [n for n in nums if n % 2 == 0]\nprint(*evens)"
+      "title": "Filtering an Array/List",
+      "description": "Converting explicit template-based iterator filtering into idiomatic list comprehensions.",
+      "fromCode": "#include <vector>\n#include <algorithm>\n\nstd::vector<int> filter_even(const std::vector<int>& nums) {\n    std::vector<int> result;\n    for (int n : nums) {\n        if (n % 2 == 0) result.push_back(n);\n    }\n    return result;\n}",
+      "toCode": "def filter_even(nums: list[int]) -> list[int]:\n    return [n for n in nums if n % 2 == 0]"
     },
     {
-      "title": "Class with constructor and method",
-      "description": "C++ class with explicit constructor and destructor translates to a Python class — GC handles cleanup.",
-      "fromCode": "class Rectangle {\n    double width, height;\npublic:\n    Rectangle(double w, double h)\n        : width(w), height(h) {}\n    ~Rectangle() {}  // trivial destructor\n\n    double area()      const { return width * height; }\n    double perimeter() const { return 2*(width+height); }\n};",
-      "toCode": "class Rectangle:\n    def __init__(self, width: float, height: float):\n        self.width = width\n        self.height = height\n    # No destructor needed — GC handles cleanup\n\n    def area(self) -> float:\n        return self.width * self.height\n\n    def perimeter(self) -> float:\n        return 2 * (self.width + self.height)"
+      "title": "Reading a File safely",
+      "description": "Replacing explicit RAII stream abstractions with context managers.",
+      "fromCode": "#include <fstream>\n#include <string>\n#include <iostream>\n\nvoid read_file(const std::string& path) {\n    std::ifstream file(path);\n    if (file.is_open()) {\n        std::string line;\n        while (std::getline(file, line)) {\n            std::cout << line << '\\n';\n        }\n    }\n}",
+      "toCode": "def read_file(path: str) -> None:\n    with open(path, 'r', encoding='utf-8') as file:\n        for line in file:\n            print(line, end='')"
     }
   ],
   "tips": [
     {
-      "title": "Delete memory management",
-      "body": "Remove all new, delete, and smart pointer (unique_ptr, shared_ptr) declarations. Python's garbage collector handles deallocation automatically."
+      "title": "Profile Before Porting",
+      "body": "Identify CPU-bound bottlenecks; hot paths reliant on raw cache-locality or SIMD operations will suffer significant performance drops in pure Python and may require C extensions."
     },
     {
-      "title": "Remove header files",
-      "body": "C++ separates declaration (.h) from implementation (.cpp). Python has none of that — everything lives in a single .py file. Merge headers into the module."
+      "title": "Adopt Type Hinting",
+      "body": "Mitigate the loss of compile-time safety by utilizing Python's typing module along with static analysis tools like mypy."
     },
     {
-      "title": "std::vector → list, std::map → dict",
-      "body": "Replace all STL containers with Python built-ins. vector<T> → list, map<K,V> → dict, unordered_set<T> → set, pair<A,B> → tuple."
+      "title": "Replace RAII with Context Managers",
+      "body": "Convert C++ scope-bound resource destructors directly into Python 'with' statements to ensure determinism in resource cleanup."
     },
     {
-      "title": "Remove const and & from signatures",
-      "body": "C++ const T& parameters become plain Python parameters. Python passes objects by reference automatically — no & needed."
+      "title": "Leverage Built-In Structures",
+      "body": "Avoid re-implementing basic search or sort algorithms; Python's internal dicts and lists are heavily optimized in C."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "How do I replace C++ templates in Python?",
+      "answer": "Python inherently handles this via duck typing, meaning functions accept any object that implements the required methods. For strict static checking, use TypeVar generics with typing hints."
+    },
+    {
+      "question": "Will my parallel code break due to Python's GIL?",
+      "answer": "Yes, true multi-threaded CPU parallelization is constrained by Python's Global Interpreter Lock (GIL). You must pivot to the multiprocessing module or utilize C extensions to run parallel compute intensive operations."
+    },
+    {
+      "question": "What is the equivalent of a pointer in Python?",
+      "answer": "Python does not expose pointers or address arithmetic. Every variable is an object reference, meaning mutable structures passed to functions behave similarly to pointers or references."
     }
   ]
 }

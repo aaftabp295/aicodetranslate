@@ -1,62 +1,76 @@
 {
-  "intro": "Kotlin dramatically reduces Java boilerplate while remaining fully JVM-compatible. Java's verbose getter/setter POJOs collapse into Kotlin `data class` declarations, `Optional<T>` is replaced by Kotlin's built-in null-safety operators (`?.`, `?:`, `!!`), anonymous inner classes become lambdas, and Java's checked exceptions simply disappear. The same logic that takes 50 lines of Java often fits in 15 lines of idiomatic Kotlin.",
+  "intro": "Porting from Java to Kotlin modernizes a codebase within the same JVM ecosystem, maintaining full interoperability while drastically reducing boilerplate code. This conversion targets safer engineering defaults by eliminating whole classes of common exceptions like null pointer issues directly at the compiler level. The result is a cleaner, more expressive architecture with modern features like coroutines.",
   "diffs": [
     {
-      "category": "Verbosity",
-      "from": "Full class/field/getter/setter boilerplate for every model.",
-      "to": "data class gives equals/hashCode/copy/toString in one line."
+      "category": "Type System",
+      "from": "Statically typed with primitive vs object divisions and implicit nullability permissions for all reference values.",
+      "to": "Statically typed with clear nullability boundaries baked directly into type declarations and unified object types."
     },
     {
-      "category": "Null safety",
-      "from": "All references nullable. NullPointerException at runtime.",
-      "to": "T vs T? enforced by compiler. Safe-call (?.) and Elvis (?:) operators."
+      "category": "Syntax",
+      "from": "Verbose syntax requiring semicolons, explicit getter/setter boilerplate, and rigid class declarations.",
+      "to": "Concise, expressive layout removing semicolons, auto-generating properties, and providing functional language extensions."
     },
     {
-      "category": "Coroutines",
-      "from": "CompletableFuture, thread pools, synchronized.",
-      "to": "Coroutines: suspend, launch, async, flow — lightweight and composable."
+      "category": "Memory",
+      "from": "Standard JVM runtime memory layouts allocating classes and garbage collecting object states.",
+      "to": "Identical JVM runtime behavior with extra optimizations like inline functions preventing object overhead in lambdas."
     },
     {
-      "category": "Functional",
-      "from": "Streams API (verbose). Anonymous inner classes for lambdas (pre-8).",
-      "to": "Collection extensions (filter, map, flatMap) directly on any Iterable."
+      "category": "Async",
+      "from": "Native OS threads, platform thread pools, or newly introduced project Loom virtual thread mechanisms.",
+      "to": "Lightweight, compiler-driven coroutines that pause execution state without blocking underlying runtime threads."
     },
     {
-      "category": "String templates",
-      "from": "String.format() or + concatenation.",
-      "to": "String templates: \"Hello, $name\" or \"Sum: ${a + b}\"."
+      "category": "Standard Library",
+      "from": "Traditional core Java packages expanded carefully across major version releases over decades.",
+      "to": "JDK enhancements focusing on functional collections, sequence streams, and utilities optimized for shorter code expressions."
     }
   ],
   "examples": [
     {
-      "title": "Java POJO → Kotlin data class",
-      "description": "25 lines of Java boilerplate collapses to a single Kotlin data class declaration.",
-      "fromCode": "public class Product {\n    private final String name;\n    private final double price;\n    private final boolean available;\n\n    public Product(String name, double price, boolean available) {\n        this.name = name; this.price = price; this.available = available;\n    }\n    public String getName()      { return name; }\n    public double getPrice()     { return price; }\n    public boolean isAvailable() { return available; }\n    // + equals, hashCode, toString...\n}",
-      "toCode": "data class Product(\n    val name: String,\n    val price: Double,\n    val isAvailable: Boolean,\n)\n// equals, hashCode, copy, toString all generated"
+      "title": "Data Class Definition",
+      "description": "Replacing standard Java POJO structures with concise Kotlin data classes.",
+      "fromCode": "public class User {\n    private final String name;\n    public User(String name) { this.name = name; }\n    public String getName() { return name; }\n}",
+      "toCode": "data class User(val name: String)"
     },
     {
-      "title": "Stream chain → Kotlin collection extensions",
-      "description": "Java's Stream API becomes Kotlin's built-in collection functions — no collect() needed.",
-      "fromCode": "List<String> names = products.stream()\n    .filter(p -> p.isAvailable())\n    .sorted(Comparator.comparing(Product::getPrice))\n    .map(Product::getName)\n    .collect(Collectors.toList());",
-      "toCode": "val names = products\n    .filter { it.isAvailable }\n    .sortedBy { it.price }\n    .map { it.name }"
+      "title": "Null-Safe Operations",
+      "description": "Converting explicit null checking structures into safe-call chains.",
+      "fromCode": "public class Handler {\n    public void process(String data) {\n        if (data != null) {\n            System.out.println(data.toUpperCase());\n        }\n    }\n}",
+      "toCode": "class Handler {\n    fun process(data: String?) {\n        println(data?.uppercase())\n    }\n}"
     }
   ],
   "tips": [
     {
-      "title": "POJO → data class",
-      "body": "Every Java POJO (fields + getters + equals/hashCode) becomes a Kotlin data class. Remove all getters — Kotlin properties are accessed directly: product.name, not product.getName()."
+      "title": "Leverage Interoperability",
+      "body": "Convert your codebase safely page by page. Kotlin communicates flawlessly with existing Java files inside the same build loop."
     },
     {
-      "title": "Optional<T> → nullable T?",
-      "body": "Replace Optional<T> with T?. Replace .orElse(default) with ?: default (Elvis operator). Replace .ifPresent{} with ?.let{}."
+      "title": "Replace Utilities with Extensions",
+      "body": "Eliminate static utility classes (e.g., StringUtils). Refactor them into clean Kotlin extension functions attached to target classes."
     },
     {
-      "title": "CompletableFuture → coroutines",
-      "body": "Add kotlinx.coroutines. Mark async methods suspend fun. Replace thenApply with direct sequential code inside a coroutine scope. Launch with viewModelScope.launch or runBlocking."
+      "title": "Enforce Strict Nullability",
+      "body": "Audit your Java parameters before porting; map them consciously to nullable (?) or non-nullable types based on actual code constraints."
     },
     {
-      "title": "Switch → when",
-      "body": "Java switch becomes Kotlin when. It's an expression: val label = when (code) { 1 -> \"one\" 2 -> \"two\" else -> \"other\" }. No fall-through."
+      "title": "Simplify Collections Management",
+      "body": "Switch standard streams definitions to Kotlin's direct collection functions like map, filter, and associateBy for cleaner execution syntax."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Does Kotlin replace Lombok?",
+      "answer": "Yes. Kotlin natively provides properties, data classes, and constructors, rendering Lombok annotations unnecessary."
+    },
+    {
+      "question": "Are Kotlin data classes identical to Java records?",
+      "answer": "They are conceptually very similar. Both generate structural equality and getters, but Kotlin data classes allow class mutability and handle inheritance differently."
+    },
+    {
+      "question": "Is there a performance cost when moving to Kotlin?",
+      "answer": "No, Kotlin compiles directly down to JVM bytecode, making its raw execution speed equivalent to native Java code."
     }
   ]
 }

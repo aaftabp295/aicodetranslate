@@ -1,62 +1,76 @@
 {
-  "intro": "PHP's web-centric execution model and dynamic typing share similarities with Python, but the idioms diverge significantly. PHP's `$` variable prefix and array functions (`array_map`, `array_filter`) translate to Python's plain variables and built-in `list` methods. PHP's mixed-type arrays become Python lists or dicts, `echo` statements become `print`, and PHP's `require`/`include` becomes Python's `import` system.",
+  "intro": "Converting a backend application from PHP to Python transitions your stack from a web-centric template engine to a general-purpose language ecosystem. This architectural shift is often executed to align server capabilities with modern machine learning stacks, data streaming platforms, or offline processing workflows. The migration trades a stateless, request-bound environment for a persistent application lifecycle.",
   "diffs": [
     {
-      "category": "Variable prefix",
-      "from": "All variables prefixed with $. $name, $count, $user.",
-      "to": "No prefix. Plain names: name, count, user."
+      "category": "Type System",
+      "from": "Gradual typing system supporting scalar hints, with a history of dynamic type coercion and implicit conversions.",
+      "to": "Strict dynamic typing with comprehensive, optional static type hints checked via third-party tools."
     },
     {
-      "category": "Type system",
-      "from": "Weakly typed; automatic coercion between strings and numbers.",
-      "to": "Dynamically typed; explicit conversion required (int(\"5\") not \"5\" + 1)."
+      "category": "Syntax",
+      "from": "C-style syntax featuring dollar signs ($) for variables, explicit semicolons, and string concatenation using the dot (.) operator.",
+      "to": "Clean, indentation-based syntax using explicit whitespace, standard assignment operators, and formatted f-strings."
     },
     {
-      "category": "Array model",
-      "from": "Single array type covers indexed lists, associative maps, and mixes.",
-      "to": "list for sequences, dict for key-value maps, set for unique values."
+      "category": "Memory",
+      "from": "Stateless, short-lived memory lifecycle where resources are completely isolated and torn down after every single HTTP request.",
+      "to": "Persistent state application lifecycle managing memory via reference counting and cyclic garbage collection across multiple requests."
     },
     {
-      "category": "Web focus",
-      "from": "Runs natively inside web servers (Apache/nginx). echo outputs HTML.",
-      "to": "General-purpose. Use Flask/Django/FastAPI for web. print() to stdout."
+      "category": "Async",
+      "from": "Historically synchronous and blocking, relying on server backends (FPM/Apache) to handle parallel requests via worker processes.",
+      "to": "Native asynchronous event loops using async/await syntax to handle concurrent connections within a single persistent process."
     },
     {
-      "category": "Error handling",
-      "from": "Older code uses error codes/warnings; modern PHP uses try/catch.",
-      "to": "Pure exception-based. Every error is an exception."
+      "category": "Standard Library",
+      "from": "Deeply focused on web tasks, providing hundreds of built-in functions for URL parsing, HTML handling, and database manipulation.",
+      "to": "Broad standard library encompassing system administration, networking, math, file manipulation, and data processing utilities."
     }
   ],
   "examples": [
     {
-      "title": "Array functions → list operations",
-      "description": "PHP's array_map/array_filter become Python list comprehensions or built-in functions.",
-      "fromCode": "$numbers = [1, 2, 3, 4, 5, 6, 7, 8];\n\n$evens  = array_filter($numbers, fn($n) => $n % 2 === 0);\n$squared = array_map(fn($n) => $n ** 2, $evens);\n\necho implode(', ', $squared); // 4, 16, 36, 64",
-      "toCode": "numbers = [1, 2, 3, 4, 5, 6, 7, 8]\n\nsquared = [n ** 2 for n in numbers if n % 2 == 0]\n\nprint(', '.join(str(n) for n in squared))  # 4, 16, 36, 64"
+      "title": "Array Manipulation vs Dictionary Manipulation",
+      "description": "Converting PHP associative arrays into native Python dictionary manipulations.",
+      "fromCode": "<?php\nfunction getPayload() {\n    $data = [\"status\" => \"active\", \"code\" => 200];\n    unset($data[\"code\"]);\n    return $data;\n}",
+      "toCode": "def get_payload() -> dict:\n    data = {\"status\": \"active\", \"code\": 200}\n    del data[\"code\"]\n    return data"
     },
     {
-      "title": "PHP class → Python class",
-      "description": "PHP visibility modifiers and type hints map cleanly to Python. The $ prefix and -> arrow disappear.",
-      "fromCode": "class User {\n    private string $name;\n    private int $age;\n\n    public function __construct(string $name, int $age) {\n        $this->name = $name;\n        $this->age  = $age;\n    }\n\n    public function greet(): string {\n        return \"Hello, \" . $this->name;\n    }\n}",
-      "toCode": "class User:\n    def __init__(self, name: str, age: int):\n        self._name = name\n        self._age  = age\n\n    def greet(self) -> str:\n        return \"Hello, \" + self._name"
+      "title": "String Formatting and Concatenation",
+      "description": "Transforming sigil-based string insertion into modern Python f-strings.",
+      "fromCode": "<?php\nfunction formatUser($name, $id) {\n    return \"User: \" . $name . \" (ID: \" . $id . \")\";\n}",
+      "toCode": "def format_user(name: str, id_num: int) -> str:\n    return f\"User: {name} (ID: {id_num})\""
     }
   ],
   "tips": [
     {
-      "title": "Strip the $ prefix from every variable",
-      "body": "PHP's $variable syntax is purely syntactic. Remove the $ from every identifier. $userList becomes user_list; $totalCount becomes total_count."
+      "title": "Shift to Application Frameworks",
+      "body": "PHP code often runs directly from files. In Python, you must use application frameworks like FastAPI, Django, or Flask to manage routes and state."
     },
     {
-      "title": "Split PHP arrays into list or dict",
-      "body": "If PHP array uses sequential integer keys, use Python list. If it uses string keys (associative), use dict. Mixed arrays should be refactored."
+      "title": "Manage Global State Carefully",
+      "body": "Because Python processes persist across multiple HTTP calls, global variables remain in memory. Ensure proper cleanup to avoid memory leaks."
     },
     {
-      "title": "array_* functions → comprehensions",
-      "body": "array_map($fn, $arr) → [fn(x) for x in arr]. array_filter($arr, $fn) → [x for x in arr if fn(x)]. array_reduce → functools.reduce."
+      "title": "Drop the Dollar Signs",
+      "body": "When translating code, strip out all variable prefix sigils ($) and transition your variable naming conventions from camelCase to snake_case."
     },
     {
-      "title": "echo / print → print()",
-      "body": "PHP echo and print statements become Python's print() function. String concatenation with . becomes + or f-strings."
+      "title": "Reconstruct Superglobals",
+      "body": "Map PHP superglobals like $_GET, $_POST, and $_SERVER directly to request payload context objects provided by your chosen Python web framework."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What is the Python equivalent to Composer?",
+      "answer": "Python uses package managers like pip or Poetry to download libraries, managing dependencies inside isolated environments using venv."
+    },
+    {
+      "question": "How do I deploy Python web applications?",
+      "answer": "Instead of utilizing PHP-FPM behind Nginx, Python applications use WSGI or ASGI servers like Gunicorn or Uvicorn to host persistent processes."
+    },
+    {
+      "question": "Is Python faster than PHP?",
+      "answer": "For basic web rendering, raw performance is comparable. However, Python's persistent memory architecture gives it a significant edge for heavy startup tasks like loading machine learning models."
     }
   ]
 }

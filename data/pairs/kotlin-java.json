@@ -1,62 +1,76 @@
 {
-  "intro": "Kotlin compiles to the same JVM bytecode as Java and is fully interoperable with it, so the conversion is largely syntactic. Kotlin's data classes become Java POJOs with getters/setters/equals/hashCode, `val`/`var` declarations become typed Java fields, extension functions become static utility methods, and Kotlin's null safety (`?` types) maps to Java's `Optional` or `@Nullable` annotations. Kotlin coroutines translate to `CompletableFuture` or `ExecutorService`.",
+  "intro": "Porting a codebase from Kotlin to Java steps back from modern syntax sugars to classic, class-based object orientation inside the JVM environment. This migration is typically driven by legacy enterprise alignment requirements, team training constraints, or specific toolchain compatibility needs. The conversion involves trading concise functional abstractions for formal, nominal boilerplate architectures.",
   "diffs": [
     {
-      "category": "Null safety",
-      "from": "Type system distinguishes nullable (T?) from non-null (T) at compile time.",
-      "to": "All references nullable by default. NPE is a runtime risk. Use Optional<T> or @Nullable."
+      "category": "Type System",
+      "from": "Static strong typing with explicit nullability tracking baked completely into the compiler constraints.",
+      "to": "Statically typed with implicit nullability permissions for all reference values, requiring defensive runtime validations."
     },
     {
-      "category": "Data classes",
-      "from": "data class generates equals, hashCode, copy, toString automatically.",
-      "to": "Record (Java 16+) gives similar benefits; POJO requires manual implementation."
+      "category": "Syntax",
+      "from": "Expressive, concise layout removing semicolons, auto-generating properties, and providing functional extensions.",
+      "to": "Verbose syntax requiring semicolons, explicit getter/setter boilerplate, and rigid class declarations."
     },
     {
-      "category": "Coroutines",
-      "from": "kotlinx.coroutines: suspend fun, launch, async, flow.",
-      "to": "CompletableFuture, ExecutorService, Project Reactor, or Virtual Threads (Java 21+)."
+      "category": "Memory",
+      "from": "Managed JVM runtime garbage execution profiles enhanced with inline optimization tracking routines.",
+      "to": "Standard JVM runtime memory layouts allocating classes and garbage collecting object states."
     },
     {
-      "category": "Extension fns",
-      "from": "Extension functions add methods to existing types without subclassing.",
-      "to": "No extension functions. Use static utility methods or wrapper classes."
+      "category": "Async",
+      "from": "Compiler-managed coroutine architectures executing non-blocking asynchronous routines natively.",
+      "to": "Native OS threads, platform thread pools, or newly introduced Project Loom virtual thread mechanisms."
     },
     {
-      "category": "Verbosity",
-      "from": "val/var, smart casts, when expression, string templates reduce boilerplate.",
-      "to": "More verbose. switch vs when, explicit casts, String.format() for interpolation."
+      "category": "Standard Library",
+      "from": "JDK enhancements focusing on functional collections, sequence streams, and utilities optimized for shorter code expressions.",
+      "to": "Traditional core Java packages expanded carefully across major version releases over decades."
     }
   ],
   "examples": [
     {
-      "title": "Data class → Java record",
-      "description": "Kotlin data class with copy() maps to a Java record for immutable value objects.",
-      "fromCode": "data class User(\n    val id: Int,\n    val name: String,\n    val email: String,\n    val active: Boolean = true,\n)\n\nval alice = User(1, \"Alice\", \"alice@example.com\")\nval updated = alice.copy(active = false)",
-      "toCode": "// Java 16+ record\npublic record User(\n    int id,\n    String name,\n    String email,\n    boolean active\n) {\n    // No copy() — create new record manually\n    User withActive(boolean active) {\n        return new User(id, name, email, active);\n    }\n}"
+      "title": "Data Record Representation",
+      "description": "Transforming a compact Kotlin data class into a classic Java class configuration with explicit boilerplate.",
+      "fromCode": "data class Employee(val id: Int, val name: String)",
+      "toCode": "public class Employee {\n    private final int id;\n    private final String name;\n\n    public Employee(int id, String name) {\n        this.id = id;\n        this.name = name;\n    }\n\n    public int getId() { return id; }\n    public String getName() { return name; }\n\n    @Override\n    public boolean equals(Object o) { /* ... */ return false; }\n    @Override\n    public int hashCode() { /* ... */ return 0; }\n}"
     },
     {
-      "title": "when expression → switch expression",
-      "description": "Kotlin's when is an expression; Java's switch expression (Java 14+) covers the same cases.",
-      "fromCode": "fun describe(n: Int): String = when {\n    n < 0  -> \"negative\"\n    n == 0 -> \"zero\"\n    n < 10 -> \"small positive\"\n    else   -> \"large positive\"\n}",
-      "toCode": "String describe(int n) {\n    return switch (Integer.signum(n)) {\n        case -1 -> \"negative\";\n        case  0 -> \"zero\";\n        default -> n < 10 ? \"small positive\" : \"large positive\";\n    };\n}"
+      "title": "Handling Null States Safely",
+      "description": "Converting explicit null-safe elvis expressions into standard Java defensive conditional structures.",
+      "fromCode": "fun printCode(info: Info?) {\n    val code = info?.code ?: \"DEFAULT\"\n    println(code)\n}",
+      "toCode": "public class Handler {\n    public void printCode(Info info) {\n        String code = (info != null && info.getCode() != null) ? info.getCode() : \"DEFAULT\";\n        System.out.println(code);\n    }\n}"
     }
   ],
   "tips": [
     {
-      "title": "Null-safe (?.) → Optional or null check",
-      "body": "Kotlin's user?.name becomes Optional.ofNullable(user).map(u -> u.name()).orElse(null) or an explicit if (user != null) guard in Java."
+      "title": "Generate Proper Fields",
+      "body": "Replace clean implicit property expressions with dedicated private variables paired with explicit getter and setter functions."
     },
     {
-      "title": "suspend fun → CompletableFuture",
-      "body": "Kotlin suspend functions map to Java CompletableFuture<T>. Kotlin's launch {} becomes CompletableFuture.runAsync(). Flow<T> maps to Reactive Streams or java.util.concurrent.Flow."
+      "title": "Add Defensive Null Checks",
+      "body": "Enforce safe boundaries against unexpected data crashes by adding manual Object.requireNonNull routines at entry barriers."
     },
     {
-      "title": "Extension functions → static utils",
-      "body": "Kotlin String.truncate() extensions become Java static methods: StringUtils.truncate(String s). Place them in a utility class."
+      "title": "Convert Extensions to Statics",
+      "body": "Unroll functional extension helpers by refactoring them into standalone static utility methods that accept target object references."
     },
     {
-      "title": "data class copy() → record constructor",
-      "body": "Java records are immutable and have no copy(). Replace alice.copy(active=false) with new User(alice.id(), alice.name(), alice.email(), false)."
+      "title": "Refactor Smart Casts",
+      "body": "Manually add structural type verification blocks coupled with explicit variable typecasting statements where Kotlin used to auto-cast."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What happens to Kotlin Coroutines in Java?",
+      "answer": "They cannot be handled directly as simple functions. You must refactor coroutine logic blocks into standard CompletableFuture instances or multi-threaded Executer Service pipelines."
+    },
+    {
+      "question": "How do I replace default argument parameters?",
+      "answer": "Java does not support default arguments. You must build out clean method overloading definitions to mimic this functional behavior."
+    },
+    {
+      "question": "Is there a performance reduction when moving to Java?",
+      "answer": "No. Both architectures output similar bytecode targets directed at the JVM, ensuring identical raw runtime execution speeds."
     }
   ]
 }
