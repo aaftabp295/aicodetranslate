@@ -224,7 +224,7 @@ export default async function ConvertPage({ params }: PageProps) {
                 className="rounded-full border-border bg-card hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground dark:hover:text-primary-foreground hover:border-transparent dark:hover:border-transparent cursor-pointer text-xs transition-all font-semibold"
               >
                 <Link href={`/convert-${from}-to-${target}`}>
-                  {fromDisplay} &rarr; {targetDisplay}
+                 Convert {fromDisplay} to {targetDisplay}
                 </Link>
               </Button>
             )

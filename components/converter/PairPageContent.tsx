@@ -118,7 +118,7 @@ export function PairPageContent({ from, to, fromDisplay, toDisplay }: Props) {
       <section className="space-y-5">
         <div>
           <h2 className="text-xl font-bold tracking-tight">
-            Migration Tips: {fromDisplay} → {toDisplay}
+            Migration Tips: Convert {fromDisplay} to {toDisplay}
           </h2>
           <p className="text-muted-foreground text-sm mt-1">
             Specific patterns to watch for when porting a {fromDisplay} codebase to {toDisplay}.
