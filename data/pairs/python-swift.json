@@ -1,62 +1,76 @@
 {
-  "intro": "Python provides cross-platform agility through structural dynamic typing and runtime flexibility. Transitioning to Swift delivers compiled performance, static guarantees, and native optimization targeting Apple platforms and performance-critical server backends. This migration path is selected when developers need to eliminate runtime errors, build native consumer applications, or optimize compute efficiency.",
+  "intro": "Python serves as a versatile language prominent in scripting, machine learning systems, and backend automation tasks, while Swift delivers a highly optimized compiled environment engineered for safety, performance, and Apple ecosystem software. Transitioning code to Swift provides exceptional bare-metal execution speeds, safe memory guarantees, and immediate native UI compiler hooks. This architectural move swaps dynamic layout interpretations for strict static typing, structured compile-time optionals, and deterministic resource scopes.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Dynamic, strongly typed with type hinting capabilities.",
-      "to": "Static, strongly typed with rigorous type inference."
+      "from": "Strong, dynamic typing. Type constraints are validated at runtime, permitting loose initialization assignments.",
+      "to": "Strong, static typing featuring compile-time type deduction, absolute null tracking via optionals, and protocol-oriented validation abstractions."
     },
     {
-      "category": "Memory Management",
-      "from": "Tracing Garbage Collection and reference counting.",
-      "to": "Deterministic Automatic Reference Counting (ARC) enforced at compile time."
+      "category": "Syntax",
+      "from": "Whitespace indentation architecture with clean expressions and minimal keyword overhead.",
+      "to": "C-style structural syntax utilizing braces, where statement semicolons are omitted and variable scopes are strictly defined."
     },
     {
-      "category": "Null Safety",
-      "from": "None checking handled entirely at runtime.",
-      "to": "Compile-time Optional types preventing unexpected null references."
+      "category": "Memory",
+      "from": "Automated resource lifecycle tracked via runtime reference pointers and an accompanying cyclical garbage sweep engine.",
+      "to": "Deterministic Automated Reference Counting (ARC), resolving object resource deallocations at compilation without background thread collection routines."
     },
     {
-      "category": "Value vs Reference",
-      "from": "Objects are reference-passed; simple primitives behave like values.",
-      "to": "Explicit Value types (structs, enums) vs Reference types (classes)."
+      "category": "Async",
+      "from": "Cooperative concurrency architecture driven by native async/await keywords and an integrated asyncio system manager.",
+      "to": "Modern structured concurrency model using native async/await keywords, structured task groups, and Actor isolation containers."
     },
     {
-      "category": "Execution Performance",
-      "from": "Interpreted bytecode with significant runtime overhead.",
-      "to": "Compiled directly to LLVM machine instructions for raw performance."
+      "category": "Standard Library",
+      "from": "Wide scripting toolkit offering native support for configurations, serialization, and automation tasks.",
+      "to": "Streamlined core library optimized for highly performant text formatting, mathematical array management, and modern system bindings."
     }
   ],
   "examples": [
     {
-      "title": "Optional Handling",
-      "description": "Safely unwrapping a variable that may containing a value or null.",
-      "fromCode": "def process(name: str | None):\n    if name is not None:\n        print(f\"Hello, {name}\")\n    else:\n        print(\"Anonymous\")",
-      "toCode": "func process(name: String?) {\n    if let unwrappedName = name {\n        print(\"Hello, \\(unwrappedName)\")\n    } else {\n        print(\"Anonymous\")\n    }\n}"
+      "title": "Safely unwrapping an optional value",
+      "description": "Compares evaluating missing reference states at runtime with Swift's strict compile-time optional unwrapping structures.",
+      "fromCode": "def greet(user):\n    name = user.get('name')\n    if name:\n        print(f'Hi {name}')",
+      "toCode": "func greet(user: [String: String]) {\n    if let name = user[\"name\"] {\n        print(\"Hi \\(name)\")\n    }\n}"
     },
     {
-      "title": "Struct Definitions",
-      "description": "Creating lightweight, immutable data structures with methods.",
-      "fromCode": "from dataclasses import dataclass\n\n@dataclass(frozen=True)\ndef Point:\n    x: float\n    y: float",
-      "toCode": "struct Point {\n    let x: Double\n    let y: Double\n}"
+      "title": "Defining an enum with associated values",
+      "description": "Shows the difference between flat Python enum definitions and Swift's advanced typed data variants.",
+      "fromCode": "from enum import Enum\nclass Result(Enum):\n    SUCCESS = 1\n    FAILURE = 2",
+      "toCode": "enum Result {\n    case success(payload: String)\n    case failure(code: Int)\n}"
     }
   ],
   "tips": [
     {
-      "title": "Break Reference Cycles",
-      "body": "Declare delegate or block references as \"weak\" or \"unowned\" to prevent memory leaks in Swift's ARC engine."
+      "title": "Understand Value vs Reference Typings",
+      "body": "Swift defaults to struct containers for most data models, which use pass-by-copy mechanics, unlike Python's universal pass-by-reference object models."
     },
     {
-      "title": "Default to Structs",
-      "body": "Prefer structs over classes by default to capitalize on value semantics and thread-safe data copying."
+      "title": "Enforce Safety Using guard Statements",
+      "body": "Use early-exit guard statements (e.g., guard let validation else { return }) to handle invalid condition states upfront and keep code paths clean."
     },
     {
-      "title": "Embrace Guard Statements",
-      "body": "Use early exits with \"guard let\" to unwrap optionals cleanly and minimize nested logic structures."
+      "title": "Default to let Identifiers",
+      "body": "Enforce immutability constraints natively by initializing all unmutated constants with 'let' instead of 'var' variables."
     },
     {
-      "title": "Specify Mutability explicitly",
-      "body": "Use \"let\" for all immutable constant values and \"var\" only when values must actively change."
+      "title": "Leverage Protocol Extensions",
+      "body": "Replace classical class-based inheritance architecture by writing protocol interfaces enriched with modular default extension behaviors."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Does Swift suffer from runtime garbage collection freezes?",
+      "answer": "No. Swift uses Automated Reference Counting (ARC) to free resources instantly when variable references hit zero, avoiding background thread stalls."
+    },
+    {
+      "question": "What is the Swift equivalent to a Python list comprehension?",
+      "answer": "You use functional chaining operators on arrays, replicating processing logic compactly via combinations like `array.map { ... }.filter { ... }`."
+    },
+    {
+      "question": "Can I deploy Swift applications on Linux servers?",
+      "answer": "Yes. Swift is fully open-source and provides official compiler releases optimized for Linux and server environments, backed by frameworks like Vapor."
     }
   ]
 }

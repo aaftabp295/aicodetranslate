@@ -1,62 +1,76 @@
 {
-  "intro": "Python manipulates collections sequentially using procedural logic or object-relational mapping patterns. SQL is a declarative query language designed to extract, transform, and manage relational database records. Developers rewrite data logic from Python into SQL to run queries directly inside the database engine, eliminating network latency and maximizing query performance.",
+  "intro": "Python functions as an imperative, procedural scripting environment optimized for algorithmic manipulation, file operations, and general software construction, whereas SQL is a declarative query language engineered exclusively for relational data interaction. Developers migrate procedural logic to SQL to leverage database internal execution optimization, push computations directly to storage layers, and reduce network extraction overhead. This shift requires abandoning loop sequences and object models in favor of set-based logic and relational algebra.",
   "diffs": [
     {
-      "category": "Execution Paradigm",
-      "from": "Imperative/procedural; you write the explicit steps to process data.",
-      "to": "Declarative; you specify the desired output criteria, and the engine optimizes execution."
+      "category": "Type System",
+      "from": "Strong, dynamic typing. Type validation occurs at runtime, and objects can change reference properties flexibly.",
+      "to": "Static, rigid schema types. Column types must be defined explicitly during table creation and are validated strictly during mutations."
     },
     {
-      "category": "Data Model",
-      "from": "In-memory object graphs, dynamic structures, and arrays.",
-      "to": "Relational tables structured into strict schemas of rows and columns."
+      "category": "Syntax",
+      "from": "Whitespace-delimited block structures executing in an imperative, line-by-line sequence.",
+      "to": "Declarative query statements ending in semicolons, specifying *what* data to retrieve or mutate rather than *how* to extract it."
     },
     {
-      "category": "Iteration Mechanism",
-      "from": "Explicit loops (for, while) or functional collection comprehensions.",
-      "to": "Set-based relational algebra operations (JOIN, WHERE, GROUP BY)."
+      "category": "Memory",
+      "from": "Managed via reference counters and object sweep threads tracking local heap variables within application scopes.",
+      "to": "Optimized by database storage engine allocation managers using buffer pools, temporary cache directories, and index mapping allocations."
     },
     {
-      "category": "State Continuity",
-      "from": "Transient in-memory execution states that reset when the script ends.",
-      "to": "Persistent ACID-compliant transaction states written directly to storage disks."
+      "category": "Async",
+      "from": "Managed via asyncio structures executing non-blocking system tasks across single runtime loops.",
+      "to": "Handled implicitly by database transaction engines scheduling parallel reads and writes across concurrent locking states."
     },
     {
-      "category": "Optimization Control",
-      "from": "Developer-optimized loops, reference tracking, and algorithmic choices.",
-      "to": "Query planner evaluations using internal indices and structural analytics."
+      "category": "Standard Library",
+      "from": "Extensive standard toolkit full of generalized utilities, web modules, file parsers, and data models.",
+      "to": "Focused set of built-in aggregate parameters, date arithmetic tools, math operators, and string formatting primitives."
     }
   ],
   "examples": [
     {
-      "title": "Filter and Aggregate Data",
-      "description": "Filtering data entries and calculating a sum based on a grouping key.",
-      "fromCode": "users = [\n    {\"role\": \"admin\", \"active\": True, \"login_count\": 10},\n    {\"role\": \"user\", \"active\": True, \"login_count\": 5}\n]\ntotal = sum(u[\"login_count\"] for u in users if u[\"active\"] and u[\"role\"] == \"admin\")",
-      "toCode": "SELECT SUM(login_count) AS total_logins\nFROM users\nWHERE active = true AND role = 'admin';"
+      "title": "Filtering and aggregating a dataset",
+      "description": "Compares imperative loop collection tracking against declarative relational filtering and aggregation.",
+      "fromCode": "users = [\n    {'role': 'admin', 'active': True},\n    {'role': 'user', 'active': True}\n]\ncount = len([u for u in users if u['active'] and u['role'] == 'admin'])",
+      "toCode": "SELECT COUNT(*)\nFROM users\nWHERE active = TRUE AND role = 'admin';"
     },
     {
-      "title": "Join Datasets",
-      "description": "Combining records from two distinct sources based on a shared tracking key.",
-      "fromCode": "users = {1: \"Alice\", 2: \"Bob\"}\norders = [{\"id\": 10, \"user_id\": 1, \"total\": 50.0}]\n\njoined = [\n    {\"name\": users[o[\"user_id\"]], \"total\": o[\"total\"]}\n    for o in orders if o[\"user_id\"] in users\n]",
-      "toCode": "SELECT u.name, o.total\nFROM orders o\nJOIN users u ON o.user_id = u.id;"
+      "title": "Updating record values conditionally",
+      "description": "Contrasts manually mutating objects within memory loops against a bulk table database modification statement.",
+      "fromCode": "for user in users:\n    if user['points'] > 100:\n        user['status'] = 'VIP'",
+      "toCode": "UPDATE users\nSET status = 'VIP'\nWHERE points > 100;"
     }
   ],
   "tips": [
     {
-      "title": "Think in Sets",
-      "body": "Avoid processing rows with procedural loops; use set-based filters and relational joins instead."
+      "title": "Think in Data Sets Rather Than Loops",
+      "body": "Avoid cursor definitions or loop routines in SQL. Express processing workflows through unified relational criteria to allow query optimizers to scale."
     },
     {
-      "title": "Utilize Database Indexes",
-      "body": "Ensure columns used frequently in WHERE and JOIN clauses are indexed to avoid full table scans."
+      "title": "Utilize Window Functions Natively",
+      "body": "Replace Python collection window slicing arrays with SQL window operations (e.g., ROW_NUMBER() OVER (...)) for efficient partition partitioning."
     },
     {
-      "title": "Leverage Aggregate Functions",
-      "body": "Offload calculations like SUM, AVG, and COUNT to the database engine instead of computing them in application memory."
+      "title": "Leverage Indexes for Performance",
+      "body": "Instead of loading entire datasets to search via application memory, create explicit database indexes to instantly reduce scanning scopes."
     },
     {
-      "title": "Use Prepared Statements",
-      "body": "Always parameterize dynamic inputs to protect database systems against SQL injection attacks."
+      "title": "Enforce Constraints at Storage Layers",
+      "body": "Port Python business validation rules directly into SQL schema constraints (NOT NULL, UNIQUE, CHECK) to ensure data repository integrity."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Is SQL faster than Python for processing transactional records?",
+      "answer": "Yes. SQL engines execute operations directly where data resides on disk or cache, eliminating the overhead of transferring large data rows to an external application interpreter."
+    },
+    {
+      "question": "What is the SQL equivalent to a Python try-except block?",
+      "answer": "Relational databases use transaction blocks (`BEGIN TRANSACTION` and `ROLLBACK`) or specific database-level error handlers inside stored procedures."
+    },
+    {
+      "question": "How do I implement conditional Python if-else logic inside a SQL query?",
+      "answer": "You use the declarative `CASE WHEN condition THEN result ELSE alternative END` statement block directly within your projection fields."
     }
   ]
 }

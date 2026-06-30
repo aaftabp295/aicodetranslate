@@ -1,62 +1,76 @@
 {
-  "intro": "Rust's ownership model and borrow checker represent a fundamentally different memory management philosophy from Python's garbage collector. When porting Python to Rust, every variable must have a defined lifetime, `list` becomes `Vec<T>`, `dict` becomes `HashMap<K, V>`, and Python exceptions are replaced with Rust's `Result<T, E>` type. The gain is predictable, zero-overhead performance with memory safety guarantees and no GC pauses.",
+  "intro": "Python prioritizes execution abstraction and immediate developer iteration using runtime script evaluation, while Rust guarantees compile-time memory safety, computational execution velocity, and zero-cost abstractions. Converting code to Rust removes runtime garbage collection pauses and interpreter overhead while ensuring thread safety natively. This migration replaces dynamic structural lookups with absolute type ownership rules, explicit lifecycles, and predictive compilation designs.",
   "diffs": [
     {
-      "category": "Memory model",
-      "from": "Garbage collected via reference counting (CPython). No manual memory.",
-      "to": "Ownership + borrow checker. Compile-time memory safety. No GC pauses."
+      "category": "Type System",
+      "from": "Strong, dynamic typing. Type checking happens at runtime, allowing variables to change bindings dynamically.",
+      "to": "Static, strong type system featuring comprehensive type inference, explicit generics, trait bounds, and algebraic data types."
     },
     {
-      "category": "Error handling",
-      "from": "Exceptions with try/except. Arbitrary nesting allowed.",
-      "to": "Result<T, E> and Option<T>. Errors are values, not control flow."
+      "category": "Syntax",
+      "from": "Whitespace indentation architecture with clean expressions and minimal keyword overhead.",
+      "to": "C-style brace syntax containing clear type declarations, macro calls (appending !), and pattern-matching control structures."
     },
     {
-      "category": "Type system",
-      "from": "Dynamic. Type hints optional and unenforced at runtime.",
-      "to": "Static, expressive, with algebraic data types (enum with data), traits, and lifetimes."
+      "category": "Memory",
+      "from": "Automatically managed via internal reference registries supplemented by a periodic cyclic collector routine.",
+      "to": "Governed at compile-time by an ownership tracking model with strict borrow checking rules, eliminating manual allocation and tracking routines."
     },
     {
-      "category": "Collections",
-      "from": "list (dynamic), dict (hash map), set — all built-in and zero friction.",
-      "to": "Vec<T>, HashMap<K,V>, HashSet<T> from std::collections. Must import explicitly."
+      "category": "Async",
+      "from": "Single-loop event runtime utilizing cooperative async task handlers inside the asyncio framework package.",
+      "to": "Zero-overhead Future model integrated into language syntax, requiring choosing a runtime executor (like Tokio) to scale."
     },
     {
-      "category": "Performance",
-      "from": "Interpreted; CPython has GIL. Typically 10–100x slower than Rust.",
-      "to": "Compiled to native code. Zero-cost abstractions. Comparable to C/C++ throughput."
+      "category": "Standard Library",
+      "from": "Batteries-included library full of general scripting, file formatting, network routing, and abstract models.",
+      "to": "Focused core library providing basic memory primitives, system OS channels, and highly performance collection setups."
     }
   ],
   "examples": [
     {
-      "title": "Function with fallible return",
-      "description": "Python exceptions map to Rust's Result<T, E>. The ? operator propagates errors ergonomically.",
-      "fromCode": "def parse_positive(s: str) -> int:\n    n = int(s)          # raises ValueError if not a number\n    if n <= 0:\n        raise ValueError(f\"Expected positive, got {n}\")\n    return n",
-      "toCode": "use std::num::ParseIntError;\n\nfn parse_positive(s: &str) -> Result<u32, String> {\n    let n: i64 = s.parse().map_err(|e: ParseIntError| e.to_string())?;\n    if n <= 0 {\n        return Err(format!(\"Expected positive, got {}\", n));\n    }\n    Ok(n as u32)\n}"
+      "title": "Safe error propagation via wrappers",
+      "description": "Compares an exception-raising Python method with Rust's type-safe compile-time Result enum construct.",
+      "fromCode": "def divide(a, b):\n    if b == 0:\n        raise ValueError('Divide by zero')\n    return a / b",
+      "toCode": "fn divide(a: f64, b: f64) -> Result<f64, String> {\n    if b == 0.0 {\n        return Err(String::from(\"Divide by zero\"));\n    }\n    Ok(a / b)\n}"
     },
     {
-      "title": "Struct and implementation block",
-      "description": "Python classes map to Rust struct + impl blocks. The derive macro generates boilerplate.",
-      "fromCode": "from dataclasses import dataclass\n\n@dataclass\nclass Rectangle:\n    width: float\n    height: float\n\n    def area(self) -> float:\n        return self.width * self.height\n\n    def is_square(self) -> bool:\n        return self.width == self.height",
-      "toCode": "#[derive(Debug, Clone)]\nstruct Rectangle {\n    width: f64,\n    height: f64,\n}\n\nimpl Rectangle {\n    fn area(&self) -> f64 {\n        self.width * self.height\n    }\n\n    fn is_square(&self) -> bool {\n        (self.width - self.height).abs() < f64::EPSILON\n    }\n}"
+      "title": "Matching structured enumeration variants",
+      "description": "Shows Python structural pattern checking matching against Rust's complete compile-time match validations.",
+      "fromCode": "def handle_status(status):\n    match status:\n        case 'ok': return 200\n        case 'error': return 500",
+      "toCode": "enum Status {\n    Ok,\n    Error,\n}\n\nfn handle_status(status: Status) -> u32 {\n    match status {\n        Status::Ok => 200,\n        Status::Error => 500,\n    }\n}"
     }
   ],
   "tips": [
     {
-      "title": "Wrap return values in Result/Option",
-      "body": "Every function that can fail returns Result<T, E>. Functions that may return nothing return Option<T>. Use the ? operator to propagate errors up the call stack."
+      "title": "Internalize Ownership and Borrowing",
+      "body": "Understand that variables take exclusive ownership of values. Pass references using an ampersand (&) to allow values to be read without transferring ownership."
     },
     {
-      "title": "list → Vec<T>",
-      "body": "Python list becomes Vec<T>. Literal [1,2,3] becomes vec![1,2,3]. list.append(x) becomes vec.push(x). list comprehensions become .iter().filter().map().collect()."
+      "title": "Replace Null with Option",
+      "body": "Rust does not have a null value. Replicate optional data states by leveraging the standard Option<T> enum containing Some(T) and None."
     },
     {
-      "title": "dict → HashMap<K,V>",
-      "body": "Python dict becomes std::collections::HashMap<K,V>. Must be imported. Initialize with HashMap::new() or the hashmap! macro from external crates."
+      "title": "Leverage Pattern Matching Natively",
+      "body": "Use the match control structure for explicit condition routing; the compiler will verify all logic branches are covered."
     },
     {
-      "title": "String vs &str",
-      "body": "Python str maps to both: String (owned, heap-allocated) and &str (borrowed string slice). Function parameters usually accept &str; owned storage uses String."
+      "title": "Separate Logic via Traits",
+      "body": "Replace traditional class inheritance logic by declaring shared interfaces using 'trait' containers, then implementing them for target configurations."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What is the Rust equivalent of a Python dictionary?",
+      "answer": "The primary alternative is `std::collections::HashMap`, which requires predefined, fixed compile-time types for keys and values."
+    },
+    {
+      "question": "Does Rust have a garbage collector?",
+      "answer": "No. Rust resolves memory allocation lifecycles at compile time using ownership scope rules, freeing memory the moment a variable drops out of scope."
+    },
+    {
+      "question": "Can I use Rust to speed up slow Python routines?",
+      "answer": "Yes, you can write native extensions in Rust using the `PyO3` framework, allowing you to call compiled Rust functions directly inside Python."
     }
   ]
 }

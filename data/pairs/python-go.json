@@ -1,62 +1,76 @@
 {
-  "intro": "Python's dynamic typing and interpreted runtime trade raw speed for development velocity; Go's compiled, statically typed runtime inverts that trade-off. Converting Python to Go requires explicitly typing every variable and function signature, replacing Python's exception handling with Go's idiomatic `error` return values, and restructuring goroutine-friendly concurrency patterns in place of Python threads or `asyncio`. Python's `dict` becomes Go's `map`, and slices replace lists.",
+  "intro": "Python prioritizes extreme flexibility and rapid scripting capability via dynamic execution, while Go emphasizes engineering simplicity, high concurrency, and exceptional network performance. Transitioning to Go produces highly optimized, self-contained binaries that eliminate interpreter overhead and scale seamlessly across multi-core processors. This migration swaps flexible object patterns for strict compile-time verification and explicit, idiomatic error paths.",
   "diffs": [
     {
-      "category": "Type system",
-      "from": "Dynamic; type hints optional and unenforced at runtime.",
-      "to": "Static; every variable and parameter must have a declared type."
+      "category": "Type System",
+      "from": "Dynamic typing with optional type annotations that do not enforce constraints or format safety during execution.",
+      "to": "Static, strong type system relying on implicit type deduction alongside duck-typed, structural interfaces evaluated at compile time."
     },
     {
-      "category": "Error handling",
-      "from": "Exceptions raised with raise; caught with try/except.",
-      "to": "Errors returned as second return value. No exceptions (except panic for fatal bugs)."
+      "category": "Syntax",
+      "from": "Clean layouts governed by structural indentation blocks, bypassing structural tokens or block terminating symbols.",
+      "to": "C-style syntax using braces and mandatory structured blocks. Emphasizes minimalist keywords and strict, opinionated compiler rules."
     },
     {
-      "category": "Concurrency",
-      "from": "asyncio for I/O; threading constrained by GIL for CPU work.",
-      "to": "Goroutines are lightweight threads multiplexed over OS threads. No GIL."
+      "category": "Memory",
+      "from": "Automated resource lifecycle tracked via runtime reference pointers and an accompanying cyclical garbage sweep engine.",
+      "to": "Managed via an ultra-low latency, concurrent garbage collector optimized for heap management without stop-the-world stalls."
     },
     {
-      "category": "Collections",
-      "from": "list, dict, set are built-in dynamic types.",
-      "to": "slice ([]T), map[K]V. No built-in set — use map[T]struct{}."
+      "category": "Async",
+      "from": "Orchestrated single-threaded event processing using coroutines, futures, and the explicit asyncio platform module.",
+      "to": "First-class concurrency using goroutines (lightweight green threads managed by the runtime) and typed communication channels."
     },
     {
-      "category": "Compilation",
-      "from": "Interpreted; startup is fast but steady-state throughput is lower.",
-      "to": "Compiled to a single static binary. Fast startup, lower memory, high throughput."
+      "category": "Standard Library",
+      "from": "Batteries-included library providing high-level scripting, parsing, and data manipulation tools.",
+      "to": "Highly functional standard library optimized for building scalable network microservices, web servers, and low-level system software."
     }
   ],
   "examples": [
     {
-      "title": "Function with error return",
-      "description": "Python exceptions become Go's idiomatic (value, error) double return pattern.",
-      "fromCode": "def divide(a: float, b: float) -> float:\n    if b == 0:\n        raise ValueError(\"division by zero\")\n    return a / b\n\ntry:\n    result = divide(10, 0)\nexcept ValueError as e:\n    print(\"Error:\", e)",
-      "toCode": "import \"errors\"\nimport \"fmt\"\n\nfunc divide(a, b float64) (float64, error) {\n    if b == 0 {\n        return 0, errors.New(\"division by zero\")\n    }\n    return a / b, nil\n}\n\nresult, err := divide(10, 0)\nif err != nil {\n    fmt.Println(\"Error:\", err)\n}"
+      "title": "Concurrent worker execution",
+      "description": "Compares executing concurrent tasks between Python asyncio and Go's native goroutines.",
+      "fromCode": "import asyncio\n\nasync def worker(worker_id):\n    print(f'Worker {worker_id} running')\n\nasync def main():\n    await asyncio.gather(*(worker(i) for i in range(3)))\nasyncio.run(main())",
+      "toCode": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc worker(id int, wg *sync.WaitGroup) {\n\tdefer wg.Done()\n\tfmt.Printf(\"Worker %d running\\n\", id)\n}\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 3; i++ {\n\t\twg.Add(1)\n\t\tgo worker(i, &wg)\n\t}\n\twg.Wait()\n}"
     },
     {
-      "title": "Struct vs Python class",
-      "description": "Python classes with methods translate to Go structs with receiver functions.",
-      "fromCode": "class Rectangle:\n    def __init__(self, width: float, height: float):\n        self.width = width\n        self.height = height\n\n    def area(self) -> float:\n        return self.width * self.height\n\n    def perimeter(self) -> float:\n        return 2 * (self.width + self.height)",
-      "toCode": "type Rectangle struct {\n    Width  float64\n    Height float64\n}\n\nfunc (r Rectangle) Area() float64 {\n    return r.Width * r.Height\n}\n\nfunc (r Rectangle) Perimeter() float64 {\n    return 2 * (r.Width + r.Height)\n}"
+      "title": "Reading configuration data and handling errors",
+      "description": "Shows the structural difference between Python exception trapping and Go's explicit error value tracking.",
+      "fromCode": "try:\n    with open('cfg.txt') as f:\n        cfg = f.read()\nexcept FileNotFoundError as err:\n    print(f'Error: {err}')",
+      "toCode": "package main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc main() {\n\tcfg, err := os.ReadFile(\"cfg.txt\")\n\tif err != nil {\n\t\tfmt.Printf(\"Error: %v\\n\", err)\n\t\treturn\n\t}\n\t_ = cfg\n}"
     }
   ],
   "tips": [
     {
-      "title": "Replace exceptions with error returns",
-      "body": "Every function that can fail should return (T, error). Callers check if err != nil before using the result. Use fmt.Errorf(\"context: %w\", err) to wrap errors with context."
+      "title": "Handle Errors as Normal Values",
+      "body": "Go does not implement exceptions. Functions return an error interface value as their final output; always check if this value is nil before proceeding."
     },
     {
-      "title": "list → slice, dict → map",
-      "body": "Python list becomes []T (e.g. []int). Python dict[str]int becomes map[string]int. Initialize maps with make(map[string]int) before writing to them."
+      "title": "Use Structs Instead of Loose Dictionaries",
+      "body": "Instead of unconstrained maps, model your incoming data payloads or configuration configurations into statically typed Go structs."
     },
     {
-      "title": "No list comprehensions",
-      "body": "Go has no comprehension syntax. Replace [x for x in items if cond] with a for range loop that appends to a pre-allocated slice: result = append(result, x)."
+      "title": "Avoid Excessive Pointer Use",
+      "body": "Go passes by value. Use pointers explicitly when you need to modify the original struct state or avoid copying large underlying allocations."
     },
     {
-      "title": "Goroutines for concurrency",
-      "body": "Python's asyncio.gather maps to launching goroutines with go func() and collecting results via a sync.WaitGroup or channels."
+      "title": "Utilize gofmt for Uniform Styling",
+      "body": "Go enforces a universal formatting style through the 'gofmt' utility. Avoid configuring bespoke styling guidelines; adopt the community standard."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can a Go channel replace Python's asyncio Queue?",
+      "answer": "Yes, Go channels are native synchronization primitives designed for thread-safe message passing between goroutines, making queues obsolete for typical use cases."
+    },
+    {
+      "question": "How are unexported fields handled in Go compared to Python's underscores?",
+      "answer": "Go uses capitalization for visibility control. Fields or functions starting with an uppercase letter are public (exported); lowercase items remain package-private."
+    },
+    {
+      "question": "Does Go support object inheritance?",
+      "answer": "No, Go lacks class-based inheritance. It promotes composition by embedding structures within other structures, combined with flexible interfaces."
     }
   ]
 }

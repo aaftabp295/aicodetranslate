@@ -1,62 +1,76 @@
 {
-  "intro": "Rewriting Rust in Python prioritises developer ergonomics and iteration speed over Rust's zero-cost abstractions and memory-safety guarantees. Rust's ownership and lifetimes disappear — Python's garbage collector handles memory automatically. Rust's `Result` and `Option` types map to Python's exception handling and `None`. The tradeoff is reduced performance and no compile-time memory safety, but significantly faster development and a much shorter codebase.",
+  "intro": "Rust delivers strict compile-time safety boundaries, deterministic resource handling, and bare-metal performance, while Python provides exceptional developer velocity through rapid runtime scripting interpolation. Developers migrate software systems from Rust to Python to simplify prototyping cycles, streamline data exploration workflows, and leverage extensive machine learning packages. This rewrite path replaces ownership tracking rules and explicit lifespan models with dynamic, automated reference-counted object bindings.",
   "diffs": [
     {
-      "category": "Memory model",
-      "from": "Ownership + borrow checker. No GC. Compile-time lifetime enforcement.",
-      "to": "Garbage collected (reference counting). No manual memory management."
+      "category": "Type System",
+      "from": "Static, strong type system featuring comprehensive type inference, explicit generics, trait bounds, and algebraic data types.",
+      "to": "Strong, dynamic typing. Type checking happens at runtime, allowing variables to change bindings dynamically."
     },
     {
-      "category": "Error handling",
-      "from": "Result<T,E> and Option<T> as return values. ? operator for propagation.",
-      "to": "Exceptions. try/except at boundaries. No checked errors."
+      "category": "Syntax",
+      "from": "C-style brace syntax containing clear type declarations, macro calls (appending !), and pattern-matching control structures.",
+      "to": "Whitespace indentation architecture with clean expressions and minimal keyword overhead."
     },
     {
-      "category": "Performance",
-      "from": "Native code, zero-cost abstractions. Predictable low latency.",
-      "to": "Interpreted; CPython GIL limits CPU parallelism. ~10–100x slower."
+      "category": "Memory",
+      "from": "Governed at compile-time by an ownership tracking model with strict borrow checking rules, eliminating manual allocation and tracking routines.",
+      "to": "Automatically managed via internal reference registries supplemented by a periodic cyclic collector routine."
     },
     {
-      "category": "Verbosity",
-      "from": "Explicit ownership annotations, lifetimes, and trait bounds.",
-      "to": "Terse. Variables are dynamic. No lifetime annotations."
+      "category": "Async",
+      "from": "Zero-overhead Future model integrated into language syntax, requiring choosing a runtime executor (like Tokio) to scale.",
+      "to": "Single-loop event runtime utilizing cooperative async task handlers inside the asyncio framework package."
     },
     {
-      "category": "Concurrency",
-      "from": "Fearless concurrency: send/sync traits prevent data races at compile time.",
-      "to": "GIL prevents true thread parallelism. Use multiprocessing for CPU parallelism."
+      "category": "Standard Library",
+      "from": "Focused core library providing basic memory primitives, system OS channels, and highly performance collection setups.",
+      "to": "Batteries-included library full of general scripting, file formatting, network routing, and abstract models."
     }
   ],
   "examples": [
     {
-      "title": "Result → exception",
-      "description": "Rust's match on Result translates to Python's try/except with the same branching logic.",
-      "fromCode": "fn read_number(s: &str) -> Result<i32, String> {\n    s.parse::<i32>().map_err(|e| e.to_string())\n}\n\nmatch read_number(\"42\") {\n    Ok(n)  => println!(\"Got: {}\", n),\n    Err(e) => eprintln!(\"Error: {}\", e),\n}",
-      "toCode": "def read_number(s: str) -> int:\n    try:\n        return int(s)\n    except ValueError as e:\n        raise ValueError(str(e)) from e\n\ntry:\n    n = read_number(\"42\")\n    print(f\"Got: {n}\")\nexcept ValueError as e:\n    print(f\"Error: {e}\", file=sys.stderr)"
+      "title": "Safe error propagation via wrappers",
+      "description": "Compares a type-safe compile-time Rust Result enum construct with an exception-raising Python method.",
+      "fromCode": "fn divide(a: f64, b: f64) -> Result<f64, String> {\n    if b == 0.0 {\n        return Err(String::from(\"Divide by zero\"));\n    }\n    Ok(a / b)\n}",
+      "toCode": "def divide(a, b):\n    if b == 0:\n        raise ValueError('Divide by zero')\n    return a / b"
     },
     {
-      "title": "Struct + impl → class",
-      "description": "Rust structs with impl blocks map directly to Python classes. Drop ownership annotations entirely.",
-      "fromCode": "struct Counter {\n    count: u32,\n    max: u32,\n}\n\nimpl Counter {\n    fn new(max: u32) -> Self {\n        Counter { count: 0, max }\n    }\n    fn increment(&mut self) -> Option<u32> {\n        if self.count < self.max {\n            self.count += 1;\n            Some(self.count)\n        } else { None }\n    }\n}",
-      "toCode": "class Counter:\n    def __init__(self, max_val: int):\n        self.count = 0\n        self.max = max_val\n\n    def increment(self) -> int | None:\n        if self.count < self.max:\n            self.count += 1\n            return self.count\n        return None"
+      "title": "Matching structured enumeration variants",
+      "description": "Shows Rust's complete compile-time match validations contrasting with Python structural pattern checking.",
+      "fromCode": "enum Status {\n    Ok,\n    Error,\n}\n\nfn handle_status(status: Status) -> u32 {\n    match status {\n        Status::Ok => 200,\n        Status::Error => 500,\n    }\n}",
+      "toCode": "def handle_status(status):\n    match status:\n        case 'ok': return 200\n        case 'error': return 500"
     }
   ],
   "tips": [
     {
-      "title": "Drop ownership annotations",
-      "body": "Remove all lifetime annotations, &, &mut, and ownership transfers. Python's GC handles all of that. Variables are freely sharable without borrow constraints."
+      "title": "Accept Dynamic Type References",
+      "body": "Relax strict static type constraints. Python handles data variants natively at runtime, removing the need for complex type parameters or generics."
     },
     {
-      "title": "Result/Option → exceptions/None",
-      "body": "Replace Ok(val)/Err(e) returns with plain returns and raise. Replace Option<T> with returning None directly. Match on Result becomes try/except."
+      "title": "Replace Structs with Built-in Dicts",
+      "body": "Instead of constructing rigid struct entities for basic key-value data maps, utilize Python's lightweight dictionary literals or dataclass objects."
     },
     {
-      "title": "Vec → list, HashMap → dict",
-      "body": "vec![1,2,3] becomes [1,2,3]. HashMap::new() becomes {}. push/insert become .append()/{} assignment. iter().filter().collect() becomes list comprehensions."
+      "title": "Use Native try-except Error Scopes",
+      "body": "Replace Rust Result propagation patterns (using the ? operator) with Python's standard structural exception trapping frameworks."
     },
     {
-      "title": "Traits → duck typing or Protocol",
-      "body": "Rust trait bounds (T: Display + Clone) become Python duck typing — just call the method. For explicit contracts, use typing.Protocol."
+      "title": "Rely on the Garbage Collector Engine",
+      "body": "Forget lifetimes and borrow rules. Variables can be freely shared across scopes without compile-time restrictions, as memory is managed automatically."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What is the Python equivalent of Rust's Option type?",
+      "answer": "Python uses the `None` primitive value directly. Type hinting can declare optional fields explicitly using `Optional[T]` or `T | None` definitions."
+    },
+    {
+      "question": "Can I use Rust libraries inside my new Python script layout?",
+      "answer": "Yes, using the `PyO3` framework toolset, you can compile Rust code blocks into standard Python native module structures that import seamlessly."
+    },
+    {
+      "question": "How do Python performance baselines contrast with compiled Rust code?",
+      "answer": "Python executes noticeably slower because it operates as an interpreted runtime language that incurs execution penalties for dynamic lookups."
     }
   ]
 }

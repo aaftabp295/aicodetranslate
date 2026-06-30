@@ -1,62 +1,76 @@
 {
-  "intro": "Python manages structural automation logic and application backends via explicit object validation. Bash functions directly within the operating system shell to orchestrate commands, file system streams, and lightweight process lifecycles. System administrators move code from Python to Bash to eliminate package dependencies and create fast, direct deployment automation.",
+  "intro": "Python provides a robust, cross-platform environment for structured application development, whereas Bash is optimized for direct Unix shell interaction and stream-based text manipulation. Developers migrate from Python to Bash to eliminate runtime dependencies in minimal container environments or to streamline system-level automation scripts. Conversely, moving to Python introduces explicit data types, complex error handling, and superior maintainability for growing codebases.",
   "diffs": [
     {
-      "category": "Primary Focus",
-      "from": "General-purpose high-level programming and scripting abstractions.",
-      "to": "Command-line execution, stream redirection, and process control."
+      "category": "Type System",
+      "from": "Dynamically typed with strong type enforcement. Objects have distinct types (int, list, dict) that prevent implicit invalid operations.",
+      "to": "Untyped or text-typed. Everything is fundamentally treated as a string; numeric or array contexts are evaluated via specific operators or builtins like let or expr."
     },
     {
-      "category": "Data Type Modeling",
-      "from": "Rich types (ints, strings, objects, lists).",
-      "to": "String-based variables; untyped data evaluated contextually."
+      "category": "Syntax",
+      "from": "Whitespace-dependent indentation with clean, keyword-driven structure. Standard control flows use blocks defined by colons.",
+      "to": "Command-line and token-driven syntax. Relies on specific shell constructs like tests [[ ... ]], semicolons, and terminating keywords like fi or done."
     },
     {
-      "category": "Output Handling",
-      "from": "Explicit return values or typed programmatic exceptions.",
-      "to": "Process exit status codes (0 for success, non-zero for errors)."
+      "category": "Memory",
+      "from": "Automated memory management via reference counting and a cyclic garbage collector. Obscures direct system memory interactions.",
+      "to": "Relies entirely on underlying process life cycles. Variables are stored as string allocations in the current shell environment or subshell memory spaces."
     },
     {
-      "category": "Syntax Boundary",
-      "from": "Indentation levels define structural program flow blocks.",
-      "to": "Command termination delimiters, keywords (fi, done), and semi-colons."
+      "category": "Async",
+      "from": "First-class asynchronous programming using the asyncio event loop, coroutines, and async/await syntax.",
+      "to": "Achieved via Unix job control. Tasks are pushed to the background using the ampersand (&) operator and managed via wait, kill, and traps."
     },
     {
-      "category": "External Actions",
-      "from": "Requires subprocess module imports to execute shell commands.",
-      "to": "Executes operating system binary tools directly as native commands."
+      "category": "Standard Library",
+      "from": "Comprehensive 'batteries-included' library containing dedicated modules for JSON parsing, math, HTTP servers, and structured data manipulation.",
+      "to": "Minimal built-in library. Relies heavily on external Unix command-line utilities and coreutils such as sed, awk, grep, and curl to perform complex mutations."
     }
   ],
   "examples": [
     {
-      "title": "Check File Existence",
-      "description": "Checking for the presence of a file before initiating operations.",
-      "fromCode": "import os\n\nif os.path.exists(\"app.log\"):\n    print(\"Found\")\nelse:\n    print(\"Missing\")",
-      "toCode": "if [ -f \"app.log\" ]; then\n    echo \"Found\"\nelse\n    echo \"Missing\"\nfi"
+      "title": "Iterating a directory and filtering files",
+      "description": "Demonstrates scanning a directory for specific files and performing an action safely.",
+      "fromCode": "import os\nfor file in os.listdir('.'):\n    if file.endswith('.log'):\n        print(f'Processing: {file}')",
+      "toCode": "for file in *.log; do\n    [ -e \"$file\" ] || continue\n    echo \"Processing: $file\"\ndone"
     },
     {
-      "title": "Loop Through Arguments",
-      "description": "Iterating over command-line arguments passed into the execution runtime.",
-      "fromCode": "import sys\n\nfor arg in sys.argv[1:]:\n    print(f\"Arg: {arg}\")",
-      "toCode": "for arg in \"\\$@\"; do\n    echo \"Arg: $arg\"\ndone"
+      "title": "Executing a system command and capturing output",
+      "description": "Shows how to execute an external tool and capture its trimmed standard output.",
+      "fromCode": "import subprocess\noutput = subprocess.check_output(['uname', '-r']).decode('utf-8').strip()\nprint(output)",
+      "toCode": "output=$(uname -r)\necho \"$output\""
     }
   ],
   "tips": [
     {
-      "title": "Quote Variable References",
-      "body": "Wrap all variable expansions in double quotes (e.g., \"\\$var\") to preserve spaces and avoid globbing issues."
+      "title": "Quote Variables Diligently",
+      "body": "Always wrap Bash variable expansions in double quotes (e.g., \"$VAR\") to prevent word splitting and globbing issues that do not exist in Python."
     },
     {
-      "title": "Monitor Exit Status Codes",
-      "body": "Evaluate the \\$? parameter immediately after executing a command to catch and handle system failures."
+      "title": "Handle Return Codes Explicitly",
+      "body": "Bash does not throw exceptions. Use 'set -e' to terminate on errors, or check '$?' immediately after execution to replicate Python's try-except flows."
     },
     {
-      "title": "Set Safe Execution Modes",
-      "body": "Include \"set -euo pipefail\" at the start of scripts to terminate execution early when commands fail."
+      "title": "Substitute Complex Data with Text Processing",
+      "body": "Bash lacks nested objects or lists. Convert Python dict operations into key-value text structures readable by associative arrays (declare -A) or stream editors."
     },
     {
-      "title": "Treat Types as Strings",
-      "body": "Remember that Bash stores all variable values as strings; use arithmetic expansion ((x++)) for calculations."
+      "title": "Manage Subshells Wisely",
+      "body": "Piping commands or using $(...) spawns subshells in Bash. Remember that variables modified inside a subshell do not persist in the parent scope."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "How do I implement Python try-except error catching in Bash?",
+      "answer": "Bash uses exit codes instead of exceptions. You simulate a try-except block by executing a command and checking its exit status or using the logical OR operator: `command || { echo 'Failure actions'; exit 1; }`."
+    },
+    {
+      "question": "Does Bash support Python-like dictionary data structures?",
+      "answer": "Yes, Bash 4+ supports associative arrays. You must explicitly declare them using `declare -A my_dict`, after which you can assign keys and values similarly to Python maps."
+    },
+    {
+      "question": "Which language is better for container initialization scripts?",
+      "answer": "Bash is typically preferred for minimal container entrypoints because it avoids the overhead of installing the Python interpreter, keeping image sizes smaller."
     }
   ]
 }

@@ -1,62 +1,76 @@
 {
-  "intro": "Python's dynamic nature facilitates structural fluidity and fast iterations via scripting. Moving to C# introduces a rigid, statically typed component model backed by Microsoft's .NET ecosystem, optimizing for enterprise architecture and heavy multi-threaded workloads. Developers port workloads here to gain superior compile-time validation, explicit object-oriented design patterns, and native async/await efficiency at scale.",
+  "intro": "Python prioritizes rapid, scriptable workflows through dynamic runtime typing, whereas C# provides a highly structured, type-safe environment backed by the robust .NET framework. Developers migrate to C# to build highly maintainable, enterprise-grade architectures and multi-threaded enterprise services. This shift introduces rigid static compilation rules, formal interface design patterns, and an advanced, highly performant runtime engine.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Dynamic, strongly typed.",
-      "to": "Static, strong, safe, with explicit and inferred typing (var)."
+      "from": "Strong, dynamic typing. Variable definitions do not require type specifications, allowing flexibility at runtime.",
+      "to": "Strong, static typing. Supports implicit var type declarations, explicit interface blueprints, generics, and strict compile-time validation."
     },
     {
-      "category": "Memory Management",
-      "from": "Reference counting and garbage collection.",
-      "to": "Generational tracing garbage collector (GC)."
+      "category": "Syntax",
+      "from": "Minimalist layout defined by semantic whitespace, utilizing lightweight declarations and conversational keywords.",
+      "to": "Structured block syntax using braces and explicit type definitions. Highly object-oriented layout requiring explicit namespaces and class containers."
     },
     {
-      "category": "Async/Concurrency",
-      "from": "asyncio event loop or multiprocessing to bypass GIL.",
-      "to": "Task Parallel Library (TPL) with true multi-threaded async/await execution."
+      "category": "Memory",
+      "from": "Memory lifecycle managed by automated reference counting combined with a secondary tracing garbage collection engine.",
+      "to": "Managed by a generational, tracing garbage collector (GC) highly tuned for multi-threaded systems and object tracking optimizations."
     },
     {
-      "category": "Execution Model",
-      "from": "Bytecode interpretation/JIT via alternate engines.",
-      "to": "Compiled to Common Intermediate Language (CIL), JIT-compiled by CLR."
+      "category": "Async",
+      "from": "Driven by an event-loop system utilizing the asyncio module ecosystem and basic cooperative task constructs.",
+      "to": "First-class integration using the Task-based Asynchronous Pattern (TAP) powered natively by async/await and thread pool scaling."
     },
     {
-      "category": "Syntax Style",
-      "from": "Indentation-defined blocks, minimal boilerplate.",
-      "to": "Brace-delimited blocks, mandatory class structures, explicit access modifiers."
+      "category": "Standard Library",
+      "from": "Wide, cross-domain modules focusing heavily on scripting, file automation, and data handling workflows.",
+      "to": "Deep .NET Base Class Library (BCL) providing unified, enterprise-grade capabilities for cryptography, async workflows, and networking."
     }
   ],
   "examples": [
     {
-      "title": "Async HTTP Request",
-      "description": "Fetching JSON text from a remote API asynchronously.",
-      "fromCode": "import asyncio\nimport aiohttp\n\nasync def fetch():\n    async with aiohttp.ClientSession() as session:\n        async with session.get(\"https://api.example.com\") as resp:\n            return await resp.text()",
-      "toCode": "using System.Net.Http;\nusing System.Threading.Tasks;\n\npublic class ApiClient {\n    private static readonly HttpClient client = new HttpClient();\n    \n    public async Task<string> FetchAsync() {\n        return await client.GetStringAsync(\"https://api.example.com\");\n    }\n}"
+      "title": "Fetching JSON data asynchronously",
+      "description": "Compares a Python asynchronous HTTP call to the equivalent C# Task-based HttpClient architecture.",
+      "fromCode": "import asyncio\nimport aiohttp\n\nasync def fetch_data(url):\n    async with aiohttp.ClientSession() as session:\n        async with session.get(url) as response:\n            return await response.json()",
+      "toCode": "using System.Net.Http;\nusing System.Net.Http.Json;\nusing System.Threading.Tasks;\n\npublic class DataService\n{\n    private static readonly HttpClient client = new HttpClient();\n    public async Task<T?> FetchDataAsync<T>(string url)\n    {\n        return await client.GetFromJsonAsync<T>(url);\n    }\n}"
     },
     {
-      "title": "List Filter and Transform",
-      "description": "Filtering an array and transforming the results into a new sequence.",
-      "fromCode": "items = [1, 2, 3, 4, 5]\nfiltered = [x * 2 for x in items if x > 2]",
-      "toCode": "using System.Linq;\nusing System.Collections.Generic;\n\npublic class Program {\n    public static void Main() {\n        List<int> items = new List<int> { 1, 2, 3, 4, 5 };\n        var filtered = items.Where(x => x > 2).Select(x => x * 2).ToList();\n    }\n}"
+      "title": "Filtering a collection with a predicate",
+      "description": "Contrasts a Python list comprehension with C#'s functional LINQ pipeline syntax.",
+      "fromCode": "nums = [1, 2, 3, 4, 5]\nevens = [x for x in nums if x % 2 == 0]",
+      "toCode": "using System.Linq;\nusing System.Collections.Generic;\n\nList<int> nums = new List<int> { 1, 2, 3, 4, 5 };\nList<int> evens = nums.Where(x => x % 2 == 0).ToList();"
     }
   ],
   "tips": [
     {
-      "title": "Leverage LINQ",
-      "body": "Replace Python list comprehensions with C# LINQ syntax (Where, Select) for readable data manipulation."
+      "title": "Utilize LINQ for Queries",
+      "body": "Replace Python's list comprehensions and lambda expressions with C# Language Integrated Query (LINQ) extension methods for clean filtering."
     },
     {
-      "title": "Declare Access Modifiers",
-      "body": "Explicitly specify public, private, or protected for class members, as C# defaults to private."
+      "title": "Leverage Built-In Properties",
+      "body": "Avoid writing manual getter and setter methods or using @property. C# provides auto-implemented properties (e.g., public string Name { get; set; }) natively."
     },
     {
-      "title": "Utilize Structs vs Classes",
-      "body": "Use structs for small, immutable value types and classes for reference types to optimize allocations."
+      "title": "Understand Value vs Reference Types",
+      "body": "Be aware that primitives (int, bool, struct) are stored as value types on the stack, while classes are reference types residing on the heap."
     },
     {
-      "title": "Wrap I/O in Using Blocks",
-      "body": "Always use the \"using\" statement or declaration for IDisposable resources like streams and database connections."
+      "title": "Configure Explicit Error Handlers",
+      "body": "C# relies exclusively on structured exception handling. Ensure your exceptions map to precise, type-safe catch blocks rather than broad catches."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What is the equivalent of a Python dict in C#?",
+      "answer": "The primary equivalent is the `Dictionary<TKey, TValue>` class, located in the `System.Collections.Generic` namespace, which enforces compile-time types for keys and values."
+    },
+    {
+      "question": "Can I use dynamic variables in C# like I do in Python?",
+      "answer": "Yes, C# includes the `dynamic` keyword, which bypasses compile-time type checking and resolves member invocations at runtime using the Dynamic Language Runtime (DLR)."
+    },
+    {
+      "question": "How does null safety compare between the two languages?",
+      "answer": "Modern C# supports Nullable Reference Types, which trigger compiler warnings if an object might be null, offering stronger safety guarantees than typical Python execution."
     }
   ]
 }

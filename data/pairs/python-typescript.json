@@ -1,62 +1,76 @@
 {
-  "intro": "Python and TypeScript share a commitment to developer productivity, but their type systems differ fundamentally — Python's type hints are optional and runtime-ignored, while TypeScript enforces structural typing at compile time. When converting, Python's `dict`, `list`, and `Optional` type hints map to TypeScript interfaces, generics, and union types. Python dataclasses translate naturally to TypeScript interfaces or classes with typed properties.",
+  "intro": "Python offers an expressive, indentation-driven workflow for server backend services and automation, whereas TypeScript enhances the web platform with compile-time type safety over dynamic environments. Porting configurations to TypeScript enables seamless full-stack web validation, robust frontend compilation safety, and direct enterprise API integrations. This transition introduces optional structural types, interfaces, and comprehensive build-time verification steps.",
   "diffs": [
     {
-      "category": "Type enforcement",
-      "from": "Type hints (PEP 484) are optional and ignored at runtime.",
-      "to": "Types are enforced at compile time by tsc. Violations are build errors."
+      "category": "Type System",
+      "from": "Dynamic and strongly checked type resolution. Evaluates definitions at runtime, offering flexible duck-typing behaviors.",
+      "to": "Static, structural type layering that verifies safety boundaries at compile time before erasing markers into target JavaScript objects."
     },
     {
-      "category": "Interface model",
-      "from": "Protocols define structural interfaces (PEP 544). Abstract base classes too.",
-      "to": "interface and type alias define structural contracts enforced by the compiler."
+      "category": "Syntax",
+      "from": "Whitespace-dependent indentation layout that avoids block termination keywords or line semicolons.",
+      "to": "C-style block syntax using curly braces, explicit assignment keywords (const, let), and optional statement semicolons."
     },
     {
-      "category": "Null handling",
-      "from": "Optional[X] = Union[X, None]. None is a valid value of any type by default.",
-      "to": "X | null or X | undefined. Strict mode requires explicit null narrowing."
+      "category": "Memory",
+      "from": "Automatically managed via internal reference registries supplemented by a periodic cyclic collector routine.",
+      "to": "Managed entirely by host engine runtime environments (such as V8) utilizing mature mark-and-sweep garbage collection algorithms."
     },
     {
-      "category": "Generics",
-      "from": "TypeVar and Generic[T] for parameterised classes. Runtime erasure.",
-      "to": "Generic syntax <T> on functions, classes, and interfaces. Compile-time only."
+      "category": "Async",
+      "from": "Single-threaded event loop engine using async/await syntax to manage non-blocking, cooperative I/O tasks.",
+      "to": "Natively asynchronous core. Non-blocking runtime behavior is powered directly by Promises, async/await keywords, and an internal loop."
     },
     {
-      "category": "Compilation",
-      "from": "Interpreted directly by CPython. No build step.",
-      "to": "Transpiled to JavaScript by tsc or bundlers like esbuild/Vite/SWC."
+      "category": "Standard Library",
+      "from": "Extensive standard library including high-level data types, networking protocols, crypto, and OS abstractions out of the box.",
+      "to": "Relies on core ECMAScript specifications complemented by environment-specific bindings (DOM or Node.js APIs) and NPM packages."
     }
   ],
   "examples": [
     {
-      "title": "Typed function with Optional argument",
-      "description": "Python Optional[str] maps to TypeScript string | null. Default values and return types translate directly.",
-      "fromCode": "from typing import Optional\n\ndef greet(name: str, prefix: Optional[str] = None) -> str:\n    if prefix is None:\n        return \"Hello, \" + name\n    return prefix + \" \" + name\n\nprint(greet(\"Alice\"))          # Hello, Alice\nprint(greet(\"Bob\", \"Dr.\"))     # Dr. Bob",
-      "toCode": "function greet(name: string, prefix: string | null = null): string {\n  if (prefix === null) {\n    return \"Hello, \" + name;\n  }\n  return prefix + \" \" + name;\n}\n\nconsole.log(greet(\"Alice\"));        // Hello, Alice\nconsole.log(greet(\"Bob\", \"Dr.\"));   // Dr. Bob"
+      "title": "Defining an interface and parameter model",
+      "description": "Compares runtime typing specifications against strict compile-time TypeScript type constraints.",
+      "fromCode": "class Config:\n    def __init__(self, port: int, host: str):\n        self.port = port\n        self.host = host",
+      "toCode": "interface Config {\n    port: number;\n    host: string;\n}\n\nconst serverConfig: Config = { port: 8080, host: \"localhost\" };"
     },
     {
-      "title": "Typed dataclass → TypeScript interface + class",
-      "description": "Python dataclasses map cleanly to TypeScript interfaces for the shape and classes for behaviour.",
-      "fromCode": "from dataclasses import dataclass\n\n@dataclass\nclass Product:\n    id: int\n    name: str\n    price: float\n    in_stock: bool = True\n\n    def discounted(self, pct: float) -> float:\n        return self.price * (1 - pct / 100)",
-      "toCode": "interface Product {\n  id: number;\n  name: string;\n  price: number;\n  inStock: boolean;\n}\n\nclass ProductModel implements Product {\n  inStock = true;\n  constructor(\n    public id: number,\n    public name: string,\n    public price: number,\n  ) {}\n\n  discounted(pct: number): number {\n    return this.price * (1 - pct / 100);\n  }\n}"
+      "title": "Processing dictionary data maps safely",
+      "description": "Contrasts Python's runtime dictionary manipulation with TypeScript's type-safe Record mappings.",
+      "fromCode": "cache: dict[str, int] = {'items': 100}\nval = cache.get('items', 0)",
+      "toCode": "const cache: Record<string, number> = { items: 100 };\nconst val: number = cache[\"items\"] ?? 0;"
     }
   ],
   "tips": [
     {
-      "title": "Optional[X] → X | null",
-      "body": "Python Optional[X] means X | None. In TypeScript strict mode write X | null. Enable strictNullChecks to get compile-time null safety equivalent to Python mypy."
+      "title": "Avoid Using the any Type Override",
+      "body": "Do not bypass type checking using 'any'. Leverage 'unknown' combined with explicit runtime type guards to parse untrusted payloads safely."
     },
     {
-      "title": "dict → interface or Record<K,V>",
-      "body": "Python dict[str, int] maps to Record<string, number>. If keys are known, define a TypeScript interface instead for better IDE autocompletion."
+      "title": "Utilize Nullish Coalescing Operators",
+      "body": "Replace Python's lazy logical evaluation loops (or checks) with TypeScript's specific nullish coalescing operator (??) to protect zero and false values."
     },
     {
-      "title": "List[X] → X[] or Array<X>",
-      "body": "Python List[int] becomes number[] or Array<number>. Tuple[int, str] becomes [number, string] — a tuple type in TypeScript."
+      "title": "Leverage Structural Type Resolution",
+      "body": "TypeScript validates structures based on shapes rather than class lineage definitions. If an object matches an interface's layout, it satisfies the type constraint."
     },
     {
-      "title": "Dataclass → interface + class",
-      "body": "Simple dataclasses with only data become TypeScript interfaces. Add a class wrapper only if you need methods or a constructor with default logic."
+      "title": "Configure strict Mode in tsconfig",
+      "body": "Ensure \"strict\": true is enabled inside your tsconfig.json workspace to maximize type verification boundaries and eliminate implicit null leaks."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What is the equivalent of Python's tuple type in TypeScript?",
+      "answer": "TypeScript supports fixed-length array literal typings called tuples: `const point: [number, number] = [10, 20];`."
+    },
+    {
+      "question": "Do TypeScript type definitions exist at application runtime?",
+      "answer": "No. TypeScript types are stripped away during compilation. The final output is pure JavaScript, meaning types incur zero runtime execution overhead."
+    },
+    {
+      "question": "How do I handle default configuration properties cleanly?",
+      "answer": "You can use standard JavaScript object destructuring paired with assignments directly within function parameters: `function setup({ port = 80 } = {}) {}`."
     }
   ]
 }

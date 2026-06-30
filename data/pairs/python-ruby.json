@@ -1,62 +1,76 @@
 {
-  "intro": "While Python prioritizes readability through explicit constructs and a single obvious way to complete tasks, Ruby champions developer happiness through implicit conventions and functional flexibility. Both are dynamic, object-oriented languages frequently leveraged in web frameworks. Programmers transition to Ruby primarily to leverage the opinionated ecosystem of Ruby on Rails or to adopt DSL-driven application design.",
+  "intro": "Python focuses on explicit, unambiguous syntax with strong architectural tooling across diverse domain scopes, while Ruby prioritizes developer happiness and extreme runtime flexibility through highly expressive, block-centric object dynamics. Developers translate scripts to Ruby to fit within mature web ecosystems like Ruby on Rails or to exploit advanced runtime metaprogramming patterns. This porting workflow maps clean indentation structures into flexible, block-driven code statements where everything is explicitly an object.",
   "diffs": [
     {
-      "category": "Design Philosophy",
-      "from": "Explicit is better than implicit; code readability is paramount.",
-      "to": "Developer happiness, high expressiveness, and meta-programming freedom."
+      "category": "Type System",
+      "from": "Strongly, dynamically typed. Enforces explicit runtime constraints, rejecting operations across conflicting variables.",
+      "to": "Strongly, dynamically typed. Uses pure duck typing where an object's capabilities are determined by its responding methods at runtime."
     },
     {
-      "category": "Methods / Invocations",
-      "from": "Parentheses required for function calls; methods are objects.",
-      "to": "Optional parentheses; methods are invocations, blocks are first-class."
+      "category": "Syntax",
+      "from": "Whitespace indentation rules determine code execution blocks, avoiding block-terminating keyword flags.",
+      "to": "Keyword-enclosed statement blocks (def...end) that ignore whitespace indentation layout, supporting optional method parentheses."
     },
     {
-      "category": "Boolean Evaluation",
-      "from": "Falsy values include None, False, 0, empty collections.",
-      "to": "Only false and nil evaluate to falsy; 0 and empty collections are truthy."
+      "category": "Memory",
+      "from": "Managed via reference counting parameters operating in tandem with an internal cyclical reclamation engine.",
+      "to": "Automated object tracking utilizing a global mark-and-sweep garbage collection framework tuned for high object creation rates."
     },
     {
-      "category": "Class Modification",
-      "from": "Explicit wrapper/decorators or monkey patching via assignment.",
-      "to": "Open classes allowing direct extension and runtime modification."
+      "category": "Async",
+      "from": "Cooperative concurrency architecture driven by native async/await keywords and an integrated asyncio system manager.",
+      "to": "Orchestrated via Fiber objects, Ractor isolation models, or traditional thread instances, avoiding strict single-loop configurations."
     },
     {
-      "category": "Package Ecosystem",
-      "from": "pip modules/packages.",
-      "to": "RubyGems and Bundler tooling."
+      "category": "Standard Library",
+      "from": "Broad system toolkit containing extensive packages for network engineering, math tracking, and automation script structures.",
+      "to": "Rich object-oriented toolkit specializing in elegant string manipulation, collection filtering, and meta-object creation utilities."
     }
   ],
   "examples": [
     {
-      "title": "Class with Getter/Setter",
-      "description": "Defining an object structure with basic properties and methods.",
-      "fromCode": "class User:\n    def __init__(self, name):\n        self.name = name\n\nuser = User(\"Bob\")\nprint(user.name)",
-      "toCode": "class User\n  attr_accessor :name\n  def initialize(name)\n    @name = name\n  end\nend\n\nuser = User.new(\"Bob\")\nputs user.name"
+      "title": "Iterating collections with block closures",
+      "description": "Compares an explicit Python loop construct against Ruby's idiomatic block iterator method.",
+      "fromCode": "items = [1, 2, 3]\nfor x in items:\n    print(x * 2)",
+      "toCode": "items = [1, 2, 3]\nitems.each do |x|\n  puts x * 2\nend"
     },
     {
-      "title": "Collection Filtering",
-      "description": "Selecting elements from a collection using a predicate function.",
-      "fromCode": "nums = [1, 2, 3, 4, 5]\nevens = [x for x in nums if x % 2 == 0]",
-      "toCode": "nums = [1, 2, 3, 4, 5]\nevens = nums.select { |x| x.even? }"
+      "title": "Dynamic method intercept processing",
+      "description": "Shows the difference between overriding attribute hooks versus capturing undefined method execution triggers dynamically.",
+      "fromCode": "class Proxy:\n    def __getattr__(self, name):\n        return f'Missing: {name}'",
+      "toCode": "class Proxy\n  def method_missing(name, *args)\n    \"Missing: #{name}\"\n  end\nend"
     }
   ],
   "tips": [
     {
-      "title": "Check Falsy Logic",
-      "body": "Verify truthiness conditionals, because 0 and empty arrays ([]) evaluate to true in Ruby."
+      "title": "Omit Parentheses on Idiomatic Calls",
+      "body": "Ruby permits dropping parentheses around method arguments when the call is clear; practice this construct to align with idiomatic styling."
     },
     {
-      "title": "Drop Call Parentheses",
-      "body": "Omit parentheses on method calls when writing standard idiomatic Ruby, except for complex nested calls."
+      "title": "Rely on Implicit Returns",
+      "body": "Ruby methods automatically return the evaluation results of their final statement block line; omit explicit return keywords."
     },
     {
-      "title": "Utilize Open Classes",
-      "body": "Take advantage of Ruby's open classes cautiously to add utility methods directly to core classes."
+      "title": "Leverage Blocks and Procs",
+      "body": "Replace explicit lambda iterations or functional helper maps with Ruby's block structures (do...end) passed natively into target method routines."
     },
     {
-      "title": "Leverage attr_accessor",
-      "body": "Avoid writing manual getter and setter methods by using attr_accessor, attr_reader, or attr_writer."
+      "title": "Understand True Object Foundations",
+      "body": "In Ruby, every value—including basic primitives like numbers and booleans—is an instantiation of a class and responds to method calls."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What is the Ruby equivalent to Python's dictionary structure?",
+      "answer": "Ruby uses the `Hash` class, which frequently utilizes symbols (`key: value` or `:key => value`) as lightweight, highly optimized index keys."
+    },
+    {
+      "question": "How do Python decorators map to Ruby structures?",
+      "answer": "Ruby achieves decoration using metaprogramming patterns, such as class macro helper methods or hooking into lifecycle hooks like `method_added`."
+    },
+    {
+      "question": "Are Ruby strings mutable like Python strings?",
+      "answer": "No, Ruby strings are mutable by default. You can modify them inline unless you explicitly freeze them or declare `# frozen_string_literal: true`."
     }
   ]
 }

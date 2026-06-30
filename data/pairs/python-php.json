@@ -1,62 +1,76 @@
 {
-  "intro": "Python acts as a general-purpose language with applications spanning machine learning, automation, and backend engineering. PHP is purposely engineered and optimized specifically for web development and server-side request rendering. Migration frequently occurs when shifting a system to standard web-hosting environments or integrating into legacy CMS infrastructures optimized for immediate HTTP response cycles.",
+  "intro": "Python serves as a versatile language prominent in data tasks, scripting, and enterprise backend engineering, whereas PHP is an execution engine specifically tailored for rapid server-side web development and content delivery. Porting Python code to PHP unifies backend APIs within mainstream web hosting ecosystems, eliminating complex application server routing stacks. This transition swaps indentation-driven processing logic for dynamic web scripting structures designed around stateless HTTP request-response cycles.",
   "diffs": [
     {
       "category": "Type System",
-      "from": "Dynamic, strongly typed.",
-      "to": "Dynamic, weakly typed (supports gradual static typing with strict_types)."
+      "from": "Strong, dynamic typing. Prevents silent runtime operations between conflicting types without explicit variable conversions.",
+      "to": "Gradual, dynamic typing. Supports strict mode configuration, return type hints, scalar declarations, and automatic string coercion paths."
     },
     {
-      "category": "Runtime Lifecycle",
-      "from": "Persistent application process running an event loop or WSGI server.",
-      "to": "Shared-nothing architecture; process boots, executes, and dies per request."
+      "category": "Syntax",
+      "from": "Indentation-enforced blocks with high-level keyword constructs, avoiding structural tokens or terminal operators.",
+      "to": "C-style structural syntax requiring variable dollar signs ($), statement semicolons, curly braces, and string interpolation dots."
     },
     {
-      "category": "Package Management",
-      "from": "pip with PyPI ecosystem.",
-      "to": "Composer with Packagist ecosystem."
+      "category": "Memory",
+      "from": "Automated object collection managed via internal reference counters and background cyclic sweep loops.",
+      "to": "Stateless memory allocation model optimized to teardown and recycle all allocated request references immediately upon request completion."
     },
     {
-      "category": "Variables/Syntax",
-      "from": "Bare identifier name binding.",
-      "to": "Sigil-prefixed identifiers (e.g., $variable)."
+      "category": "Async",
+      "from": "Native asynchronous concurrency supported by async/await syntax and managed by an internal event loop engine.",
+      "to": "Synchronous, single-threaded execution design by nature. Relies on external multi-process managers (FPM) or specialized loop libraries (Swoole)."
     },
     {
-      "category": "Array Structures",
-      "from": "Distinct sequence lists and key-value dictionaries.",
-      "to": "Unified associative arrays used for both lists and dictionaries."
+      "category": "Standard Library",
+      "from": "Extensive standard toolkit offering comprehensive libraries for math processing, networking protocols, and system scripting data models.",
+      "to": "Rich, web-centric built-in function catalog engineered for direct cookie management, query handling, and HTML manipulation."
     }
   ],
   "examples": [
     {
-      "title": "Associative Data Mapping",
-      "description": "Creating a dictionary/associative array and looking up values.",
-      "fromCode": "user = {\"name\": \"Alice\", \"role\": \"admin\"}\nprint(user[\"name\"])",
-      "toCode": "<?php\n$user = [\"name\" => \"Alice\", \"role\" => \"admin\"];\necho $user['name'];"
+      "title": "Merging arrays and extracting values",
+      "description": "Compares merging elements and printing outcomes using dictionary concepts versus associative arrays.",
+      "fromCode": "base = {'a': 1}\nextra = {'b': 2}\nmerged = {**base, **extra}\nprint(merged['b'])",
+      "toCode": "<?php\n$base = ['a' => 1];\n$extra = ['b' => 2];\n$merged = array_merge($base, $extra);\necho $merged['b'];"
     },
     {
-      "title": "JSON Decoding",
-      "description": "Parsing a JSON string into an accessible object or array structure.",
-      "fromCode": "import json\ndata = json.loads('{\"id\": 101, \"status\": \"ok\"}')\nprint(data[\"status\"])",
-      "toCode": "<?php\n$data = json_decode('{\"id\": 101, \"status\": \"ok\"}', true);\necho $data['status'];"
+      "title": "Declaring a class with type annotations",
+      "description": "Contrasts a standard Python typed initializer class with a PHP 8 constructor promotion structure.",
+      "fromCode": "class Client:\n    def __init__(self, cid: int, role: str):\n        self.cid = cid\n        self.role = role",
+      "toCode": "<?php\nclass Client {\n    public function __construct(\n        public int $cid,\n        public string $role\n    ) {}\n}"
     }
   ],
   "tips": [
     {
-      "title": "Enable Strict Types",
-      "body": "Declare strict_types=1 at the top of PHP files to enforce parameter and return type declarations."
+      "title": "Enable Strict Type Validation",
+      "body": "Declare declare(strict_types=1); at the absolute top of your PHP files to enforce strict compile-time and runtime variable type validation rules."
     },
     {
-      "title": "Use Unified Arrays",
-      "body": "Combine Python lists and dicts into PHP's native array structure, keeping track of sequential vs string keys."
+      "title": "Leverage Constructor Property Promotion",
+      "body": "Use PHP 8+ constructor visibility keywords to declare and assign properties inline inside class parameters, minimizing structural boilerplate."
     },
     {
-      "title": "Mind the Request Lifecycle",
-      "body": "Remember that state does not persist in memory between HTTP requests in PHP like it does in a Python web server."
+      "title": "Convert Dicts to Associative Arrays",
+      "body": "Python dictionaries map directly to PHP associative arrays. Use brackets with fat arrows (key => value) to implement identical map workflows."
     },
     {
-      "title": "Prefix Variables with Sigils",
-      "body": "Prepend all variable allocations and references with a dollar sign ($), unlike Python's bare tokens."
+      "title": "Mind the Shared-Nothing Lifecycle",
+      "body": "Remember that PHP scripts reset completely after each HTTP request. Use persistent caches like Redis to share data state between page refreshes."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What is the equivalent of Python's f-strings in PHP?",
+      "answer": "PHP supports variable interpolation inside double-quoted strings natively using the variable syntax format directly: `\"Hello {$name}\"`."
+    },
+    {
+      "question": "How do PHP namespaces compare to Python imports?",
+      "answer": "Python uses file-system hierarchy imports directly. PHP uses virtual `namespace` declarations combined with PSR-4 autoloading configurations managed via Composer."
+    },
+    {
+      "question": "Does PHP support decorator syntax like Python?",
+      "answer": "PHP 8+ includes 'Attributes', which function identically to decorators for attaching structured metadata tags to classes, methods, or parameters."
     }
   ]
 }
