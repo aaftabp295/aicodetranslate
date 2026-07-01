@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { toast } from 'sonner'
-import { Loader2, Copy, Check, ArrowLeftRight, Sparkles, BookOpen, AlertTriangle, Maximize2, Trash2 } from 'lucide-react'
+import { Loader2, Copy, Check, ArrowLeftRight, Sparkles, AlertTriangle, Maximize2, Trash2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -50,9 +50,6 @@ export function ConverterPanel({
     toLang,
     setToLang,
     isLoading,
-    isExplaining,
-    showExplain,
-    explanation,
     copied,
     setCopied,
     highlightedHtml,
@@ -65,7 +62,6 @@ export function ConverterPanel({
     plan,
     fetchQuota,
     convertCode,
-    explainCode,
     swapLanguages,
     clearConverter,
   } = useConverterStore()
@@ -76,8 +72,6 @@ export function ConverterPanel({
   const currentCode = hydrated ? code : ''
   const currentConvertedCode = hydrated ? convertedCode : ''
   const currentHighlightedHtml = hydrated ? highlightedHtml : ''
-  const currentExplanation = hydrated ? explanation : ''
-  const currentShowExplain = hydrated ? showExplain : false
 
   // Fetch current quota limit and remaining tokens on mount
   React.useEffect(() => {
@@ -322,49 +316,6 @@ export function ConverterPanel({
           </Button>
         </div>
       </div>
-
-      {/* Explanation Section */}
-      {currentConvertedCode && (
-        <div className="space-y-4">
-          <div className="flex justify-center">
-            <Button
-              variant="outline"
-              onClick={explainCode}
-              disabled={isExplaining}
-              className="border-border hover:bg-muted font-medium cursor-pointer flex items-center gap-2"
-            >
-              {isExplaining ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Explaining...</span>
-                </>
-              ) : (
-                <>
-                  <BookOpen className="h-4 w-4" />
-                  <span>Explain this conversion</span>
-                </>
-              )}
-            </Button>
-          </div>
-
-          {currentShowExplain && currentExplanation && (
-            <Card className="border-border bg-card shadow-sm max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <CardHeader className="pb-3 border-b border-border">
-                <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-primary" />
-                  <span>Translation Decisions</span>
-                </CardTitle>
-                <CardDescription className="text-xs">
-                  AI breakdown of design patterns, idioms, and scope decisions.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6 text-sm text-foreground/90 space-y-4 leading-relaxed whitespace-pre-line text-left">
-                {currentExplanation}
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      )}
 
       {/* Upgrade Dialog */}
       <Dialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>

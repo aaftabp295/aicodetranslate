@@ -12,9 +12,6 @@ interface ConverterState {
 
   // UI Status State
   isLoading: boolean
-  isExplaining: boolean
-  showExplain: boolean
-  explanation: string
   copied: boolean
   highlightedHtml: string
   activeMaximize: 'input' | 'output' | null
@@ -29,7 +26,6 @@ interface ConverterState {
     code: string
     convertedCode: string
     highlightedHtml: string
-    explanation: string
     fromLang: string
     toLang: string
   } | null
@@ -43,13 +39,10 @@ interface ConverterState {
   setHighlightedHtml: (html: string) => void
   setActiveMaximize: (maximize: 'input' | 'output' | null) => void
   setShowUpgradeDialog: (show: boolean) => void
-  setShowExplain: (show: boolean) => void
-  setExplanation: (explanation: string) => void
 
   // Actions
   fetchQuota: () => Promise<void>
   convertCode: () => Promise<void>
-  explainCode: () => Promise<void>
   swapLanguages: () => Promise<void>
   clearConverter: () => void
   restoreDraft: () => void
@@ -64,9 +57,6 @@ export const useConverterStore = create<ConverterState>()(
       fromLang: 'python',
       toLang: 'javascript',
       isLoading: false,
-      isExplaining: false,
-      showExplain: false,
-      explanation: '',
       copied: false,
       highlightedHtml: '',
       activeMaximize: null,
@@ -86,13 +76,11 @@ export const useConverterStore = create<ConverterState>()(
       setHighlightedHtml: (highlightedHtml) => set({ highlightedHtml }),
       setActiveMaximize: (activeMaximize) => set({ activeMaximize }),
       setShowUpgradeDialog: (showUpgradeDialog) => set({ showUpgradeDialog }),
-      setShowExplain: (showExplain) => set({ showExplain }),
-      setExplanation: (explanation) => set({ explanation }),
       clearConverter: () => {
-        const { code, convertedCode, highlightedHtml, explanation, fromLang, toLang } = get()
+        const { code, convertedCode, highlightedHtml, fromLang, toLang } = get()
         if (code.trim()) {
           set({
-            lastDraft: { code, convertedCode, highlightedHtml, explanation, fromLang, toLang }
+            lastDraft: { code, convertedCode, highlightedHtml, fromLang, toLang }
           })
           
           toast("Editor cleared", {
@@ -109,8 +97,6 @@ export const useConverterStore = create<ConverterState>()(
           code: '',
           convertedCode: '',
           highlightedHtml: '',
-          explanation: '',
-          showExplain: false,
           copied: false
         })
       },
@@ -122,10 +108,8 @@ export const useConverterStore = create<ConverterState>()(
             code: lastDraft.code,
             convertedCode: lastDraft.convertedCode,
             highlightedHtml: lastDraft.highlightedHtml,
-            explanation: lastDraft.explanation,
             fromLang: lastDraft.fromLang,
             toLang: lastDraft.toLang,
-            showExplain: !!lastDraft.explanation,
             lastDraft: null
           })
           toast.success("Restored last session code!")
@@ -160,7 +144,7 @@ export const useConverterStore = create<ConverterState>()(
           return
         }
 
-        set({ isLoading: true, showExplain: false, explanation: '' })
+        set({ isLoading: true })
 
         try {
           const response = await fetch('/api/convert', {
@@ -194,43 +178,6 @@ export const useConverterStore = create<ConverterState>()(
         }
       },
 
-      explainCode: async () => {
-        const { code, convertedCode, fromLang, toLang } = get()
-        if (!convertedCode) return
-
-        set({ isExplaining: true })
-        try {
-          const response = await fetch('/api/explain', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              fromLang,
-              toLang,
-              originalCode: code,
-              convertedCode,
-            }),
-          })
-
-          if (response.status === 429) {
-            set({ remaining: 0, showUpgradeDialog: true })
-            return
-          }
-
-          if (!response.ok) {
-            const errData = await response.json().catch(() => ({}))
-            throw new Error(errData.error || 'Failed to generate explanation.')
-          }
-
-          const data = await response.json()
-          set({ explanation: data.explanation, showExplain: true })
-          toast.success('Explanation generated!')
-        } catch (error: any) {
-          console.error('Explanation error:', error)
-          toast.error(error?.message || 'Failed to generate explanation.')
-        } finally {
-          set({ isExplaining: false })
-        }
-      },
 
       swapLanguages: async () => {
         const { fromLang, toLang, code, convertedCode } = get()
@@ -267,8 +214,6 @@ export const useConverterStore = create<ConverterState>()(
         convertedCode: state.convertedCode,
         fromLang: state.fromLang,
         toLang: state.toLang,
-        explanation: state.explanation,
-        showExplain: state.showExplain,
         highlightedHtml: state.highlightedHtml,
         lastDraft: state.lastDraft,
       }),

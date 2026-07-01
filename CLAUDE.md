@@ -36,7 +36,6 @@ Secondary goal: monetize via freemium subscriptions using Dodo Payments.
 ### AI
 - Model: Google Gemini Flash (gemini-3.1-flash-lite)
 - Strategy: Single-pass conversion and code review
-- Optional second pass: explanation feature
 
 ### Payments
 - Provider: Dodo Payments (Merchant of Record, India-friendly, INR payouts) - *Status: COMING SOON*
@@ -212,7 +211,6 @@ Rewritten from `/convert-[pair]` in `next.config.ts`
 /login                         Auth page
 
 /api/convert                   Main conversion endpoint (edge)
-/api/explain                   Explanation endpoint (edge)
 /api/highlight                 Highlight code syntax on the server (edge)
 /api/quota                     Current user daily usage & limit (edge)
 /api/webhooks/dodo             Dodo Payments webhook (edge) - *Status: PENDING*
@@ -284,20 +282,6 @@ STARTCODE
 {userCode}
 ENDCODE
 
-
-### User Message — Explain
-
-A developer converted {fromLang} to {toLang}.
-
-ORIGINAL ({fromLang}):
-{originalCode}
-
-CONVERTED ({toLang}):
-{convertedCode}
-
-Write bullet points explaining the most important translation decisions.
-Focus on: language-specific pattern changes, behavioral differences,
-assumptions made. Under 150 words. Be specific.
 
 
 ---
