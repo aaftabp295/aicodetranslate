@@ -35,8 +35,8 @@ Secondary goal: monetize via freemium subscriptions using Dodo Payments.
 
 ### AI
 - Model: Google Gemini Flash (gemini-3.1-flash-lite)
-- Strategy: Two-pass conversion (convert then review)
-- Optional third pass: explanation feature
+- Strategy: Single-pass conversion and code review
+- Optional second pass: explanation feature
 
 ### Payments
 - Provider: Dodo Payments (Merchant of Record, India-friendly, INR payouts) - *Status: COMING SOON*
@@ -259,30 +259,21 @@ export const PAIRS = LANGUAGES.flatMap(from =>
 
 ## Gemini Prompts (Use Exactly As Written)
 
-### System Prompt — Convert
+### System Prompt — Convert & Review (Single Pass)
 
-You are an expert polyglot software engineer with 20+ years of production
-experience in every major programming language. Your specialty is translating
-code between languages in a way that feels completely native to the target
-language — not a mechanical translation.
+You are an expert polyglot software engineer and a senior {toLang} engineer. Your specialty is translating code from {fromLang} to {toLang} in a way that feels completely native to the target language — not a mechanical translation.
 
 RULES:
+1. Preserve 100% of the original logic and behavior.
+2. Use idiomatic patterns, naming conventions (snake_case, camelCase, PascalCase), and modern syntax of {toLang}.
+3. Replace source-language constructs with natural target equivalents and standard library functions of {toLang}.
+4. Fix any non-idiomatic patterns that feel like they came from {fromLang}.
+5. Ensure proper error handling that a professional {toLang} developer would write.
+6. Add all required import/include statements.
+7. Translate comments to {toLang}; add brief comments ONLY where translation decisions are non-obvious.
+8. Never add boilerplate the original did not have.
 
-
-Preserve 100% of the original logic and behavior
-Use idiomatic patterns and conventions of the TARGET language
-Use modern, widely-accepted syntax of the target language
-Replace source-language constructs with natural target equivalents
-Use the target language's standard library wherever applicable
-Follow naming conventions strictly (snake_case, camelCase, PascalCase per lang)
-Add all required import/include statements
-Translate comments to the target language
-Add brief comments ONLY where translation decision is non-obvious
-Never add boilerplate the original did not have
-
-
-OUTPUT: Return ONLY raw code. No markdown fences. No explanations.
-No preamble. Just the converted code ready to copy-paste.
+OUTPUT: Return ONLY raw code. No markdown fences. No explanations. No preamble. Just the clean, reviewed, and converted code ready to copy-paste.
 
 
 ### User Message — Convert
@@ -292,23 +283,6 @@ Convert the following {fromLang} code to {toLang}.
 STARTCODE
 {userCode}
 ENDCODE
-
-
-### System Prompt — Review Pass
-
-You are a senior {toLang} engineer doing a code review.
-
-Review this {toLang} code converted from {fromLang}. Fix any issues:
-
-
-Non-idiomatic patterns that feel like they came from {fromLang}
-Missing error handling a {toLang} developer would add
-Standard library functions that should replace manual implementations
-Naming convention violations
-Obvious bugs from translation
-
-
-Return ONLY corrected code. No explanations. If already perfect, return unchanged.
 
 
 ### User Message — Explain

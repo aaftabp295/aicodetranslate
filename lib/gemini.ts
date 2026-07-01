@@ -21,77 +21,44 @@ export async function convertCode(
       throw new Error('GEMINI_API_KEY is not defined in environment variables')
     }
 
-    // Step B — First pass (convert)
-    const convertSystemInstruction = `You are an expert polyglot software engineer with 20+ years of production
-experience in every major programming language. Your specialty is translating
-code between languages in a way that feels completely native to the target
-language — not a mechanical translation.
+    // Step B — Single-pass conversion and code review
+    const systemInstruction = `You are an expert polyglot software engineer and a senior ${toLang} engineer. Your specialty is translating code from ${fromLang} to ${toLang} in a way that feels completely native to the target language — not a mechanical translation.
 
 RULES:
-1. Preserve 100% of the original logic and behavior
-2. Use idiomatic patterns and conventions of the TARGET language
-3. Use modern, widely-accepted syntax of the target language
-4. Replace source-language constructs with natural target equivalents
-5. Use the target language standard library wherever applicable
-6. Follow naming conventions strictly (snake_case, camelCase, PascalCase per lang)
-7. Add all required import/include statements
-8. Translate comments to the target language
-9. Add brief comments ONLY where translation decision is non-obvious
-10. Never add boilerplate the original did not have
+1. Preserve 100% of the original logic and behavior.
+2. Use idiomatic patterns, naming conventions (snake_case, camelCase, PascalCase), and modern syntax of ${toLang}.
+3. Replace source-language constructs with natural target equivalents and standard library functions of ${toLang}.
+4. Fix any non-idiomatic patterns that feel like they came from ${fromLang}.
+5. Ensure proper error handling that a professional ${toLang} developer would write.
+6. Add all required import/include statements.
+7. Translate comments to ${toLang}; add brief comments ONLY where translation decisions are non-obvious.
+8. Never add boilerplate the original did not have.
 
-OUTPUT: Return ONLY raw code. No markdown fences. No explanations.
-No preamble. Just the converted code ready to copy-paste.`
+OUTPUT: Return ONLY raw code. No markdown fences. No explanations. No preamble. Just the clean, reviewed, and converted code ready to copy-paste.`
 
-    const convertModel = genAI.getGenerativeModel({
+    const model = genAI.getGenerativeModel({
       model: 'gemini-3.1-flash-lite',
-      systemInstruction: convertSystemInstruction,
+      systemInstruction: systemInstruction,
       generationConfig: {
         maxOutputTokens: 4096,
       },
     })
 
-    const convertUserMessage = `Convert the following ${fromLang} code to ${toLang}.
+    const userMessage = `Convert the following ${fromLang} code to ${toLang}.
 
 STARTCODE
 ${code}
 ENDCODE`
 
-    const firstPassResult = await convertModel.generateContent(convertUserMessage)
-    const firstPassOutput = firstPassResult.response.text()
+    const result = await model.generateContent(userMessage)
+    const output = result.response.text()
 
-    if (!firstPassOutput) {
-      throw new Error('First pass generated empty output')
-    }
-
-    // Step C — Second pass (review)
-    const reviewSystemInstruction = `You are a senior ${toLang} engineer doing a code review.
-
-Review this ${toLang} code converted from ${fromLang}. Fix any issues:
-- Non-idiomatic patterns that feel like they came from ${fromLang}
-- Missing error handling a ${toLang} developer would add
-- Standard library functions that should replace manual implementations
-- Naming convention violations
-- Obvious bugs from translation
-
-Return ONLY corrected code. No explanations. If already perfect, return unchanged.`
-
-    const reviewModel = genAI.getGenerativeModel({
-      model: 'gemini-3.1-flash-lite',
-      systemInstruction: reviewSystemInstruction,
-      generationConfig: {
-        maxOutputTokens: 4096,
-      },
-    })
-
-    const secondPassResult = await reviewModel.generateContent(firstPassOutput)
-    const secondPassOutput = secondPassResult.response.text()
-
-    if (!secondPassOutput) {
-      throw new Error('Second pass generated empty output')
+    if (!output) {
+      throw new Error('AI conversion generated empty output')
     }
 
     // Clean up markdown code blocks if the model ignored the instructions
-    let cleanedOutput = secondPassOutput.trim()
+    let cleanedOutput = output.trim()
     if (cleanedOutput.startsWith('```')) {
       const lines = cleanedOutput.split('\n')
       if (lines[0].startsWith('```')) {
