@@ -12,51 +12,31 @@ export async function GET(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser()
 
-    // 2. Determine plan
+    // 2. Determine plan (disable pro for now, mapping logged in to free)
     let plan: 'guest' | 'free' | 'pro' = 'guest'
     if (process.env.DISABLE_RATE_LIMIT === 'true') {
-      plan = 'pro'
+      plan = 'free'
     } else if (user) {
-      const { data: subscription } = await supabase
-        .from('subscriptions')
-        .select('plan, expires_at')
-        .eq('user_id', user.id)
-        .maybeSingle()
-
-      if (subscription && subscription.plan === 'pro') {
-        const expiresAt = subscription.expires_at
-          ? new Date(subscription.expires_at).getTime()
-          : 0
-        if (expiresAt > Date.now()) {
-          plan = 'pro'
-        } else {
-          plan = 'free'
-        }
-      } else {
-        plan = 'free'
-      }
+      plan = 'free'
     }
 
     // 3. Get rate-limiting identifier
-    const { identifier } = getIdentifier(request, user?.id, plan === 'pro')
+    const { identifier } = getIdentifier(request, user?.id, false)
 
-    // 4. Fetch quota
+    // 4. Fetch quota fallbacks if Redis is unconfigured
     if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
       return NextResponse.json({
-        remaining: 5,
-        limit: 5,
+        remaining: plan === 'guest' ? 2 : 5,
+        limit: plan === 'guest' ? 2 : 5,
         plan,
       })
     }
 
     let limiter = guestLimiter
-    let maxLimit = 3
-    if (plan === 'pro') {
-      limiter = proLimiter
-      maxLimit = 500
-    } else if (plan === 'free') {
+    let maxLimit = 2
+    if (plan === 'free') {
       limiter = freeLimiter
-      maxLimit = 10
+      maxLimit = 5
     }
 
     // Check quota directly from Redis without consuming a token

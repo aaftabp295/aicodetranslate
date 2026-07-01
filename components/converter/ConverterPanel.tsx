@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { toast } from 'sonner'
-import { Loader2, Copy, Check, ArrowLeftRight, Sparkles, BookOpen, AlertTriangle, Maximize2 } from 'lucide-react'
+import { Loader2, Copy, Check, ArrowLeftRight, Sparkles, BookOpen, AlertTriangle, Maximize2, Trash2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -62,10 +62,12 @@ export function ConverterPanel({
     limit,
     showUpgradeDialog,
     setShowUpgradeDialog,
+    plan,
     fetchQuota,
     convertCode,
     explainCode,
     swapLanguages,
+    clearConverter,
   } = useConverterStore()
 
   // Hydration-aware parameters
@@ -84,6 +86,20 @@ export function ConverterPanel({
 
   const lastParamsRef = React.useRef({ from: '', to: '' })
 
+  // Handle client-side SPA navigation remounts (clear code unless it is the initial app load)
+  React.useEffect(() => {
+    if (hydrated) {
+      const store = useConverterStore.getState()
+      if (store.isInitialLoad) {
+        // App just loaded/refreshed, mark initial load as false but preserve the code state
+        useConverterStore.setState({ isInitialLoad: false })
+      } else {
+        // Client-side navigation to this page, clear editors
+        clearConverter()
+      }
+    }
+  }, [hydrated, clearConverter])
+
   // Sync route parameters with store if route changes
   React.useEffect(() => {
     if (hydrated) {
@@ -91,10 +107,17 @@ export function ConverterPanel({
       if (routeChanged) {
         setFromLang(defaultFrom)
         setToLang(defaultTo)
+        
+        // If it's a client-side navigation route change (not initial load/refresh), clear the converter code
+        const store = useConverterStore.getState()
+        if (!store.isInitialLoad && lastParamsRef.current.from !== '') {
+          clearConverter()
+        }
+        
         lastParamsRef.current = { from: defaultFrom, to: defaultTo }
       }
     }
-  }, [hydrated, defaultFrom, defaultTo, setFromLang, setToLang])
+  }, [hydrated, defaultFrom, defaultTo, setFromLang, setToLang, clearConverter])
 
   // Copy converted code to clipboard
   const handleCopy = async () => {
@@ -113,7 +136,7 @@ export function ConverterPanel({
     <div className="w-full max-w-6xl mx-auto px-4 py-8 space-y-8">
       {/* Upper Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-        
+
         {/* Left Panel: Input */}
         <Card className="flex flex-col h-[540px] border-border bg-card shadow-sm">
           <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between space-y-0">
@@ -135,7 +158,7 @@ export function ConverterPanel({
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="flex items-center space-x-1">
               <Button
                 variant="ghost"
@@ -157,7 +180,7 @@ export function ConverterPanel({
               </Button>
             </div>
           </CardHeader>
-          
+
           <CardContent className="p-0 flex-1 flex flex-col overflow-hidden">
             <CodeEditor
               value={currentCode}
@@ -194,7 +217,7 @@ export function ConverterPanel({
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="flex items-center space-x-1">
               {currentConvertedCode && (
                 <Button
@@ -218,7 +241,7 @@ export function ConverterPanel({
               </Button>
             </div>
           </CardHeader>
-          
+
           <CardContent className={cn(
             "p-0 flex-1 flex flex-col overflow-hidden bg-muted/20 dark:bg-muted/5",
             currentHighlightedHtml || isLoading ? "justify-start" : "justify-center"
@@ -233,7 +256,7 @@ export function ConverterPanel({
                 <Skeleton className="h-4 w-5/6 bg-muted" />
               </div>
             ) : currentHighlightedHtml ? (
-              <div 
+              <div
                 className="output-highlight w-full flex-1 font-mono text-sm overflow-auto text-left min-h-0 p-6 no-scrollbar"
                 dangerouslySetInnerHTML={{ __html: currentHighlightedHtml }}
               />
@@ -256,9 +279,9 @@ export function ConverterPanel({
               {remaining !== null ? `${remaining} conversions left today` : 'Checking quota...'}
             </span>
           </div>
-          <Progress 
-            value={remaining !== null ? ((limit - remaining) / limit) * 100 : 0} 
-            className="h-1.5 bg-primary/10 dark:bg-primary/20" 
+          <Progress
+            value={remaining !== null ? ((limit - remaining) / limit) * 100 : 0}
+            className="h-1.5 bg-primary/10 dark:bg-primary/20"
           />
           {remaining === 0 && (
             <p className="text-xs text-amber-600 dark:text-amber-500 font-semibold flex items-center gap-1.5">
@@ -268,24 +291,36 @@ export function ConverterPanel({
           )}
         </div>
 
-        {/* Action Button */}
-        <Button
-          onClick={convertCode}
-          disabled={isLoading || remaining === 0}
-          className="w-full sm:w-[200px] h-11 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold cursor-pointer shrink-0 shadow-sm flex items-center justify-center gap-2"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Converting...</span>
-            </>
-          ) : (
-            <>
-              <Sparkles className="h-4 w-4" />
-              <span>Convert Code</span>
-            </>
-          )}
-        </Button>
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto shrink-0">
+          <Button
+            variant="outline"
+            onClick={clearConverter}
+            disabled={isLoading || !currentCode.trim()}
+            className="w-full sm:w-[120px] h-11 border-border hover:bg-muted font-semibold cursor-pointer shadow-xs flex items-center justify-center gap-2"
+          >
+            <Trash2 className="h-4 w-4 text-muted-foreground" />
+            <span>Clear</span>
+          </Button>
+
+          <Button
+            onClick={convertCode}
+            disabled={isLoading || remaining === 0}
+            className="w-full sm:w-[200px] h-11 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold cursor-pointer shadow-sm flex items-center justify-center gap-2"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Converting...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-4 w-4" />
+                <span>Convert Code</span>
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Explanation Section */}
@@ -334,42 +369,79 @@ export function ConverterPanel({
       {/* Upgrade Dialog */}
       <Dialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
         <DialogContent className="bg-card border-border sm:max-w-[425px]">
-          <DialogHeader className="text-center space-y-3">
-            <div className="mx-auto bg-amber-100 dark:bg-amber-950 p-3 rounded-full w-fit">
-              <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-500" />
-            </div>
-            <DialogTitle className="text-xl font-bold">You've used all 5 free conversions today</DialogTitle>
-            <DialogDescription className="text-muted-foreground text-sm">
-              Upgrade to a Pro plan for unlimited conversions, priority support, and advanced features.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid grid-cols-2 gap-3 mt-6">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowUpgradeDialog(false)
-                window.location.href = '/pricing'
-              }}
-              className="w-full border-border hover:bg-muted font-semibold cursor-pointer text-xs sm:text-sm px-2"
-            >
-              Get Annual — $49/yr
-            </Button>
-            <Button
-              onClick={() => {
-                setShowUpgradeDialog(false)
-                window.location.href = '/pricing'
-              }}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold cursor-pointer text-xs sm:text-sm px-2"
-            >
-              Upgrade to Pro — $7/mo
-            </Button>
-          </div>
+          {plan === 'guest' ? (
+            <>
+              <DialogHeader className="text-center space-y-3">
+                <div className="mx-auto bg-primary/10 p-3 rounded-full w-fit">
+                  <Sparkles className="h-6 w-6 text-primary" />
+                </div>
+                <DialogTitle className="text-xl font-bold">Get 5 Free Conversions Daily</DialogTitle>
+                <DialogDescription className="text-muted-foreground text-sm leading-relaxed">
+                  You've used all 2 guest conversions today. Sign up for a free account to get 5 conversions every day, view your translation history, and unlock detailed logic explanations.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid grid-cols-2 gap-3 mt-6">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowUpgradeDialog(false)
+                    window.location.href = '/pricing'
+                  }}
+                  className="w-full border-border hover:bg-muted font-semibold cursor-pointer text-xs sm:text-sm px-2"
+                >
+                  View Plans
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowUpgradeDialog(false)
+                    window.location.href = '/login'
+                  }}
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold cursor-pointer text-xs sm:text-sm px-2"
+                >
+                  Create Free Account
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <DialogHeader className="text-center space-y-3">
+                <div className="mx-auto bg-amber-100 dark:bg-amber-950 p-3 rounded-full w-fit">
+                  <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-500" />
+                </div>
+                <DialogTitle className="text-xl font-bold">You've used all 5 free conversions today</DialogTitle>
+                <DialogDescription className="text-muted-foreground text-sm">
+                  Upgrade to a Pro plan for unlimited conversions, priority support, and advanced features.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid grid-cols-2 gap-3 mt-6">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowUpgradeDialog(false)
+                    window.location.href = '/pricing'
+                  }}
+                  className="w-full border-border hover:bg-muted font-semibold cursor-pointer text-xs sm:text-sm px-2"
+                >
+                  Get Annual — $49/yr
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowUpgradeDialog(false)
+                    window.location.href = '/pricing'
+                  }}
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold cursor-pointer text-xs sm:text-sm px-2"
+                >
+                  Upgrade to Pro — $7/mo
+                </Button>
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
 
       {/* Maximize Editor Dialog */}
-      <Dialog 
-        open={activeMaximize !== null} 
+      <Dialog
+        open={activeMaximize !== null}
         onOpenChange={(open) => {
           if (!open) setActiveMaximize(null)
         }}
@@ -378,17 +450,17 @@ export function ConverterPanel({
           <DialogHeader className="flex flex-row items-center justify-between space-y-0 border-b border-border pb-3 shrink-0">
             <div>
               <DialogTitle className="text-lg font-bold">
-                {activeMaximize === 'input' 
-                  ? `Source Code (${LANGUAGE_DISPLAY[currentFrom as typeof LANGUAGES[number]] || currentFrom})` 
+                {activeMaximize === 'input'
+                  ? `Source Code (${LANGUAGE_DISPLAY[currentFrom as typeof LANGUAGES[number]] || currentFrom})`
                   : `Converted Code (${LANGUAGE_DISPLAY[currentTo as typeof LANGUAGES[number]] || currentTo})`}
               </DialogTitle>
               <DialogDescription className="text-xs text-muted-foreground">
-                {activeMaximize === 'input' 
-                  ? 'Edit or view your source code in full screen mode.' 
+                {activeMaximize === 'input'
+                  ? 'Edit or view your source code in full screen mode.'
                   : 'View your converted code in full screen mode.'}
               </DialogDescription>
             </div>
-            
+
             {activeMaximize === 'output' && currentConvertedCode && (
               <Button
                 variant="outline"
@@ -421,7 +493,7 @@ export function ConverterPanel({
                     <Skeleton className="h-4 w-full bg-muted" />
                   </div>
                 ) : currentHighlightedHtml ? (
-                  <div 
+                  <div
                     className="output-highlight w-full flex-1 font-mono text-sm overflow-auto text-left p-6 min-h-0 no-scrollbar"
                     dangerouslySetInnerHTML={{ __html: currentHighlightedHtml }}
                   />

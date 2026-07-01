@@ -43,15 +43,15 @@ export default function PricingPage() {
               <ul className="space-y-3 text-sm text-foreground/90">
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary shrink-0" />
-                  <span>5 conversions per day</span>
+                  <span>2 conversions/day (without account)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-primary shrink-0" />
+                  <span>5 conversions/day (with free account)</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary shrink-0" />
                   <span>All 18 programming languages</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-primary shrink-0" />
-                  <span>No account signup required</span>
                 </li>
               </ul>
             </CardContent>
@@ -106,9 +106,9 @@ export default function PricingPage() {
             </CardContent>
           </div>
           <CardFooter className="pt-4">
-            <Button disabled className="w-full font-bold bg-primary/20 text-primary-foreground/50 border border-transparent">
+            <div className="w-full text-center py-2.5 rounded-md bg-primary/10 text-primary border border-primary/20 font-bold text-sm select-none cursor-not-allowed">
               Coming Soon
-            </Button>
+            </div>
           </CardFooter>
         </Card>
 
@@ -157,9 +157,9 @@ export default function PricingPage() {
             </CardContent>
           </div>
           <CardFooter className="pt-4">
-            <Button disabled className="w-full font-bold border-border">
+            <div className="w-full text-center py-2.5 rounded-md bg-primary/10 text-primary border border-primary/20 font-bold text-sm select-none cursor-not-allowed">
               Coming Soon
-            </Button>
+            </div>
           </CardFooter>
         </Card>
       </div>

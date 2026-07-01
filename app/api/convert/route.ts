@@ -52,33 +52,16 @@ export async function POST(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser()
 
-    // 4. Determine plan
+    // 4. Determine plan (disable pro for now, mapping logged in to free)
     let plan: 'guest' | 'free' | 'pro' = 'guest'
     if (process.env.DISABLE_RATE_LIMIT === 'true') {
-      plan = 'pro'
+      plan = 'free'
     } else if (user) {
-      const { data: subscription } = await supabase
-        .from('subscriptions')
-        .select('plan, expires_at')
-        .eq('user_id', user.id)
-        .maybeSingle()
-
-      if (subscription && subscription.plan === 'pro') {
-        const expiresAt = subscription.expires_at
-          ? new Date(subscription.expires_at).getTime()
-          : 0
-        if (expiresAt > Date.now()) {
-          plan = 'pro'
-        } else {
-          plan = 'free'
-        }
-      } else {
-        plan = 'free'
-      }
+      plan = 'free'
     }
 
     // 5. Rate limit check
-    const { identifier } = getIdentifier(request, user?.id, plan === 'pro')
+    const { identifier } = getIdentifier(request, user?.id, false)
     const { success, remaining, reset } = await checkRateLimit(identifier, plan)
 
     if (!success) {

@@ -7,26 +7,26 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 })
 
-// Guest limiter: 3 conversions per 24 hours
+// Guest limiter: 2 conversions per 24 hours
 export const guestLimiter = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(3, '86400 s'),
+  limiter: Ratelimit.slidingWindow(2, '86400 s'),
   analytics: true,
   prefix: 'ratelimit:guest',
 })
 
-// Free account limiter: 10 conversions per 24 hours
+// Free account limiter: 5 conversions per 24 hours
 export const freeLimiter = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(10, '86400 s'),
+  limiter: Ratelimit.slidingWindow(5, '86400 s'),
   analytics: true,
   prefix: 'ratelimit:free',
 })
 
-// Pro account limiter: 500 conversions per 24 hours
+// Pro account limiter: disabled (mapped to free for now)
 export const proLimiter = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(500, '86400 s'),
+  limiter: Ratelimit.slidingWindow(5, '86400 s'),
   analytics: true,
   prefix: 'ratelimit:pro',
 })
@@ -69,7 +69,7 @@ export function getIdentifier(
   isPro: boolean = false
 ): { identifier: string; type: 'guest' | 'free' | 'pro' } {
   if (userId) {
-    return { identifier: userId, type: isPro ? 'pro' : 'free' }
+    return { identifier: userId, type: 'free' }
   }
 
   const cfIp = request.headers.get('cf-connecting-ip')

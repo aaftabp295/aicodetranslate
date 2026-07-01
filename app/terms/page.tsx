@@ -63,7 +63,7 @@ export default function TermsPage() {
 
       <Section title="3. Free tier usage">
         <p>
-          The free tier allows up to 5 code conversions per day without an account. Free tier usage
+          The free tier allows up to 2 code conversions per day without an account, and up to 5 conversions per day with a free account. Free tier usage
           is subject to fair-use enforcement. We reserve the right to adjust free tier limits at
           any time with reasonable notice.
         </p>

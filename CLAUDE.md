@@ -34,13 +34,13 @@ Secondary goal: monetize via freemium subscriptions using Dodo Payments.
 - File Storage: Supabase Storage
 
 ### AI
-- Model: Google Gemini Flash (gemini-1.5-flash)
+- Model: Google Gemini Flash (gemini-3.1-flash-lite)
 - Strategy: Two-pass conversion (convert then review)
 - Optional third pass: explanation feature
 
 ### Payments
-- Provider: Dodo Payments (Merchant of Record, India-friendly, INR payouts)
-- Plans: Free (5/day) | Pro $7/mo | Pro Annual $49/yr
+- Provider: Dodo Payments (Merchant of Record, India-friendly, INR payouts) - *Status: COMING SOON*
+- Plans: Free (5/day with account, 2/day without) | Pro $7/mo | Pro Annual $49/yr (Pro plans disabled / mapped to Free limits for now)
 
 ### SEO & Discovery
 - Sitemap: next-sitemap
@@ -154,13 +154,13 @@ NEXT_PUBLIC_APP_URL=https://yoursite.com
 ---
 
 ## Business Model — Freemium
-- Free tier: 5 conversions/day
+- Free tier: 5 conversions/day (logged in) | 2 conversions/day (guest)
 - Guest (no account): track by IP in Upstash Redis
-  key: `conv:ip:{ip}`, TTL: 86400 seconds
+  using `@upstash/ratelimit` SDK (prefix: `ratelimit:guest`, 2 conversions/24 hours sliding window)
 - Free account: track by user_id in Upstash Redis
-  key: `conv:user:{id}`, TTL: 86400 seconds
-- Pro account: cap at 500/day (abuse prevention)
-- Payment: Dodo Payments (MoR — handles VAT, GST, tax globally)
+  using `@upstash/ratelimit` SDK (prefix: `ratelimit:free`, 5 conversions/24 hours sliding window)
+- Pro account: cap at 500/day (abuse prevention) - *Status: COMING SOON (currently mapped to Free 5/day limit)*
+- Payment: Dodo Payments (MoR — handles VAT, GST, tax globally) - *Status: COMING SOON*
 - INR payouts direct to Indian bank account
 
 ---
@@ -204,18 +204,19 @@ create policy "users_own_subscription" on subscriptions
 /                              Homepage — hero + ConverterPanel + LanguageFromGrid
 /converters                    All 18 source languages index page
 /convert-from-[language]       e.g. /convert-from-python (18 pages)
-Shows popular targets + all 17 target options
+Rewritten to `/convert-from/[language]` in `next.config.ts` (Note: duplicate `convert-from-[language]` folder exists in code but `convert-from/[language]` is the primary dynamic route)
 /convert/[pair]                e.g. /convert/python-to-javascript (306 pages)
-Actual converter page with ConverterPanel
+Rewritten from `/convert-[pair]` in `next.config.ts`
 /pricing                       Pricing page
 /dashboard                     User history (protected)
 /login                         Auth page
 
 /api/convert                   Main conversion endpoint (edge)
 /api/explain                   Explanation endpoint (edge)
-/api/webhooks/dodo             Dodo Payments webhook (edge)
-/api/usage                     Current user daily usage (edge)
-/api/og                        Dynamic OG image generation (edge)
+/api/highlight                 Highlight code syntax on the server (edge)
+/api/quota                     Current user daily usage & limit (edge)
+/api/webhooks/dodo             Dodo Payments webhook (edge) - *Status: PENDING*
+/api/og                        Dynamic OG image generation (edge) - *Status: PENDING*
 
 
 ## User Navigation Flow

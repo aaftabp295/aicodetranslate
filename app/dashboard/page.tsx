@@ -75,7 +75,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <Button asChild className="cursor-pointer font-bold shrink-0 bg-primary text-primary-foreground hover:bg-primary/95 shadow-sm">
-          <Link href="/">
+          <Link href="/free-code-converter">
             <Sparkles className="mr-2 h-4 w-4" />
             <span>New Conversion</span>
           </Link>

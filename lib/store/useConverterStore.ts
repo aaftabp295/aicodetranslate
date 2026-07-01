@@ -23,6 +23,16 @@ interface ConverterState {
   remaining: number | null
   limit: number
   showUpgradeDialog: boolean
+  isInitialLoad: boolean
+  plan: 'guest' | 'free' | 'pro'
+  lastDraft: {
+    code: string
+    convertedCode: string
+    highlightedHtml: string
+    explanation: string
+    fromLang: string
+    toLang: string
+  } | null
 
   // Setters
   setCode: (code: string) => void
@@ -41,6 +51,8 @@ interface ConverterState {
   convertCode: () => Promise<void>
   explainCode: () => Promise<void>
   swapLanguages: () => Promise<void>
+  clearConverter: () => void
+  restoreDraft: () => void
 }
 
 export const useConverterStore = create<ConverterState>()(
@@ -61,6 +73,9 @@ export const useConverterStore = create<ConverterState>()(
       remaining: null,
       limit: 5,
       showUpgradeDialog: false,
+      isInitialLoad: true,
+      plan: 'guest',
+      lastDraft: null,
 
       // Simple Setters
       setCode: (code) => set({ code }),
@@ -73,6 +88,49 @@ export const useConverterStore = create<ConverterState>()(
       setShowUpgradeDialog: (showUpgradeDialog) => set({ showUpgradeDialog }),
       setShowExplain: (showExplain) => set({ showExplain }),
       setExplanation: (explanation) => set({ explanation }),
+      clearConverter: () => {
+        const { code, convertedCode, highlightedHtml, explanation, fromLang, toLang } = get()
+        if (code.trim()) {
+          set({
+            lastDraft: { code, convertedCode, highlightedHtml, explanation, fromLang, toLang }
+          })
+          
+          toast("Editor cleared", {
+            description: "You can restore your previous code and translation.",
+            action: {
+              label: "Undo",
+              onClick: () => get().restoreDraft(),
+            },
+            duration: 8000,
+          })
+        }
+        
+        set({
+          code: '',
+          convertedCode: '',
+          highlightedHtml: '',
+          explanation: '',
+          showExplain: false,
+          copied: false
+        })
+      },
+
+      restoreDraft: () => {
+        const { lastDraft } = get()
+        if (lastDraft) {
+          set({
+            code: lastDraft.code,
+            convertedCode: lastDraft.convertedCode,
+            highlightedHtml: lastDraft.highlightedHtml,
+            explanation: lastDraft.explanation,
+            fromLang: lastDraft.fromLang,
+            toLang: lastDraft.toLang,
+            showExplain: !!lastDraft.explanation,
+            lastDraft: null
+          })
+          toast.success("Restored last session code!")
+        }
+      },
 
       // Async Actions
       fetchQuota: async () => {
@@ -80,13 +138,13 @@ export const useConverterStore = create<ConverterState>()(
           const res = await fetch('/api/quota')
           if (res.ok) {
             const data = await res.json()
-            set({ remaining: data.remaining, limit: data.limit })
+            set({ remaining: data.remaining, limit: data.limit, plan: data.plan })
           } else {
-            set({ remaining: 5 })
+            set({ remaining: 5, plan: 'guest' })
           }
         } catch (err) {
           console.error('Failed to load quota:', err)
-          set({ remaining: 5 })
+          set({ remaining: 5, plan: 'guest' })
         }
       },
 
@@ -212,6 +270,7 @@ export const useConverterStore = create<ConverterState>()(
         explanation: state.explanation,
         showExplain: state.showExplain,
         highlightedHtml: state.highlightedHtml,
+        lastDraft: state.lastDraft,
       }),
     }
   )
