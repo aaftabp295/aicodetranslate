@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { from, to } = decoded
   const title = getPageTitle(from, to)
   const description = getPageDescription(from, to)
-  const canonical = `${process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'}/convert-${pair}`
+  const canonical = `${process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com'}/convert-${pair}`
 
   return {
     title,
@@ -66,7 +66,7 @@ export default async function ConvertPage({ params }: PageProps) {
   const { from, to } = decoded
   const fromDisplay = getLangDisplayName(from)
   const toDisplay = getLangDisplayName(to)
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com'
 
   const content = getPairContent(from, to)
   const introParagraph =
@@ -82,6 +82,7 @@ export default async function ConvertPage({ params }: PageProps) {
     '@type': 'SoftwareApplication',
     'name': `${fromDisplay} to ${toDisplay} Converter`,
     'applicationCategory': 'DeveloperApplication',
+    'operatingSystem': 'Web',
     'offers': {
       '@type': 'Offer',
       'price': '0',

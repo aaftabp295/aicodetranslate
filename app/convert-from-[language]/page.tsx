@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const title = getFromPageTitle(language)
   const description = getFromPageDescription(language)
-  const canonical = `${process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'}/convert-from-${language}`
+  const canonical = `${process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com'}/convert-from-${language}`
 
   return {
     title,
@@ -73,7 +73,7 @@ export default async function ConvertFromPage({ params }: PageProps) {
 
   const from = language as Language
   const fromDisplay = getLangDisplayName(from)
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com'
 
   // Get popular targets
   const popularTargets = getPopularTargetsFor(from)

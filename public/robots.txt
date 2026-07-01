@@ -2,6 +2,11 @@
 User-agent: *
 Allow: /
 
+# *
+User-agent: *
+Disallow: /dashboard
+Disallow: /api/
+
 # Host
 Host: https://aicodetranslate.com
 

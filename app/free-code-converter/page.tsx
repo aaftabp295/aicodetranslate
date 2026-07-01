@@ -4,11 +4,10 @@ import { ConverterPanel } from '@/components/converter/ConverterPanel'
 import { LanguageFromGrid } from '@/components/converter/LanguageFromGrid'
 
 export const metadata: Metadata = {
-  title: 'Free Code Converter – AI-Powered Language Translation Online',
-  description:
-    'Instantly convert code between 18 programming languages for free. Paste your code, pick source and target, and get clean idiomatic output powered by Gemini AI.',
+  title: 'Free Code Converter — Convert Between 18 Languages Online',
+  description: 'Free online AI code converter. Convert Python, JavaScript, TypeScript, Java, Go, Rust and more. Paste your code and get idiomatic output instantly.',
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_APP_URL || 'https://yoursite.com'}/free-code-converter`,
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com'}/free-code-converter`,
   },
 }
 
