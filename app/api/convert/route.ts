@@ -5,7 +5,6 @@ import { getIdentifier, checkRateLimit } from '@/lib/ratelimit'
 import { convertCode } from '@/lib/gemini'
 import { highlightCode } from '@/lib/highlight'
 
-export const runtime = 'edge'
 
 export async function POST(request: NextRequest) {
   try {

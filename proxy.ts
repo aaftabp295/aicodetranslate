@@ -2,8 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { updateSession } from '@/lib/supabase/middleware'
 
-export async function middleware(request: NextRequest) {
-  // 1. Refresh session via middleware helper
+export async function proxy(request: NextRequest) {
+  // 1. Refresh session via proxy helper
   const response = await updateSession(request)
 
   const { pathname } = request.nextUrl

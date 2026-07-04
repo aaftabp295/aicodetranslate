@@ -2,7 +2,6 @@ import { ImageResponse } from 'next/og'
 import { NextRequest } from 'next/server'
 import { LANGUAGE_DISPLAY } from '@/lib/languages'
 
-export const runtime = 'edge'
 
 export async function GET(request: NextRequest) {
   try {

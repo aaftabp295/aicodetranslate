@@ -2,7 +2,6 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getIdentifier, guestLimiter, freeLimiter, proLimiter } from '@/lib/ratelimit'
 
-export const runtime = 'edge'
 
 export async function GET(request: NextRequest) {
   try {
