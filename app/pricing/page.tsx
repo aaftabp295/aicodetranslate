@@ -58,7 +58,7 @@ export default function PricingPage() {
           </div>
           <CardFooter className="pt-4">
             <Button variant="outline" asChild className="w-full cursor-pointer font-bold border-border hover:bg-muted">
-              <Link href="/">Start for Free</Link>
+              <Link href="/free-code-converter">Start for Free</Link>
             </Button>
           </CardFooter>
         </Card>

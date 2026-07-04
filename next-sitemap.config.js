@@ -20,12 +20,23 @@ module.exports = {
       return { loc: path, priority: 1.0, changefreq: 'daily' }
     }
     // /convert/[pair] (built internally as /convert/[pair] but rewritten as /convert-[pair])
-    if (path.startsWith('/convert/')) {
-      loc = path.replace('/convert/', '/convert-')
+    if (path.startsWith('/convert/') || (path.startsWith('/convert-') && path.includes('-to-'))) {
+      const pair = path.startsWith('/convert/')
+        ? path.replace('/convert/', '')
+        : path.replace('/convert-', '')
+      const parts = pair.split('-to-')
+      if (parts.length === 2) {
+        const [from, to] = parts
+        const fs = require('fs')
+        const fileExists = fs.existsSync(require('path').join(process.cwd(), 'data', 'pairs', `${from}-${to}.json`))
+        if (!fileExists) {
+          return null // Exclude unoptimized pairs from sitemap
+        }
+      } else {
+        return null
+      }
+      loc = path.startsWith('/convert/') ? path.replace('/convert/', '/convert-') : path
       return { loc, priority: 0.9, changefreq: 'weekly' }
-    }
-    if (path.startsWith('/convert-') && path.includes('-to-')) {
-      return { loc: path, priority: 0.9, changefreq: 'weekly' }
     }
     // /convert-from/[language] (built internally as /convert-from/[language] but rewritten as /convert-from-[language])
     if (path.startsWith('/convert-from/')) {

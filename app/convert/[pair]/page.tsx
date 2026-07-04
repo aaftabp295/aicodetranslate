@@ -19,6 +19,8 @@ export async function generateStaticParams() {
   }))
 }
 
+export const revalidate = 86400 // Revalidate once a day
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { pair } = await params
   const decoded = getPairFromSlug(pair)
@@ -28,6 +30,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = getPageTitle(from, to)
   const description = getPageDescription(from, to)
   const canonical = `${process.env.NEXT_PUBLIC_APP_URL || 'https://aicodetranslate.com'}/convert-${pair}`
+
+  const hasCustomContent = !!getPairContent(from, to)
 
   return {
     title,
@@ -51,6 +55,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           alt: `${getLangDisplayName(from)} to ${getLangDisplayName(to)} AI Code Translate`,
         },
       ],
+    },
+    robots: {
+      index: hasCustomContent,
+      follow: true,
+      googleBot: {
+        index: hasCustomContent,
+        follow: true,
+      },
     },
   }
 }
